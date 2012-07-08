@@ -4,4 +4,7 @@
   <artifactId>atinject-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <modules>
+  	<module>atinject-core</module>
+  </modules>
 </project>
