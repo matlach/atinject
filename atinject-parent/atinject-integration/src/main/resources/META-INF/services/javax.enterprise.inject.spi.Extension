@@ -1,0 +1,3 @@
+org.atinject.core.cdi.BeanManagerExtension
+org.atinject.core.configuration.ConfigurationExtension
+org.atinject.core.infinispan.InfinispanExtension
