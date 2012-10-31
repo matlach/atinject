@@ -31,7 +31,7 @@ public class UserRequestDistributedExecutor {
 	}
 	
 	
-	public <T, UserKey> Future<T> submit(Callable<T> task, UserKey input){
+	public <T> Future<T> submit(Callable<T> task, UserKey input){
 		return distributedExecutorService.submit(task, input);
 	}
 	

@@ -10,7 +10,7 @@ import org.atinject.core.transaction.InfinispanTransactional;
 import org.atinject.core.websocket.WebSocketMessage;
 
 @InfinispanTransactional
-public class UserWebsocketControllerImpl implements UserWebsocketController {
+public class UserWebSocketControllerImpl implements UserWebSocketController {
 
 	@Inject
 	private UserService userService;
