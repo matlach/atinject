@@ -20,6 +20,10 @@ public class UserCacheProducer
 //                            .async()
 //                                .enable()
                             .purgeOnStartup(true)
+//                    .transaction()
+//                        .lockingMode(LockingMode.PESSIMISTIC)
+//                        .useSynchronization(true)
+//                        .transactionManagerLookup(new DummyTransactionManagerLookup()) // TODO retrieve from infinispan extension
                     .build();
     }
 }

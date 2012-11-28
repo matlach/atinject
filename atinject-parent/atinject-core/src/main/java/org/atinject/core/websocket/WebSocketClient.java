@@ -27,7 +27,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.util.HashMap;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -54,15 +55,18 @@ public class WebSocketClient {
     @PostConstruct
     public void initialize() throws Exception
     {
-        server.toString();
-        uri = new URI("ws://localhost:9080/websocket");
+        server.toString(); // eagerly initialize server
+        uri = new URI("ws://localhost:8080/websocket");
         run();
     }
     
     @PreDestroy
     public void shutdown()
     {
-        b.shutdown();
+        if (b != null)
+        {
+            b.shutdown();
+        }
     }
 
     public void run() throws Exception {
@@ -73,16 +77,13 @@ public class WebSocketClient {
             throw new IllegalArgumentException("Unsupported protocol: " + protocol);
         }
 
-        HashMap<String, String> customHeaders = new HashMap<String, String>();
-        customHeaders.put("MyHeader", "MyValue");
-
         // Connect with V13 (RFC 6455 aka HyBi-17). You can change it to V08 or V00.
         // If you change it to V00, ping is not supported and remember to change
         // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
         final WebSocketClientHandler handler =
                 new WebSocketClientHandler(
                         new WebSocketClientHandshakerFactory().newHandshaker(
-                                uri, WebSocketVersion.V13, null, false, customHeaders));
+                                uri, WebSocketVersion.V13, null, false, null));
 
         b.group(new NioEventLoopGroup())
          .channel(NioSocketChannel.class)
@@ -105,6 +106,8 @@ public class WebSocketClient {
     private ObjectMapper jsonMapper = new ObjectMapper();
     public void send(BaseWebSocketRequest request) throws Exception
     {
+        ByteBuffer byteBuffer = CharsetUtil.getEncoder(CharsetUtil.UTF_8).encode(CharBuffer.wrap(UUID.randomUUID().toString()));
+        
         // write uuid.
         byte[] uuidBytes = UUID.randomUUID().toString().getBytes();
         
@@ -115,6 +118,8 @@ public class WebSocketClient {
         byte[] jsonBytes = jsonMapper.writeValueAsBytes(request);
         
         ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(byteBuffer);
+        
         byteBuf.writeInt(uuidBytes.length);
         byteBuf.writeBytes(uuidBytes);
         byteBuf.writeInt(classBytes.length);

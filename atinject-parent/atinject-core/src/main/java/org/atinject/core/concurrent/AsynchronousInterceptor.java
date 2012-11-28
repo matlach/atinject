@@ -18,32 +18,31 @@ public class AsynchronousInterceptor
     private AsynchronousService asynchronousService;
     
     @AroundInvoke 
-    public Object runAsync(final InvocationContext ctx) throws Exception
+    public Object invokeAsynchronously(final InvocationContext ctx) throws Exception
     {
         // we assume AsynchronousInterceptor is the first in chain
         if (hack.get() == null)
         {
-            asynchronousService.submit(new Callable<Void>(){
+            return asynchronousService.submit(new Callable<Object>(){
                 @Override
-                public Void call() throws Exception
+                public Object call() throws Exception
                 {
                     hack.set(new Object());
                     try
                     {
-                        ctx.getMethod().invoke(ctx.getTarget(), ctx.getParameters());
+                        return ctx.getMethod().invoke(ctx.getTarget(), ctx.getParameters());
                     }
                     finally
                     {
                         hack.remove();
                     }
-                    return null;
-                }});
+                }
+            });
         }
         else
         {
-            ctx.proceed();
+            return ctx.proceed();
         }
-        return null;
     }
 
 }

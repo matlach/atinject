@@ -1,8 +1,8 @@
 package org.atinject.core.entity;
 
-import org.atinject.core.object.BaseObject;
+import java.io.Serializable;
 
-public abstract class AbstractEntity extends BaseObject
+public abstract class AbstractEntity implements Serializable
 {
 
     private static final long serialVersionUID = 1L;

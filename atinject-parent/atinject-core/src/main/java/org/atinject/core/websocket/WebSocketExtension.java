@@ -130,9 +130,9 @@ public class WebSocketExtension implements Extension
         }
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat) {
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
 
-        Class<T> clazz = pat.getAnnotatedType().getJavaClass();
+        Class<T> clazz = event.getAnnotatedType().getJavaClass();
         for (Method method : clazz.getMethods())
         {
             processMethod(method);

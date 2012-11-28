@@ -8,6 +8,7 @@ import org.atinject.core.infinispan.CacheName;
 import org.atinject.core.tiers.AbstractCacheStore;
 import org.atinject.core.transaction.InfinispanTransactional;
 import org.infinispan.Cache;
+import org.infinispan.context.Flag;
 
 @InfinispanTransactional
 @ApplicationScoped
@@ -20,7 +21,7 @@ public class UserCacheStoreImpl extends AbstractCacheStore implements UserCacheS
     @Override
     public void putUser(UserEntity user)
     {
-        cache.put(user.getUuid(), user);
+        cache.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).put(user.getUuid(), user);
     }
     
 }

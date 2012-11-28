@@ -40,6 +40,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 
+import java.nio.charset.CharacterCodingException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -67,6 +68,9 @@ public class WebSocketServer
 {
 
     @Inject
+    private Logger logger;
+    
+    @Inject
     private UserRequestDistributedExecutor distributedExecutor;
     
     @Inject
@@ -83,15 +87,27 @@ public class WebSocketServer
     @PostConstruct
     public void initialize() throws Exception
     {
-        this.port = 9080;
+        this.port = 8080;
         run();
     }
     
     @PreDestroy
     public void shutdown() throws Exception
     {
-        ch.closeFuture().sync();
-        b.shutdown();
+        try
+        {
+            if (ch != null)
+            {
+                ch.closeFuture().sync();
+            }
+        }
+        finally
+        {
+            if (b != null)
+            {
+                b.shutdown();
+            }
+        }
     }
     
     public void run() throws Exception {
@@ -103,8 +119,8 @@ public class WebSocketServer
          .childHandler(new WebSocketServerInitializer());
 
         ch = b.bind().sync().channel();
-        System.out.println("Web socket server started at port " + port + '.');
-        System.out.println("Open your browser and navigate to http://localhost:" + port + '/');
+        logger.info("Web socket server started at port {} ", port);
+        logger.info("Open your browser and navigate to http://localhost: {}", port);
     }
     
     public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel> {
@@ -177,7 +193,7 @@ public class WebSocketServer
         }
 
         private ObjectMapper mapper = new ObjectMapper();
-        private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+        private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws CharacterCodingException {
 
             // Check for closing frame
             if (frame instanceof CloseWebSocketFrame) {
@@ -189,6 +205,9 @@ public class WebSocketServer
             }
             else if (frame instanceof BinaryWebSocketFrame){
                 frame.getBinaryData();
+                
+                // read utf8
+                CharsetUtil.getDecoder(CharsetUtil.UTF_8).decode(frame.getBinaryData().nioBuffer());
                 
                 // read uuid length
                 int uuidBytesLength = frame.getBinaryData().readInt();
@@ -306,6 +325,32 @@ public class WebSocketServer
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
             cause.printStackTrace();
             ctx.close();
+        }
+        
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt)
+                throws Exception {
+            System.out.println("user event triggered '" + evt + "'");
+        }
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            System.out.println("channel registered");
+        }
+
+        @Override
+        public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+            System.out.println("channel unregistered");
+        }
+
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            System.out.println("channel active");
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            System.out.println("channel inactive");
         }
 
         private String getWebSocketLocation(HttpRequest req) {
