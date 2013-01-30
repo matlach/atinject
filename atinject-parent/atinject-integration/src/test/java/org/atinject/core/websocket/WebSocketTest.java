@@ -1,12 +1,8 @@
 package org.atinject.core.websocket;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
 import javax.inject.Inject;
 
+import org.atinject.api.user.dto.GetUserRequest;
 import org.atinject.integration.WeldRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,22 +20,9 @@ public class WebSocketTest
     @Test
     public void testWebSockets() throws Exception
     {
-        //server.toString();
-        //client.send(new GetUserRequest());
+        server.toString();
+        client.send(new GetUserRequest());
+        Thread.sleep(10000);
     }
     
-    @Test
-    public void testInputOutputStream() throws Exception
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(baos);
-        dos.writeUTF("abc");
-        dos.writeUTF("def");
-        dos.close();
-        
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
-        System.out.println(dis.readUTF());
-        System.out.println(dis.readUTF());
-        dis.close();
-    }
 }

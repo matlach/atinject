@@ -1,13 +1,11 @@
 package org.atinject.integration;
 
-import java.io.IOException;
-
 import org.atinject.core.cdi.Weld;
 
 
 public class IntegrationBootstrap {
 
-    public static void main(String[] args) throws InterruptedException, IOException
+    public static void main(String[] args) throws Exception
     {
         System.setProperty("user.timezone", "GMT");
 
@@ -19,12 +17,12 @@ public class IntegrationBootstrap {
                 try
                 {
                     System.in.read();
+                    System.exit(0);
                 }
                 catch (Exception e)
                 {
                     // swallow
                 }
-                System.exit(0);
             }
         });
         shutdownThread.setDaemon(true);
