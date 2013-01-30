@@ -5,6 +5,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
+import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.entity.AbstractEntity;
 import org.infinispan.marshall.Externalizer;
 import org.infinispan.marshall.SerializeWith;
@@ -14,8 +15,6 @@ public class UserEntity extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private static final int CURRENT_VERSION = 1;
-    
     private String uuid;
     private String name;
     private String password;
@@ -62,29 +61,15 @@ public class UserEntity extends AbstractEntity
         @Override
         public void writeObject(ObjectOutput output, UserEntity user) throws IOException
         {
-            output.writeInt(CURRENT_VERSION);
-            // jackson smile ? json ?
-            output.writeObject(user.uuid);
-            output.writeObject(user.name);
-            output.writeObject(user.password);
+            VersionableUserExternalizer externalizer = BeanManagerExtension.getReference(VersionableUserExternalizer.class);
+            externalizer.writeObject(output, user);
         }
 
         @Override
         public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException
         {
-            int version = input.readInt();
-            UserEntity user = new UserEntity();
-            switch (version)
-            {
-                // case ANY_OLD_VERSION : ..
-                case CURRENT_VERSION:
-                    
-                    user.uuid = (String) input.readObject();
-                    user.name = (String) input.readObject();
-                    user.password = (String) input.readObject();
-                    return user;
-            }
-            throw new IOException("bad version '" + version + "'");
+            VersionableUserExternalizer externalizer = BeanManagerExtension.getReference(VersionableUserExternalizer.class);
+            return externalizer.readObject(input);
         }
     }
 

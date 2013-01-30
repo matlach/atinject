@@ -9,14 +9,15 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
 
+import org.atinject.core.cache.CacheName;
 import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.event.BaseEvent;
-import org.atinject.core.infinispan.CacheName;
+import org.atinject.core.startup.Startup;
 import org.infinispan.Cache;
 import org.infinispan.distexec.DefaultExecutorService;
 
-//@Startup
+@Startup
 @ApplicationScoped
 public class DistributedEventBus
 {
@@ -60,7 +61,7 @@ public class DistributedEventBus
         @Override
         public Void call() throws Exception
         {
-            BeanManagerExtension.getBeanManager().fireEvent(event);
+            BeanManagerExtension.fireEvent(event);
             return null;
         }
         

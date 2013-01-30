@@ -54,12 +54,11 @@ import javax.inject.Inject;
 import org.atinject.api.session.Session;
 import org.atinject.core.distexec.UserKey;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
+import org.atinject.core.json.JSon;
+import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @WebSocketEndpoint(uri="ws://localhost:8080/websocket")
@@ -98,7 +97,7 @@ public class WebSocketServer
         {
             if (ch != null)
             {
-                ch.closeFuture().sync();
+                ch.close().sync();
             }
         }
         finally
@@ -192,8 +191,7 @@ public class WebSocketServer
             }
         }
 
-        private ObjectMapper mapper = new ObjectMapper();
-        private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws CharacterCodingException {
+        private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws CharacterCodingException, Exception {
 
             // Check for closing frame
             if (frame instanceof CloseWebSocketFrame) {
@@ -204,29 +202,16 @@ public class WebSocketServer
                 return;
             }
             else if (frame instanceof BinaryWebSocketFrame){
-                frame.getBinaryData();
-                
-                // read utf8
-                CharsetUtil.getDecoder(CharsetUtil.UTF_8).decode(frame.getBinaryData().nioBuffer());
-                
-                // read uuid length
-                int uuidBytesLength = frame.getBinaryData().readInt();
-                
-                // TODO validate length
+                ByteBuf byteBuf = frame.getBinaryData();
                 
                 // read uuid
-                final byte[] uuidBytes = new byte[uuidBytesLength];
-                frame.getBinaryData().readBytes(uuidBytes);
-                String uuid = new String(uuidBytes);
+                final String uuid = ByteBufUtil.readUTF8(byteBuf);
                 
-                // read class bytes length
-                int classNameBytesLength = frame.getBinaryData().readInt();
-                final byte[] classNameBytes = new byte[classNameBytesLength];
-                frame.getBinaryData().readBytes(classNameBytes);
+                // read class
+                final String className = ByteBufUtil.readUTF8(byteBuf);
                 
-                // read json (remaining bytes)
-                final byte[] jsonBytes = new byte[frame.getBinaryData().readableBytes()];
-                frame.getBinaryData().readBytes(jsonBytes);
+                // read json
+                final String json = ByteBufUtil.readUTF8(byteBuf);
                 
                 // build key
                 UserKey key = new UserKey();
@@ -239,7 +224,6 @@ public class WebSocketServer
                     @Override
                     public BaseWebSocketResponse call() throws Exception
                     {
-                        String className = new String(classNameBytes);
                         Class<? extends BaseWebSocketRequest> request = (Class<? extends BaseWebSocketRequest>) Class.forName(className);
                         WebSocketMessageMethod m = webSocketExtension.getWebSocketMessageMethod(request);
                         
@@ -264,35 +248,33 @@ public class WebSocketServer
                 };
                 
                 // submit task to distributed executor with given key
-                Future<BaseWebSocketResponse> future = distributedExecutor.submit(task, key);
-                
-                BaseWebSocketResponse response = null;
-                try
-                {
-                    response = future.get();
-                }
-                catch (InterruptedException e)
-                {
-                    Thread.currentThread().interrupt();
-                }
-                catch (ExecutionException e)
-                {
+                try{
+                    Future<BaseWebSocketResponse> future = distributedExecutor.submit(task, key);
                     
+                    BaseWebSocketResponse response = null;
+                    try
+                    {
+                        response = future.get();
+                    }
+                    catch (InterruptedException e)
+                    {
+                        Thread.currentThread().interrupt();
+                    }
+                    catch (ExecutionException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    byteBuf = Unpooled.buffer();
+                    byteBuf.writeBytes(JSon.writeValueAsBytes(response));
+                    
+                    ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
                 }
-
-                ByteBuf byteBuf = Unpooled.buffer();
-                try
-                {
-                    byteBuf.writeBytes(mapper.writeValueAsBytes(response));
-                }
-                catch (JsonProcessingException e)
-                {
+                catch (Exception e){
                     e.printStackTrace();
                 }
+
                 
-                ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
                 
-                System.out.println(uuid);
                 return;
             } else if (!(frame instanceof TextWebSocketFrame)) {
                 throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass()

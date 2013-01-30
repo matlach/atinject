@@ -50,7 +50,7 @@ public class InfinispanTransactionManager
     
     public static boolean isStatusActive() throws SystemException
     {
-        return getUserTransactionStatus() == Status.STATUS_NO_TRANSACTION;
+        return getUserTransactionStatus() == Status.STATUS_ACTIVE;
     }
     
     public static void registerSynchronization(Synchronization synchronization) throws RollbackException, SystemException

@@ -4,24 +4,37 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.user.entity.UserEntity;
-import org.atinject.core.infinispan.CacheName;
+import org.atinject.core.cache.CacheName;
+import org.atinject.core.cache.InfinispanCache;
 import org.atinject.core.tiers.AbstractCacheStore;
-import org.atinject.core.transaction.InfinispanTransactional;
-import org.infinispan.Cache;
-import org.infinispan.context.Flag;
 
-@InfinispanTransactional
 @ApplicationScoped
 public class UserCacheStoreImpl extends AbstractCacheStore implements UserCacheStore
 {
 
     @Inject @CacheName("user")
-    private Cache<String, UserEntity> cache;
+    private InfinispanCache<String, UserEntity> cache;
+    
+    @Override
+    public UserEntity getUser(String userUUID){
+        return cache.get(userUUID);
+    }
+
+    @Override
+    public void lockUser(String userUUID)
+    {
+        cache.lock(userUUID);
+    }
     
     @Override
     public void putUser(UserEntity user)
     {
-        cache.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES).put(user.getUuid(), user);
+        cache.put(user.getUuid(), user);
     }
     
+    @Override
+    public void removeUser(UserEntity user){
+        cache.remove(user.getUuid());
+    }
+
 }

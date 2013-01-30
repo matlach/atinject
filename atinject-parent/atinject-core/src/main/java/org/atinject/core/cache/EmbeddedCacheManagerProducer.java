@@ -1,4 +1,4 @@
-package org.atinject.core.infinispan;
+package org.atinject.core.cache;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -16,6 +16,15 @@ public class EmbeddedCacheManagerProducer {
     public EmbeddedCacheManager embeddedCacheManager()
     {
         return infinispanExtension.getCacheManager();
+    }
+    
+    @SuppressWarnings("rawtypes")
+    @Produces @CacheName
+    public InfinispanCache infinispanCache(InjectionPoint ip)
+    {
+        String cacheName = ip.getAnnotated().getAnnotation(CacheName.class).value();
+        InfinispanCache infinispanCache = new InfinispanCache(infinispanExtension.getCacheManager().getCache(cacheName).getAdvancedCache());
+        return infinispanCache;
     }
     
     @SuppressWarnings("rawtypes")

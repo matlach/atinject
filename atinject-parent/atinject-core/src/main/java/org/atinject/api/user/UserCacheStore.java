@@ -5,6 +5,11 @@ import org.atinject.api.user.entity.UserEntity;
 public interface UserCacheStore
 {
 
-    public void putUser(UserEntity user);
+    UserEntity getUser(String userUUID);
     
+    void lockUser(String userUUID);
+    
+    void putUser(UserEntity user);
+    
+    void removeUser(UserEntity user);
 }

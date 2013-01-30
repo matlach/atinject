@@ -7,8 +7,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.atinject.core.cache.CacheName;
 import org.atinject.core.concurrent.AsynchronousService;
-import org.atinject.core.infinispan.CacheName;
 import org.infinispan.Cache;
 import org.infinispan.distexec.DefaultExecutorService;
 import org.infinispan.distexec.DistributedExecutorService;

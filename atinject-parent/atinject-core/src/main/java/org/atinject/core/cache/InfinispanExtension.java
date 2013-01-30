@@ -1,4 +1,4 @@
-package org.atinject.core.infinispan;
+package org.atinject.core.cache;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -27,8 +27,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.util.UUID;
 
 import javax.annotation.PostConstruct;
@@ -36,9 +34,8 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.user.dto.GetUserRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.atinject.core.json.JSon;
+import org.atinject.core.netty.ByteBufUtil;
 
 @WebSocketEndpoint(uri="ws://localhost:8080/websocket")
 @ApplicationScoped
@@ -56,6 +53,7 @@ public class WebSocketClient {
     public void initialize() throws Exception
     {
         server.toString(); // eagerly initialize server
+        Thread.sleep(1000);
         uri = new URI("ws://localhost:8080/websocket");
         run();
     }
@@ -103,31 +101,20 @@ public class WebSocketClient {
         handler.handshakeFuture().sync();
     }
     
-    private ObjectMapper jsonMapper = new ObjectMapper();
-    public void send(BaseWebSocketRequest request) throws Exception
+    public ChannelFuture send(BaseWebSocketRequest request) throws Exception
     {
-        ByteBuffer byteBuffer = CharsetUtil.getEncoder(CharsetUtil.UTF_8).encode(CharBuffer.wrap(UUID.randomUUID().toString()));
+        ByteBuf byteBuf = Unpooled.buffer();
         
         // write uuid.
-        byte[] uuidBytes = UUID.randomUUID().toString().getBytes();
+        ByteBufUtil.writeUTF8(byteBuf, UUID.randomUUID().toString());
         
         // write class
-        byte[] classBytes = GetUserRequest.class.getCanonicalName().getBytes();
+        ByteBufUtil.writeUTF8(byteBuf, request.getClass().getCanonicalName());
         
         // write json
-        byte[] jsonBytes = jsonMapper.writeValueAsBytes(request);
+        ByteBufUtil.writeUTF8(byteBuf, JSon.writeValueAsString(request));
         
-        ByteBuf byteBuf = Unpooled.buffer();
-        byteBuf.writeBytes(byteBuffer);
-        
-        byteBuf.writeInt(uuidBytes.length);
-        byteBuf.writeBytes(uuidBytes);
-        byteBuf.writeInt(classBytes.length);
-        byteBuf.writeBytes(classBytes);
-        byteBuf.writeInt(jsonBytes.length);
-        byteBuf.writeBytes(jsonBytes);
-        
-        ch.write(new BinaryWebSocketFrame(byteBuf));
+        return ch.write(new BinaryWebSocketFrame(byteBuf));
     }
     
     public void sendPing()

@@ -1,4 +1,4 @@
-package org.atinject.core.infinispan;
+package org.atinject.core.cache;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
