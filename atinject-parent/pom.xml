@@ -24,8 +24,8 @@
 	</repositories>
 
 	<properties>
-		<infinispan.version>5.2.0.Beta2</infinispan.version>
-		<netty.version>4.0.0.Alpha5</netty.version>
+		<infinispan.version>5.2.0.CR3</infinispan.version>
+		<netty.version>4.0.0.Alpha7</netty.version>
 		<weld.version>1.1.9.Final</weld.version>
 		<jackson.version>2.1.0</jackson.version>
 	</properties>
@@ -110,7 +110,7 @@
 			<dependency>
     <groupId>org.hibernate</groupId>
     <artifactId>hibernate-validator</artifactId>
-    <version>5.0.0.Alpha1</version>
+    <version>5.0.0.Alpha2</version>
 </dependency>
 			
 			<dependency>
@@ -118,7 +118,12 @@
     <artifactId>pojo-mbean</artifactId>
     <version>1.1</version>
 </dependency>
-			
+
+	    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+    </dependency>		
 		</dependencies>
 	</dependencyManagement>
 
