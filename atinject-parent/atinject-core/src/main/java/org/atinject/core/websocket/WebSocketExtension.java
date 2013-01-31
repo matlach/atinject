@@ -12,6 +12,8 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.atinject.api.session.Session;
+import org.atinject.core.websocket.dto.BaseWebSocketRequest;
+import org.atinject.core.websocket.dto.BaseWebSocketResponse;
 
 public class WebSocketExtension implements Extension
 {
@@ -25,7 +27,7 @@ public class WebSocketExtension implements Extension
         messages = new LinkedHashMap<>();
     }
     
-    static class WebSocketMessageMethod
+    public static class WebSocketMessageMethod
     {
         private Method webSocketMessageMethod;
         private boolean injectSessionParameter;
@@ -66,7 +68,7 @@ public class WebSocketExtension implements Extension
         }
     }
     
-    static class WebSocketOpenMethod
+    public static class WebSocketOpenMethod
     {
         private Method openMethod;
         private boolean injectSessionParameter;
@@ -98,7 +100,7 @@ public class WebSocketExtension implements Extension
         }
     }
     
-    static class WebSocketCloseMethod
+    public static class WebSocketCloseMethod
     {
         private Method closeMethod;
         private boolean injectSessionParameter;

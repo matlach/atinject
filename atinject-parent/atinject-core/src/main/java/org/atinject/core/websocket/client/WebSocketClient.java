@@ -1,4 +1,4 @@
-package org.atinject.core.websocket;
+package org.atinject.core.websocket.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -32,16 +32,26 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.core.json.JSon;
 import org.atinject.core.netty.ByteBufUtil;
+import org.atinject.core.websocket.WebSocketEndpoint;
+import org.atinject.core.websocket.dto.BaseWebSocketRequest;
+import org.atinject.core.websocket.server.WebSocketServer;
+import org.atinject.core.websocket.server.event.WebSocketServerStarted;
+import org.atinject.core.websocket.server.event.WebSocketServerStopped;
+import org.slf4j.Logger;
 
-@WebSocketEndpoint(uri="ws://localhost:8080/websocket")
 @ApplicationScoped
+@WebSocketEndpoint(path="/websocket")
 public class WebSocketClient {
 
-    @Inject @WebSocketEndpoint(uri="ws://localhost:8080/websocket")
+    @Inject
+    private Logger logger;
+    
+    @Inject @WebSocketEndpoint(path="/websocket")
     private WebSocketServer server;
     
     private URI uri;
@@ -52,15 +62,25 @@ public class WebSocketClient {
     @PostConstruct
     public void initialize() throws Exception
     {
-        server.toString(); // eagerly initialize server
-        Thread.sleep(1000);
         uri = new URI("ws://localhost:8080/websocket");
-        run();
     }
     
     @PreDestroy
     public void shutdown()
     {
+        if (b != null)
+        {
+            b.shutdown();
+        }
+    }
+    
+    public void onWebSocketServerStarted(
+            @Observes @WebSocketEndpoint(path="/websocket") WebSocketServerStarted event) throws Exception{
+        run();        
+    }
+    
+    public void onWebSocketServerStopped(
+            @Observes @WebSocketEndpoint(path="/websocket") WebSocketServerStopped event){
         if (b != null)
         {
             b.shutdown();
@@ -96,7 +116,7 @@ public class WebSocketClient {
              }
          });
 
-        System.out.println("WebSocket Client connecting");
+        logger.info("WebSocket Client connecting");
         ch = b.connect().sync().channel();
         handler.handshakeFuture().sync();
     }
@@ -120,14 +140,14 @@ public class WebSocketClient {
     public void sendPing()
     {
      // Ping
-        System.out.println("WebSocket Client sending ping");
+        logger.info("WebSocket Client sending ping");
         ch.write(new PingWebSocketFrame(Unpooled.copiedBuffer(new byte[]{1, 2, 3, 4, 5, 6})));
     }
     
     public void sendClose() throws InterruptedException
     {
         // Close
-        System.out.println("WebSocket Client sending close");
+        logger.info("WebSocket Client sending close");
         ch.write(new CloseWebSocketFrame());
 
         // WebSocketClientHandler will close the connection when the server
@@ -160,7 +180,7 @@ public class WebSocketClient {
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            System.out.println("WebSocket Client disconnected!");
+            logger.info("WebSocket Client disconnected!");
         }
 
         @Override
@@ -168,7 +188,7 @@ public class WebSocketClient {
             Channel ch = ctx.channel();
             if (!handshaker.isHandshakeComplete()) {
                 handshaker.finishHandshake(ch, (HttpResponse) msg);
-                System.out.println("WebSocket Client connected!");
+                logger.info("WebSocket Client connected!");
                 handshakeFuture.setSuccess();
                 return;
             }
@@ -182,11 +202,13 @@ public class WebSocketClient {
             WebSocketFrame frame = (WebSocketFrame) msg;
             if (frame instanceof TextWebSocketFrame) {
                 TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-                System.out.println("WebSocket Client received message: " + textFrame.getText());
+                logger.info("WebSocket Client received message: " + textFrame.getText());
             } else if (frame instanceof PongWebSocketFrame) {
-                System.out.println("WebSocket Client received pong");
+                logger.info("WebSocket Client received pong");
+            } else if (frame instanceof BinaryWebSocketFrame) {
+                logger.info("WebSocket Client received binary ");
             } else if (frame instanceof CloseWebSocketFrame) {
-                System.out.println("WebSocket Client received closing");
+                logger.info("WebSocket Client received closing");
                 ch.close();
             }
         }

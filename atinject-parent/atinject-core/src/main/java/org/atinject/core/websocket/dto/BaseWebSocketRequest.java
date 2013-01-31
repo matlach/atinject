@@ -1,4 +1,4 @@
-package org.atinject.core.websocket;
+package org.atinject.core.websocket.dto;
 
 import org.atinject.core.dto.BaseDTO;
 

@@ -1,6 +1,6 @@
 package org.atinject.api.user.dto;
 
-import org.atinject.core.websocket.BaseWebSocketRequest;
+import org.atinject.core.websocket.dto.BaseWebSocketRequest;
 
 public class GetUserRequest extends BaseWebSocketRequest
 {

@@ -12,5 +12,5 @@ import javax.inject.Qualifier;
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 public @interface WebSocketEndpoint
 {
-    String uri() default "ws://localhost:8080/websocket";
+    String path() default "/";
 }

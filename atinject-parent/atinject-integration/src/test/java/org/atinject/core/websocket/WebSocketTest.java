@@ -3,6 +3,8 @@ package org.atinject.core.websocket;
 import javax.inject.Inject;
 
 import org.atinject.api.user.dto.GetUserRequest;
+import org.atinject.core.websocket.client.WebSocketClient;
+import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.integration.WeldRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +13,10 @@ import org.junit.runner.RunWith;
 public class WebSocketTest 
 {
 
-    @Inject @WebSocketEndpoint(uri="ws://localhost:8080/websocket")
+    @Inject @WebSocketEndpoint(path="/websocket")
     private WebSocketClient client;
     
-    @Inject @WebSocketEndpoint(uri="ws://localhost:8080/websocket")
+    @Inject @WebSocketEndpoint(path="/websocket")
     private WebSocketServer server;
     
     @Test

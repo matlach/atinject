@@ -1,6 +1,6 @@
 org.atinject.core.cdi.BeanManagerExtension
 org.atinject.core.concurrent.AsynchronousServiceExtension
 org.atinject.core.configuration.ConfigurationExtension
-org.atinject.core.infinispan.InfinispanExtension
+org.atinject.core.cache.InfinispanExtension
 org.atinject.core.websocket.WebSocketExtension
 org.atinject.core.startup.StartupExtension
