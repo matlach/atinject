@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.jsonschema.JsonSchema;
 
 @RunWith(WeldRunner.class)
 public class DTOObjectMapperTest 
@@ -26,10 +27,6 @@ public class DTOObjectMapperTest
     public static class Animal
     {
         public String name;
-
-        protected Animal()
-        {
-        }
     }
 
     public static class Dog extends Animal
@@ -396,7 +393,7 @@ public class DTOObjectMapperTest
         System.out.println();
     }
     
-    @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+    //@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
     public static class ZooWithAnimalArray{
         public Animal[] animals = new Animal[2];
     }
@@ -424,4 +421,30 @@ public class DTOObjectMapperTest
         System.out.println();
     }
 
+    public ObjectMapper getObjectMapperWithNonFinalDefaultTyping4(){
+        return new ObjectMapper()
+                .enableDefaultTyping(DefaultTyping.NON_FINAL, As.PROPERTY)
+//                .setVisibility(PropertyAccessor.FIELD, Visibility.ANY)
+//                .setVisibility(PropertyAccessor.GETTER, Visibility.NONE)
+//                .setVisibility(PropertyAccessor.IS_GETTER, Visibility.NONE)
+//                .setVisibility(PropertyAccessor.SETTER, Visibility.NONE)
+                ;
+    }
+    
+    @Test
+    public void testDefaultObjectMapper4SerializeZooWithCatAndDogList() throws Exception{
+        System.out.println("testDefaultObjectMapperSerializeZooWithCatAndDogList");
+        ObjectMapper objectMapper = getObjectMapperWithNonFinalDefaultTyping4();
+        String json = objectMapper.writeValueAsString(getZooWithCatAndDogArray());
+        System.out.println(json);
+        System.out.println();
+    }
+    
+    @Test
+    public void schemaTest() throws Exception{
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonSchema schema = objectMapper.generateJsonSchema(ZooWithAnimalArray.class);
+        String json = objectMapper.writeValueAsString(schema);
+        System.out.println(json);
+    }
 }

@@ -69,7 +69,7 @@ public class WebSocketServer
         b = new ServerBootstrap();
         b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
          .channel(NioServerSocketChannel.class)
-             .option(ChannelOption.TCP_NODELAY, true)
+             .option(ChannelOption.TCP_NODELAY, true) // TODO this will be set true by default in next netty's version
          .localAddress(port)
          .childHandler(webSocketServerInitializer.getInitializer());
 

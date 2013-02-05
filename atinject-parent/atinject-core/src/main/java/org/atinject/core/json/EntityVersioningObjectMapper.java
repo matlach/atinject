@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-public class JSon
+public class EntityVersioningObjectMapper
 {
     private static final ObjectMapper mapper;
     static{
@@ -13,7 +13,7 @@ public class JSon
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
-    private JSon(){}
+    private EntityVersioningObjectMapper(){}
     
     public static byte[] writeValueAsBytes(Object value)
     {

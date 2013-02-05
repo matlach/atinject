@@ -12,6 +12,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessProducer;
 
+import org.infinispan.Cache;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
@@ -54,23 +55,39 @@ public class InfinispanExtension implements Extension
             newGlobalConfiguration(),
             newDefaultCacheConfiguration()
         );
+        // add listener
+        cacheManager.addListener(new CacheManagerListener());
+        
         // define all cache configuration
         for (Entry<String, Configuration> entry : configurations.entrySet())
         {
             cacheManager.defineConfiguration(entry.getKey(), entry.getValue());
         }
+        
         // start all cache in parallel to prevent asymmetric cluster
         Set<String> cacheNames = configurations.keySet();
         cacheManager.startCaches(cacheNames.toArray(new String[cacheNames.size()]));
+        for (String cacheName : cacheNames){
+            Cache<?, ?> cache = cacheManager.getCache(cacheName);
+            cache.addListener(new InfinispanCacheListener<>());
+        }
         return cacheManager;
     }
-    
+
+    // TODO this need to be configured per environment
     protected GlobalConfiguration newGlobalConfiguration(){
-        return new GlobalConfigurationBuilder().transport().defaultTransport().build();
+        return new GlobalConfigurationBuilder()
+            .transport()
+                .defaultTransport()
+                .clusterName("clusterName")
+                .machineId("machineId")
+                .rackId("rackId")
+                .siteId("siteId")
+            .build();
     }
     
     protected Configuration newDefaultCacheConfiguration(){
-        return new ConfigurationBuilder().eviction().maxEntries(7).build();
+        return new ConfigurationBuilder().build();
     }
     
     public EmbeddedCacheManager getCacheManager()

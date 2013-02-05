@@ -8,11 +8,15 @@ import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.integration.WeldRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 
 @RunWith(WeldRunner.class)
 public class WebSocketTest 
 {
 
+    @Inject
+    private Logger logger;
+    
     @Inject @WebSocketEndpoint(path="/websocket")
     private WebSocketClient client;
     
@@ -24,7 +28,12 @@ public class WebSocketTest
     {
         server.toString();
         client.send(new GetUserRequest());
-        Thread.sleep(10000);
     }
     
+    @Test
+    public void testWebSocketServerExternally() throws Exception{
+        server.toString();
+        logger.info("test web socket server externally (ex : browser). press any key in console to kill unit test");
+        System.in.read();
+    }
 }

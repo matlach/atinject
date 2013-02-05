@@ -6,7 +6,7 @@ import java.io.ObjectOutput;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.atinject.core.json.JSon;
+import org.atinject.core.json.EntityVersioningObjectMapper;
 import org.atinject.core.versioning.VersionableEntityExternalizer;
 
 @ApplicationScoped
@@ -19,7 +19,7 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
     public void writeObject(ObjectOutput output, UserEntity user) throws IOException
     {
         output.writeInt(CURRENT_VERSION);
-        byte[] json = JSon.writeValueAsBytes(user);
+        byte[] json = EntityVersioningObjectMapper.writeValueAsBytes(user);
         output.writeInt(json.length);
         output.write(json);
     }
@@ -41,7 +41,7 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
             // UserEntity user = new UserEntity();
             // user.setName(node.get("name"));
             case CURRENT_VERSION:
-                UserEntity user = JSon.readValue(json, UserEntity.class);
+                UserEntity user = EntityVersioningObjectMapper.readValue(json, UserEntity.class);
                 return user;
         }
         throw new IOException("bad version '" + version + "'");

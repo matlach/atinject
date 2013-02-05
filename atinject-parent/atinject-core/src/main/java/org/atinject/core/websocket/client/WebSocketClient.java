@@ -35,7 +35,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.core.json.JSon;
+import org.atinject.core.json.EntityVersioningObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.dto.BaseWebSocketRequest;
@@ -132,7 +132,7 @@ public class WebSocketClient {
         ByteBufUtil.writeUTF8(byteBuf, request.getClass().getCanonicalName());
         
         // write json
-        ByteBufUtil.writeUTF8(byteBuf, JSon.writeValueAsString(request));
+        ByteBufUtil.writeUTF8(byteBuf, EntityVersioningObjectMapper.writeValueAsString(request));
         
         return ch.write(new BinaryWebSocketFrame(byteBuf));
     }

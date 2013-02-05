@@ -17,7 +17,7 @@ public class InfinispanCache<K, V>
     
     public InfinispanCache(AdvancedCache<K, V> cache)
     {
-        this.cache = cache;
+        this.cache = cache.withFlags(Flag.IGNORE_RETURN_VALUES);
     }
 
     public V get(K key)
@@ -62,17 +62,17 @@ public class InfinispanCache<K, V>
     
     public void put(K key, V value)
     {
-        cache.withFlags(Flag.IGNORE_RETURN_VALUES).put(key, value);
+        cache.put(key, value);
     }
     
     public void putAll(Map<K, V> m)
     {
-        cache.withFlags(Flag.IGNORE_RETURN_VALUES).putAll(m);
+        cache.putAll(m);
     }
 
     public void remove(K key)
     {
-        cache.withFlags(Flag.IGNORE_RETURN_VALUES).remove(key);
+        cache.remove(key);
     }
     
     public void removeAll(K... keys)
@@ -80,7 +80,7 @@ public class InfinispanCache<K, V>
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.length);
         for (K key : keys)
         {
-            NotifyingFuture<V> future = cache.withFlags(Flag.IGNORE_RETURN_VALUES).removeAsync(key);
+            NotifyingFuture<V> future = cache.removeAsync(key);
             futures.put(key, future);
         }
         
