@@ -1,10 +1,12 @@
-package org.atinject.api.session;
+package org.atinject.api.session.event;
 
-public class SessionClosed
+import org.atinject.api.session.Session;
+
+public class SessionOpened
 {
     private Session session;
     
-    public SessionClosed(){
+    public SessionOpened(){
         super();
     }
 
@@ -17,4 +19,5 @@ public class SessionClosed
     {
         this.session = session;
     }
+    
 }

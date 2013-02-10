@@ -29,7 +29,7 @@ public class UserServiceTest
         Assert.assertNotNull(user);
 
         logger.info("get");
-        user = userService.getUser(user.getUuid());
+        user = userService.getUser(user.getId());
         Assert.assertNotNull(user);
 
         logger.info("update");
@@ -37,9 +37,13 @@ public class UserServiceTest
         userService.updateUser(user);
         
         logger.info("get updated");
-        user = userService.getUser(user.getUuid());
+        user = userService.getUser(user.getId());
         
         logger.info("remove");
         userService.removeUser(user);
+        
+        user = userService.getUser(user.getId());
+        
+        Assert.assertNull(user);
     }
 }

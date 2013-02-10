@@ -6,6 +6,8 @@ public class Session extends MarshallableObject
 {
     private static final long serialVersionUID = 1L;
     
+    private Integer channelId;
+    
     private String sessionId;
     
     private String machineId;
@@ -18,6 +20,16 @@ public class Session extends MarshallableObject
     
     public Session(){
         super();
+    }
+
+    public Integer getChannelId()
+    {
+        return channelId;
+    }
+
+    public void setChannelId(Integer channelId)
+    {
+        this.channelId = channelId;
     }
 
     public String getSessionId()

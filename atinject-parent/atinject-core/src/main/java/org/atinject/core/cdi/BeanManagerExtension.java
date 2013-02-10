@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 public class BeanManagerExtension implements Extension
 {
 
+    // TODO in weld 2.0, bean manager should be accessed statically by using CDI.current().getBeanManager();
+    
     private static BeanManager beanManager;
     
     private static Logger logger = LoggerFactory.getLogger(BeanManagerExtension.class);

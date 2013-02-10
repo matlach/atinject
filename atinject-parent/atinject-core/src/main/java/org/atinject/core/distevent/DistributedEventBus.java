@@ -1,7 +1,9 @@
 package org.atinject.core.distevent;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -35,11 +37,11 @@ public class DistributedEventBus
         distributedExecutorService = new DefaultExecutorService(masterCacheNode, localExecutorService);
     }
     
-    public void onDistributedEventFired(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Distributed final BaseEvent event)
+    public List<Future<Void>> onDistributedEventFired(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Distributed final BaseEvent event)
     {
         DistributedEventTask distributedEventTask = new DistributedEventTask();
         distributedEventTask.setEvent(event);
-        distributedExecutorService.submitEverywhere(distributedEventTask);
+        return distributedExecutorService.submitEverywhere(distributedEventTask);
     }
     
     public static class DistributedEventTask implements Callable<Void>, Serializable

@@ -15,7 +15,7 @@ public class UserEntity extends AbstractEntity
 {
     private static final long serialVersionUID = 1L;
 
-    private String uuid;
+    private String id;
     private String name;
     private String password;
 
@@ -24,14 +24,14 @@ public class UserEntity extends AbstractEntity
         super();
     }
 
-    public String getUuid()
+    public String getId()
     {
-        return uuid;
+        return id;
     }
 
-    public void setUuid(String uuid)
+    public void setId(String uuid)
     {
-        this.uuid = uuid;
+        this.id = uuid;
     }
 
     public String getName()

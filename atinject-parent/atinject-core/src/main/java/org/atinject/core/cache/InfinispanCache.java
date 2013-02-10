@@ -1,5 +1,6 @@
 package org.atinject.core.cache;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
+import org.infinispan.distexec.mapreduce.Collator;
+import org.infinispan.distexec.mapreduce.MapReduceTask;
+import org.infinispan.distexec.mapreduce.Mapper;
+import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.util.concurrent.NotifyingFuture;
 
 public class InfinispanCache<K, V>
@@ -27,14 +32,18 @@ public class InfinispanCache<K, V>
     
     public Map<K, V> getAll(K... keys)
     {
-        Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.length);
+        return getAll(Arrays.asList(keys));
+    }
+    
+    public Map<K, V> getAll(Collection<K> keys){
+        Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
             NotifyingFuture<V> future = cache.getAsync(key);
             futures.put(key, future);
         }
         
-        Map<K, V> values = new HashMap<>(keys.length);
+        Map<K, V> values = new HashMap<>(keys.size());
         for (Entry<K, NotifyingFuture<V>> entry : futures.entrySet())
         {
             try
@@ -55,8 +64,16 @@ public class InfinispanCache<K, V>
         return values;
     }
     
+    public void lock(K key){
+        cache.lock(key);
+    }
+    
     public void lock(K... keys)
     {
+        cache.lock(keys);
+    }
+    
+    public void lock(Collection<K> keys){
         cache.lock(keys);
     }
     
@@ -77,7 +94,11 @@ public class InfinispanCache<K, V>
     
     public void removeAll(K... keys)
     {
-        Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.length);
+        removeAll(Arrays.asList(keys));
+    }
+    
+    public void removeAll(Collection<K> keys){
+        Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
             NotifyingFuture<V> future = cache.removeAsync(key);
@@ -115,5 +136,24 @@ public class InfinispanCache<K, V>
     public void clear()
     {
         cache.clear();
+    }
+
+    public <KOut, VOut> Map<KOut, VOut> performMapReduce(
+            Mapper<K,V,KOut,VOut> mapper,
+            Reducer<KOut, VOut> reducer){
+        return new MapReduceTask<K, V, KOut, VOut>(cache)
+                .mappedWith(mapper)
+                .reducedWith(reducer)
+                .execute();
+    }
+    
+    public <KOut, VOut, R> R performMapReduce(
+            Mapper<K,V,KOut,VOut> mapper,
+            Reducer<KOut, VOut> reducer,
+            Collator<KOut, VOut, R> collator){
+        return new MapReduceTask<K, V, KOut, VOut>(cache)
+                .mappedWith(mapper)
+                .reducedWith(reducer)
+                .execute(collator);
     }
 }

@@ -7,8 +7,11 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import org.atinject.api.session.Session;
+import org.atinject.api.session.SessionService;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.user.event.UserAdded;
+import org.atinject.api.user.event.UserLoggedIn;
 import org.atinject.core.concurrent.Asynchronous;
 import org.atinject.core.distevent.Distributed;
 import org.atinject.core.event.BaseEvent;
@@ -25,12 +28,40 @@ public class UserServiceImpl implements UserService{
     @Inject
     private UserCacheStore userCacheStore;
     
+    @Inject
+    private SessionService sessionService;
+    
     @Inject @Distributed
     private Event<BaseEvent> userAddedEvent;
+    
+    @Inject @Distributed
+    private Event<UserLoggedIn> userLoggedInEvent;
+    
+    @Inject
+    private UserConfiguration userConfiguration;
     
     public void fireUserAdded(UserAdded event)
     {
         userAddedEvent.fire(event);
+    }
+    
+    public void login(Session session, String name, String password){
+        UserEntity user = userCacheStore.getUserByName(name);
+        if (user == null){
+            throw new RuntimeException("wrong username");
+        }
+        if (! user.getPassword().equals(password)){
+            throw new RuntimeException("wrong password");
+        }
+        
+        // update session
+        session.setUserId(user.getId());
+        sessionService.updateSession(session);
+        
+        UserLoggedIn userLoggedIn = new UserLoggedIn();
+        userLoggedIn.setSession(session);
+        userLoggedIn.setUser(user);
+        userLoggedInEvent.fire(userLoggedIn);
     }
     
     @Asynchronous
@@ -61,7 +92,7 @@ public class UserServiceImpl implements UserService{
     {
         String userUUID = UUID.randomUUID().toString();
         UserEntity user = new UserEntity();
-        user.setUuid(userUUID);
+        user.setId(userUUID);
         user.setName(name);
         user.setPassword(password);
         
@@ -73,7 +104,7 @@ public class UserServiceImpl implements UserService{
     
     @Override
     public void updateUser(UserEntity user){
-        userCacheStore.lockUser(user.getUuid());
+        userCacheStore.lockUser(user.getId());
         userCacheStore.putUser(user);
     }
 
@@ -90,7 +121,7 @@ public class UserServiceImpl implements UserService{
     
     @Override
     public void removeUser(UserEntity user){
-        userCacheStore.lockUser(user.getUuid());
+        userCacheStore.lockUser(user.getId());
         userCacheStore.removeUser(user);
     }
 }

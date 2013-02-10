@@ -17,7 +17,8 @@ public class SessionCacheConfigurationProducer
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
-                        .cacheMode(CacheMode.REPL_SYNC)
+                        //.cacheMode(CacheMode.REPL_SYNC) // FIXME MapReduceTask need to work as well on Local/Replicated cache
+                        .cacheMode(CacheMode.DIST_SYNC)
                     .transaction()
                         .transactionMode(TransactionMode.TRANSACTIONAL)
                         .lockingMode(LockingMode.PESSIMISTIC)

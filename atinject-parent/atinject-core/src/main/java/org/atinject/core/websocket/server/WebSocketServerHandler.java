@@ -3,6 +3,7 @@ package org.atinject.core.websocket.server;
 import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -36,16 +37,21 @@ import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.session.Session;
-import org.atinject.api.session.SessionClosed;
-import org.atinject.api.session.SessionOpened;
+import org.atinject.api.session.SessionService;
+import org.atinject.api.session.event.SessionClosed;
+import org.atinject.api.session.event.SessionOpened;
+import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.concurrent.AsynchronousService;
+import org.atinject.core.distexec.TopologyService;
 import org.atinject.core.distexec.UserKey;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
-import org.atinject.core.json.EntityVersioningObjectMapper;
+import org.atinject.core.json.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
+import org.atinject.core.notification.NotificationEvent;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
@@ -65,6 +71,9 @@ public class WebSocketServerHandler {
     private WebSocketServerIndexPage webSocketServerIndexPage;
     
     @Inject
+    private TopologyService topologyService;
+    
+    @Inject
     private UserRequestDistributedExecutor distributedExecutor;
     
     @Inject
@@ -81,14 +90,27 @@ public class WebSocketServerHandler {
     private ChannelGroup channelGroup = new DefaultChannelGroup("websocket clients");
     
     @Inject
-    private Event<SessionOpened> sessionOpenedEvent;
+    private SessionService sessionService;
     
     @Inject
-    private Event<SessionClosed> sessionClosedEvent;
+    private DTOObjectMapper dtoObjectMapper;
+    
+    @Inject
+    private AsynchronousService asynchronousService;
     
     @PostConstruct
     public void initialize(){
         handler = new ChannelInboundMessageHandlerAdapterHolder();
+    }
+    
+    public void onNotificationEvent(@Observes NotificationEvent event){
+        Channel channel = channelGroup.find(event.getSession().getChannelId());
+        if (channel == null){
+            // channel has been removed, cannot send notification, no-op
+            return;
+        }
+        // send to websocket
+        
     }
     
     @Sharable
@@ -183,24 +205,30 @@ public class WebSocketServerHandler {
             // TODO this probably can be instantiated only once
             WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
                     getWebSocketLocation(req), null, false);
-            // TODO meanwhile handshaker cannot be shared
+            // TODO meanwhile handshaker cannot be shared, should be bound to channel ?
             handshaker = wsFactory.newHandshaker(req);
             if (handshaker == null) {
                 wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel());
             } else {
                 handshaker.handshake(ctx.channel(), req);
                 
+                // we should dispatch instead to "web socket open" method
                 Attribute<Session> sessionAttribute = ctx.attr(SESSION_ATTRIBUTE_KEY);
                 Session session = new Session();
+                session.setChannelId(ctx.channel().id());
                 session.setSessionId(UUID.randomUUID().toString());
-                TopologyAwareAddress address = distributedExecutor.getLocalAddress();
+                TopologyAwareAddress address = topologyService.getLocalAddress();
                 session.setMachineId(address.getMachineId());
                 session.setRackId(address.getRackId());
                 session.setSiteId(address.getSiteId());
                 sessionAttribute.set(session);
                 SessionOpened sessionOpened = new SessionOpened();
                 sessionOpened.setSession(session);
-                sessionOpenedEvent.fire(sessionOpened);
+                sessionService.onSessionOpened(sessionOpened);
+                
+                // send notification to provide session id to the client
+                // also, when user log in, depending his user id, provide the best server url depdending on is affinity
+                // since all servers are public (as they act as a static http server / dynamic http server and application server), 
             }
         }
         
@@ -263,50 +291,39 @@ public class WebSocketServerHandler {
             // read uuid
             final String uuid = ByteBufUtil.readUTF8(byteBuf);
             
-            // read class
-            final String className = ByteBufUtil.readUTF8(byteBuf);
+            // validate session
+            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
+            Session session = sessionAttribute.get();
+            if (session == null){
+                return;
+            }
+            if (! session.getSessionId().equals(uuid)){
+                return;
+            }
             
-            // read json
+            // read raw json
             final String json = ByteBufUtil.readUTF8(byteBuf);
             
-            // build key
-            UserKey key = new UserKey();
-            key.setUuid(uuid);
-            
+            // unserialize json
+            final BaseWebSocketRequest request = null;//dtoObjectMapper.get().readValue(json, BaseWebSocketRequest.class);
+
             // build task
-            Callable<BaseWebSocketResponse> task = new Callable<BaseWebSocketResponse>(){
-                private byte[] jsonBytes;
-                
-                @Override
-                public BaseWebSocketResponse call() throws Exception
-                {
-                    Class<? extends BaseWebSocketRequest> request = (Class<? extends BaseWebSocketRequest>) Class.forName(className);
-                    WebSocketMessageMethod m = webSocketExtension.getWebSocketMessageMethod(request);
-                    
-                    Object returnValue = null;
-                    if (m.isInjectSessionParameter())
-                    {
-                        if (m.isWebSocketRequestFirstParameter())
-                        {
-                            returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request.newInstance(), Session.class.newInstance());
-                        }
-                        else
-                        {
-                            returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), Session.class.newInstance(), request.newInstance());
-                        }
-                    }
-                    else
-                    {
-                        returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request.newInstance());
-                    }
-                    return (BaseWebSocketResponse) returnValue;
-                }
-            };
+            Callable<BaseWebSocketResponse> task = new WebSocketMessageTask();
             
-            // submit task to distributed executor with given key
+            Future<BaseWebSocketResponse> future;
+            if (session.getUserId() == null){
+                // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
+                future = asynchronousService.submit(task);
+            }
+            else{
+                // build user affinity based key
+                UserKey key = new UserKey();
+                key.setId(session.getUserId());
+                // submit task to distributed executor with given key
+                future = distributedExecutor.submit(task, key);
+            }
+            
             try{
-                Future<BaseWebSocketResponse> future = distributedExecutor.submit(task, key);
-                
                 BaseWebSocketResponse response = null;
                 try
                 {
@@ -321,12 +338,43 @@ public class WebSocketServerHandler {
                     e.printStackTrace();
                 }
                 byteBuf = Unpooled.buffer();
-                byteBuf.writeBytes(EntityVersioningObjectMapper.writeValueAsBytes(response));
+                byteBuf.writeBytes(dtoObjectMapper.writeValueAsBytes(response));
                 
                 ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
             }
             catch (Exception e){
                 logger.info(e.getMessage());
+            }
+        }
+        
+        public class WebSocketMessageTask implements Callable<BaseWebSocketResponse>{
+            
+            private BaseWebSocketRequest request;
+            private Session session;
+            
+            @Override
+            public BaseWebSocketResponse call() throws Exception
+            {
+                WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
+                WebSocketMessageMethod m = webSocketExtension.getWebSocketMessageMethod(request.getClass());
+                
+                Object returnValue = null;
+                if (m.isInjectSessionParameter())
+                {
+                    if (m.isWebSocketRequestFirstParameter())
+                    {
+                        returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request, session);
+                    }
+                    else
+                    {
+                        returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), session, request);
+                    }
+                }
+                else
+                {
+                    returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request);
+                }
+                return (BaseWebSocketResponse) returnValue;
             }
         }
         
@@ -358,9 +406,10 @@ public class WebSocketServerHandler {
             Attribute<Session> sessionAttribute = ctx.attr(SESSION_ATTRIBUTE_KEY);
             Session session = sessionAttribute.get();
             if (session != null){
+                // we should dispatch instead to "web socket close" method
                 SessionClosed sessionClosed = new SessionClosed();
                 sessionClosed.setSession(session);
-                sessionClosedEvent.fire(sessionClosed);
+                sessionService.onSessionClosed(sessionClosed);
             }
             
             channelGroup.remove(ctx.channel());

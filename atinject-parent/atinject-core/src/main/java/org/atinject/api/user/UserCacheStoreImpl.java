@@ -16,25 +16,33 @@ public class UserCacheStoreImpl extends AbstractCacheStore implements UserCacheS
     private InfinispanCache<String, UserEntity> cache;
     
     @Override
-    public UserEntity getUser(String userUUID){
-        return cache.get(userUUID);
+    public UserEntity getUser(String userId){
+        return cache.get(userId);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserEntity getUserByName(String name){
+        return null;
     }
 
     @Override
-    public void lockUser(String userUUID)
+    public void lockUser(String userId)
     {
-        cache.lock(userUUID);
+        cache.lock(userId);
     }
     
     @Override
     public void putUser(UserEntity user)
     {
-        cache.put(user.getUuid(), user);
+        cache.put(user.getId(), user);
     }
     
     @Override
     public void removeUser(UserEntity user){
-        cache.remove(user.getUuid());
+        cache.remove(user.getId());
     }
 
 }

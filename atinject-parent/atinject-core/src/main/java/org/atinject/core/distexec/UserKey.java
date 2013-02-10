@@ -6,22 +6,22 @@ public class UserKey implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String uuid;
+    private String id;
 
-    public String getUuid()
+    public String getId()
     {
-        return uuid;
+        return id;
     }
 
-    public void setUuid(String uuid)
+    public void setId(String id)
     {
-        this.uuid = uuid;
+        this.id = id;
     }
 
     @Override
     public int hashCode()
     {
-        return uuid.hashCode();
+        return id.hashCode();
     }
     
 }
