@@ -310,9 +310,9 @@ public class WebSocketServerHandler {
             final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
 
             // build task
-            WebSocketMessageTask task = new WebSocketMessageTask();
-            task.setSession(session);
-            task.setRequest(request);
+            WebSocketMessageTask task = new WebSocketMessageTask()
+                .setSession(session)
+                .setRequest(request);
             
             Future<BaseWebSocketResponse> future;
             if (session.getUserId() == null){
@@ -321,14 +321,17 @@ public class WebSocketServerHandler {
             }
             else{
                 // build user affinity based key
-                UserKey key = new UserKey();
-                key.setId(session.getUserId());
+                UserKey key = new UserKey()
+                    .setId(session.getUserId());
                 // submit task to distributed executor with given key
                 future = distributedExecutor.submit(task, key);
             }
             
             // wait for response to come back
             BaseWebSocketResponse response = getWebSocketResponseFromFuture(future);
+            
+            // bind the original request id back in the response
+            response.setRequestId(request.getRequestId());
             
             // send response
             sendResponse(ctx, response);
@@ -372,9 +375,10 @@ public class WebSocketServerHandler {
                 return session;
             }
 
-            public void setSession(Session session)
+            public WebSocketMessageTask setSession(Session session)
             {
                 this.session = session;
+                return this;
             }
             
             public BaseWebSocketRequest getRequest()
@@ -382,9 +386,10 @@ public class WebSocketServerHandler {
                 return request;
             }
 
-            public void setRequest(BaseWebSocketRequest request)
+            public WebSocketMessageTask setRequest(BaseWebSocketRequest request)
             {
                 this.request = request;
+                return this;
             }
 
             @Override

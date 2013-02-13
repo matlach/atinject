@@ -13,14 +13,16 @@ public class UserKey implements Serializable {
         return id;
     }
 
-    public void setId(String id)
+    public UserKey setId(String id)
     {
         this.id = id;
+        return this;
     }
 
     @Override
     public int hashCode()
     {
+        // TODO hash code need to be cached
         return id.hashCode();
     }
     
