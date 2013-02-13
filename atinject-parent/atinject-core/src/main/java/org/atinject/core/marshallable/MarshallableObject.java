@@ -2,17 +2,27 @@ package org.atinject.core.marshallable;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.smile.SmileFactory;
+
 public abstract class MarshallableObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
-	// TODO override clone method using fast byte array technique ?
-	// use netty byte buf ?
-	// see if jboss marshaller could be used
-	// jackson smile ? 
+	// TODO this need to be configurated optimally
+	private static final ObjectMapper mapper = new ObjectMapper(new SmileFactory());
+	
+	/**
+	 * perform clone using serialization technique using jackson smile format
+	 */
 	@Override
 	public MarshallableObject clone(){
-	    
-	    return null;
+	    try {
+	        byte[] bytes = mapper.writeValueAsBytes(this);
+	        return mapper.readValue(bytes, this.getClass());
+	    }
+	    catch (Exception e){
+	        throw new RuntimeException(e);
+	    }
 	}
 }
