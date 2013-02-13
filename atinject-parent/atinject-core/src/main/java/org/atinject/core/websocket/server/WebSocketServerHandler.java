@@ -42,6 +42,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.session.Session;
 import org.atinject.api.session.SessionService;
+import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.api.session.event.SessionClosed;
 import org.atinject.api.session.event.SessionOpened;
 import org.atinject.core.cdi.BeanManagerExtension;
@@ -55,6 +56,7 @@ import org.atinject.core.notification.NotificationEvent;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
+import org.atinject.core.websocket.dto.BaseWebSocketNotification;
 import org.atinject.core.websocket.dto.BaseWebSocketRequest;
 import org.atinject.core.websocket.dto.BaseWebSocketResponse;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
@@ -81,11 +83,10 @@ public class WebSocketServerHandler {
     
     private String WEBSOCKET_PATH = "/websocket";
 
-    private WebSocketServerHandshaker handshaker;
-
     private ChannelInboundMessageHandlerAdapter<Object> handler;
     
-    private static final AttributeKey<Session> SESSION_ATTRIBUTE_KEY = new AttributeKey<>("sessionId");
+    private static final AttributeKey<Session> SESSION_ATTRIBUTE_KEY = new AttributeKey<>("session");
+    private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = new AttributeKey<>("handshaker");
     
     private ChannelGroup channelGroup = new DefaultChannelGroup("websocket clients");
     
@@ -205,30 +206,32 @@ public class WebSocketServerHandler {
             // TODO this probably can be instantiated only once
             WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
                     getWebSocketLocation(req), null, false);
-            // TODO meanwhile handshaker cannot be shared, should be bound to channel ?
-            handshaker = wsFactory.newHandshaker(req);
+            WebSocketServerHandshaker handshaker = wsFactory.newHandshaker(req);
+            Attribute<WebSocketServerHandshaker> handshakerAttribute = ctx.channel().attr(WEB_SOCKET_SERVER_HANDSHAKER_KEY);
+            handshakerAttribute.set(handshaker);
             if (handshaker == null) {
                 wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel());
             } else {
                 handshaker.handshake(ctx.channel(), req);
                 
                 // we should dispatch instead to "web socket open" method
-                Attribute<Session> sessionAttribute = ctx.attr(SESSION_ATTRIBUTE_KEY);
-                Session session = new Session();
-                session.setChannelId(ctx.channel().id());
-                session.setSessionId(UUID.randomUUID().toString());
+                Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
+                Session session = new Session()
+                    .setChannelId(ctx.channel().id())
+                    .setSessionId(UUID.randomUUID().toString());
                 TopologyAwareAddress address = topologyService.getLocalAddress();
-                session.setMachineId(address.getMachineId());
-                session.setRackId(address.getRackId());
-                session.setSiteId(address.getSiteId());
+                session.setMachineId(address.getMachineId())
+                    .setRackId(address.getRackId())
+                    .setSiteId(address.getSiteId());
                 sessionAttribute.set(session);
-                SessionOpened sessionOpened = new SessionOpened();
-                sessionOpened.setSession(session);
+                SessionOpened sessionOpened = new SessionOpened().setSession(session);
                 sessionService.onSessionOpened(sessionOpened);
                 
                 // send notification to provide session id to the client
-                // also, when user log in, depending his user id, provide the best server url depdending on is affinity
-                // since all servers are public (as they act as a static http server / dynamic http server and application server), 
+                SessionOpenedNotification notification = new SessionOpenedNotification();
+                notification.setSessionId(session.getSessionId());
+                
+                sendNotification(ctx, notification);
             }
         }
         
@@ -251,12 +254,6 @@ public class WebSocketServerHandler {
         }
         
         private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-            Attribute<Session> sessionAttribute = ctx.attr(SESSION_ATTRIBUTE_KEY);
-            Session session = sessionAttribute.get();
-            if (session == null){
-                // not authorized ?
-                // TODO throw ?
-            }
             if (frame instanceof CloseWebSocketFrame) {
                 handleCloseWebSocketFrame(ctx, (CloseWebSocketFrame) frame);
                 return;
@@ -278,7 +275,11 @@ public class WebSocketServerHandler {
         }
         
         private void handleCloseWebSocketFrame(ChannelHandlerContext ctx, CloseWebSocketFrame frame){
-            handshaker.close(ctx.channel(), frame);
+            Attribute<WebSocketServerHandshaker> handshakerAttribute = ctx.channel().attr(WEB_SOCKET_SERVER_HANDSHAKER_KEY);
+            WebSocketServerHandshaker handshaker = handshakerAttribute.get();
+            if (handshaker != null){
+                handshaker.close(ctx.channel(), frame);
+            }
         }
         
         private void handlePingWebSocketFrame(ChannelHandlerContext ctx, PingWebSocketFrame frame){
@@ -286,29 +287,32 @@ public class WebSocketServerHandler {
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
+            // binary data should looks like : UTF8(sessionId) | UTF8(request)
             ByteBuf byteBuf = frame.getBinaryData();
             
-            // read uuid
-            final String uuid = ByteBufUtil.readUTF8(byteBuf);
+            // read session id
+            final String sessionId = ByteBufUtil.readUTF8(byteBuf);
             
-            // validate session
+            // validate session (need to be bound at that point)
             Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
             Session session = sessionAttribute.get();
             if (session == null){
-                return;
+                throw new RuntimeException("handshake is not complete, kick");
             }
-            if (! session.getSessionId().equals(uuid)){
-                return;
+            if (! session.getSessionId().equals(sessionId)){
+                throw new RuntimeException("wrong session id, potential hack, kick");
             }
             
-            // read raw json
+            // read json
             final String json = ByteBufUtil.readUTF8(byteBuf);
             
             // unserialize json
-            final BaseWebSocketRequest request = null;//dtoObjectMapper.get().readValue(json, BaseWebSocketRequest.class);
+            final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
 
             // build task
-            Callable<BaseWebSocketResponse> task = new WebSocketMessageTask();
+            WebSocketMessageTask task = new WebSocketMessageTask();
+            task.setSession(session);
+            task.setRequest(request);
             
             Future<BaseWebSocketResponse> future;
             if (session.getUserId() == null){
@@ -323,56 +327,89 @@ public class WebSocketServerHandler {
                 future = distributedExecutor.submit(task, key);
             }
             
-            try{
-                BaseWebSocketResponse response = null;
-                try
-                {
-                    response = future.get();
-                }
-                catch (InterruptedException e)
-                {
-                    Thread.currentThread().interrupt();
-                }
-                catch (ExecutionException e)
-                {
-                    e.printStackTrace();
-                }
-                byteBuf = Unpooled.buffer();
-                byteBuf.writeBytes(dtoObjectMapper.writeValueAsBytes(response));
-                
-                ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
+            // wait for response to come back
+            BaseWebSocketResponse response = getWebSocketResponseFromFuture(future);
+            
+            // send response
+            sendResponse(ctx, response);
+        }
+        
+        private ChannelFuture sendNotification(ChannelHandlerContext ctx, BaseWebSocketNotification notification){
+            ByteBuf byteBuf = Unpooled.buffer();
+            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
+            return ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
+        }
+        
+        private ChannelFuture sendResponse(ChannelHandlerContext ctx, BaseWebSocketResponse response){
+            ByteBuf byteBuf = Unpooled.buffer();
+            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
+            return ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
+        }
+        
+        private BaseWebSocketResponse getWebSocketResponseFromFuture(Future<BaseWebSocketResponse> future){
+            try
+            {
+                return future.get();
             }
-            catch (Exception e){
-                logger.info(e.getMessage());
+            catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+                return null;
+            }
+            catch (ExecutionException e)
+            {
+                throw new RuntimeException(e);
             }
         }
         
         public class WebSocketMessageTask implements Callable<BaseWebSocketResponse>{
             
-            private BaseWebSocketRequest request;
             private Session session;
+            private BaseWebSocketRequest request;
             
+            public Session getSession()
+            {
+                return session;
+            }
+
+            public void setSession(Session session)
+            {
+                this.session = session;
+            }
+            
+            public BaseWebSocketRequest getRequest()
+            {
+                return request;
+            }
+
+            public void setRequest(BaseWebSocketRequest request)
+            {
+                this.request = request;
+            }
+
             @Override
             public BaseWebSocketResponse call() throws Exception
             {
+                // manually inject web socket extension, as callable should have been serialized
                 WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
-                WebSocketMessageMethod m = webSocketExtension.getWebSocketMessageMethod(request.getClass());
+                
+                WebSocketMessageMethod webSocketMessageMethod = webSocketExtension.getWebSocketMessageMethod(request.getClass());
                 
                 Object returnValue = null;
-                if (m.isInjectSessionParameter())
+                if (webSocketMessageMethod.isInjectSessionParameter())
                 {
-                    if (m.isWebSocketRequestFirstParameter())
+                    if (webSocketMessageMethod.isWebSocketRequestFirstParameter())
                     {
-                        returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request, session);
+                        returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request, session);
                     }
                     else
                     {
-                        returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), session, request);
+                        returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), session, request);
                     }
                 }
                 else
                 {
-                    returnValue = m.getWebSocketMessageMethod().invoke(m.getTarget(), request);
+                    returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request);
                 }
                 return (BaseWebSocketResponse) returnValue;
             }
@@ -403,12 +440,11 @@ public class WebSocketServerHandler {
         public void channelInactive(ChannelHandlerContext ctx) {
             logger.info("channel inactive");
             
-            Attribute<Session> sessionAttribute = ctx.attr(SESSION_ATTRIBUTE_KEY);
+            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
             Session session = sessionAttribute.get();
             if (session != null){
                 // we should dispatch instead to "web socket close" method
-                SessionClosed sessionClosed = new SessionClosed();
-                sessionClosed.setSession(session);
+                SessionClosed sessionClosed = new SessionClosed().setSession(session);
                 sessionService.onSessionClosed(sessionClosed);
             }
             

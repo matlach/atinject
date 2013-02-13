@@ -22,19 +22,14 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
     @Override
     public void writeObject(ObjectOutput output, UserEntity user) throws IOException
     {
-        output.writeInt(CURRENT_VERSION);
-        byte[] json = objectMapper.writeValueAsBytes(user);
-        output.writeInt(json.length);
-        output.write(json);
+        objectMapper.writeObject(output, user, CURRENT_VERSION);
     }
 
     @Override
     public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException
     {
-        int version = input.readInt();
-        int jsonLength = input.readInt();
-        byte[] json = new byte[jsonLength];
-        input.read(json);
+        int version = objectMapper.readVersion(input);
+        byte[] json = objectMapper.readJSONBytes(input);
         
         switch (version)
         {
@@ -45,9 +40,10 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
             // UserEntity user = new UserEntity();
             // user.setName(node.get("name"));
             case CURRENT_VERSION:
-                UserEntity user = objectMapper.readValue(json, UserEntity.class);
-                return user;
+                // just leave everything to jackson
+                return objectMapper.readValue(json, UserEntity.class);
         }
+        
         throw new IOException("bad version '" + version + "'");
     }
 

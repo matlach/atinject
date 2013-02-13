@@ -12,7 +12,9 @@ public class UserAdapterImpl implements UserAdapter
     @Override
     public User userEntityToUser(UserEntity entity)
     {
-        User dto = new User();
-        return dto;
+        return new User()
+            .setId(entity.getId())
+            .setName(entity.getName())
+            .setPassword(entity.getPassword());
     }
 }

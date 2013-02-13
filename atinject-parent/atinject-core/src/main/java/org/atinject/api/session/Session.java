@@ -27,9 +27,10 @@ public class Session extends MarshallableObject
         return channelId;
     }
 
-    public void setChannelId(Integer channelId)
+    public Session setChannelId(Integer channelId)
     {
         this.channelId = channelId;
+        return this;
     }
 
     public String getSessionId()
@@ -37,9 +38,10 @@ public class Session extends MarshallableObject
         return sessionId;
     }
 
-    public void setSessionId(String sessionId)
+    public Session setSessionId(String sessionId)
     {
         this.sessionId = sessionId;
+        return this;
     }
 
     public String getUserId()
@@ -47,9 +49,10 @@ public class Session extends MarshallableObject
         return userId;
     }
 
-    public void setUserId(String userId)
+    public Session setUserId(String userId)
     {
         this.userId = userId;
+        return this;
     }
 
     public String getMachineId()
@@ -57,9 +60,10 @@ public class Session extends MarshallableObject
         return machineId;
     }
 
-    public void setMachineId(String machineId)
+    public Session setMachineId(String machineId)
     {
         this.machineId = machineId;
+        return this;
     }
 
     public String getRackId()
@@ -67,9 +71,10 @@ public class Session extends MarshallableObject
         return rackId;
     }
 
-    public void setRackId(String rackId)
+    public Session setRackId(String rackId)
     {
         this.rackId = rackId;
+        return this;
     }
 
     public String getSiteId()
@@ -77,9 +82,10 @@ public class Session extends MarshallableObject
         return siteId;
     }
 
-    public void setSiteId(String siteId)
+    public Session setSiteId(String siteId)
     {
         this.siteId = siteId;
+        return this;
     }
     
 }

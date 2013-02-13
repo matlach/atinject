@@ -17,9 +17,10 @@ public class UserAffinityNotification extends BaseWebSocketNotification
         return url;
     }
 
-    public void setUrl(String url)
+    public UserAffinityNotification setUrl(String url)
     {
         this.url = url;
+        return this;
     }
     
 }

@@ -17,9 +17,10 @@ public class SessionOpenedNotification extends BaseWebSocketNotification
         return sessionId;
     }
 
-    public void setSessionId(String sessionId)
+    public SessionOpenedNotification setSessionId(String sessionId)
     {
         this.sessionId = sessionId;
+        return this;
     }
     
 }

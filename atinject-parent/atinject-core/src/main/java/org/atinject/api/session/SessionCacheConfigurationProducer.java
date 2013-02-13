@@ -21,7 +21,7 @@ public class SessionCacheConfigurationProducer
                         .cacheMode(CacheMode.DIST_SYNC)
                     .transaction()
                         .transactionMode(TransactionMode.TRANSACTIONAL)
-                        .lockingMode(LockingMode.PESSIMISTIC)
+                        .lockingMode(LockingMode.OPTIMISTIC)
                         .useSynchronization(true)
                         .transactionManagerLookup(new DummyTransactionManagerLookup())
                     .build();

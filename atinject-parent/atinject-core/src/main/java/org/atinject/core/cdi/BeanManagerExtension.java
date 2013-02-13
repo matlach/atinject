@@ -57,4 +57,8 @@ public class BeanManagerExtension implements Extension
         beanManager.fireEvent(event, qualifiers);
     }
     
+    public static CreationalContext createUnboundCreationalContext(){
+        return beanManager.createCreationalContext(null);
+    }
+    
 }

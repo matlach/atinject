@@ -10,5 +10,9 @@
 		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
 		<class>org.atinject.core.transaction.InfinispanTransactionalInterceptor</class>
 	</interceptors>
+	
+	<alternatives>
+		<stereotype>org.atinject.core.environment.JUnit</stereotype>
+	</alternatives>
 
 </beans>

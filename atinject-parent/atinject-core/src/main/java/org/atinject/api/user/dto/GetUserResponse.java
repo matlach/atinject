@@ -12,9 +12,10 @@ public class GetUserResponse extends BaseWebSocketResponse
         return user;
     }
 
-    public void setUser(User user)
+    public GetUserResponse setUser(User user)
     {
         this.user = user;
+        return this;
     }
     
 }

@@ -27,7 +27,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -35,6 +34,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import org.atinject.api.session.dto.SessionOpenedNotification;
+import org.atinject.core.dto.BaseDTO;
 import org.atinject.core.json.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.websocket.WebSocketEndpoint;
@@ -57,6 +58,9 @@ public class WebSocketClient {
     @Inject
     private DTOObjectMapper dtoObjectMapper;
     
+    private String sessionId;
+    private String userId;
+    
     private URI uri;
 
     private Bootstrap b;
@@ -75,6 +79,14 @@ public class WebSocketClient {
         {
             b.shutdown();
         }
+    }
+    
+    public String getSessionId(){
+        return sessionId;
+    }
+    
+    public String getUserId(){
+        return userId;
     }
     
     public void onWebSocketServerStarted(
@@ -127,12 +139,13 @@ public class WebSocketClient {
     public ChannelFuture send(BaseWebSocketRequest request) throws Exception
     {
         ByteBuf byteBuf = Unpooled.buffer();
+        while (sessionId == null){
+            logger.info("waiting 1 sec to wait for handshake to complete, session is null");
+            Thread.sleep(1000L);
+        }
         
-        // write uuid.
-        ByteBufUtil.writeUTF8(byteBuf, UUID.randomUUID().toString());
-        
-        // write class
-        ByteBufUtil.writeUTF8(byteBuf, request.getClass().getCanonicalName());
+        // write session id
+        ByteBufUtil.writeUTF8(byteBuf, sessionId);
         
         // write json
         ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(request));
@@ -210,10 +223,25 @@ public class WebSocketClient {
                 logger.info("WebSocket Client received pong");
             } else if (frame instanceof BinaryWebSocketFrame) {
                 logger.info("WebSocket Client received binary ");
+                handleBinaryWebSocketFrame(ctx, (BinaryWebSocketFrame) frame);
             } else if (frame instanceof CloseWebSocketFrame) {
                 logger.info("WebSocket Client received closing");
                 ch.close();
             }
+        }
+        
+        private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
+            ByteBuf byteBuf = frame.getBinaryData();
+            
+            String json = ByteBufUtil.readUTF8(byteBuf);
+            BaseDTO dto = dtoObjectMapper.readValue(json);
+            if (dto instanceof SessionOpenedNotification){
+                SessionOpenedNotification notification = (SessionOpenedNotification) dto;
+                sessionId = notification.getSessionId();
+            }
+//            else if(dto instanceof ){
+//                
+//            }
         }
 
         @Override

@@ -14,9 +14,10 @@ public class GetUserRequest extends BaseWebSocketRequest
         return uuid;
     }
 
-    public void setUuid(String uuid)
+    public GetUserRequest setUuid(String uuid)
     {
         this.uuid = uuid;
+        return this;
     }
     
     

@@ -27,7 +27,12 @@ public class WebSocketTest
     public void testWebSockets() throws Exception
     {
         server.toString();
+        
+        Thread.sleep(1000L); // wait for session id
+        
         client.send(new GetUserRequest());
+        
+        Thread.sleep(1000L);
     }
     
     @Test

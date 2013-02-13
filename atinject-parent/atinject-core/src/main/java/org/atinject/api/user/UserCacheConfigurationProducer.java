@@ -10,7 +10,7 @@ import org.infinispan.transaction.LockingMode;
 import org.infinispan.transaction.TransactionMode;
 import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
-public class UserCacheProducer
+public class UserCacheConfigurationProducer
 {
     @CacheName("user")
     @Produces

@@ -11,9 +11,9 @@ import org.infinispan.notifications.cachemanagerlistener.event.ViewChangedEvent;
 import org.slf4j.Logger;
 
 @Listener
-public class CacheManagerListener
+public class ClusteredCacheManagerListener
 {
-    private Logger logger = LoggerFactory.getLogger(CacheManagerListener.class);
+    private Logger logger = LoggerFactory.getLogger(ClusteredCacheManagerListener.class);
     
     @CacheStarted
     public void onCacheStarted(CacheStartedEvent event){

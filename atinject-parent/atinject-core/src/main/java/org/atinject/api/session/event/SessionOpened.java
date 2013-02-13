@@ -15,9 +15,10 @@ public class SessionOpened
         return session;
     }
 
-    public void setSession(Session session)
+    public SessionOpened setSession(Session session)
     {
         this.session = session;
+        return this;
     }
     
 }

@@ -35,9 +35,9 @@ import org.infinispan.transaction.xa.GlobalTransaction;
 import org.slf4j.Logger;
 
 @Listener
-public class InfinispanCacheListener<K, V>
+public class ClusteredCacheListener<K, V>
 {
-    private Logger logger = LoggerFactory.getLogger(InfinispanCacheListener.class);
+    private Logger logger = LoggerFactory.getLogger(ClusteredCacheListener.class);
     
     private ConcurrentMap<GlobalTransaction, Queue<Event<K, V>>> transactions = new ConcurrentHashMap<>();
     

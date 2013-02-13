@@ -15,8 +15,9 @@ public class SessionClosed
         return session;
     }
 
-    public void setSession(Session session)
+    public SessionClosed setSession(Session session)
     {
         this.session = session;
+        return this;
     }
 }

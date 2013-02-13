@@ -29,9 +29,10 @@ public class UserEntity extends AbstractEntity
         return id;
     }
 
-    public void setId(String uuid)
+    public UserEntity setId(String id)
     {
-        this.id = uuid;
+        this.id = id;
+        return this;
     }
 
     public String getName()
@@ -39,9 +40,10 @@ public class UserEntity extends AbstractEntity
         return name;
     }
 
-    public void setName(String name)
+    public UserEntity setName(String name)
     {
         this.name = name;
+        return this;
     }
 
     public String getPassword()
@@ -49,9 +51,10 @@ public class UserEntity extends AbstractEntity
         return password;
     }
 
-    public void setPassword(String password)
+    public UserEntity setPassword(String password)
     {
         this.password = password;
+        return this;
     }
 
     public static class UserExternalizer implements Externalizer<UserEntity>

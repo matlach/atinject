@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import org.atinject.core.tiers.AbstractCacheStore;
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
 import org.infinispan.distexec.mapreduce.Collator;
@@ -15,27 +19,33 @@ import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.util.concurrent.NotifyingFuture;
 
-public class InfinispanCache<K, V>
+public abstract class ClusteredCache<K, V> extends AbstractCacheStore
 {
 
-    private final AdvancedCache<K, V> cache;
+    @Inject
+    private ClusteredCacheManager cacheManager;
     
-    public InfinispanCache(AdvancedCache<K, V> cache)
+    private AdvancedCache<K, V> cache;
+    
+    @PostConstruct
+    public void initialize()
     {
+        String cacheName = this.getClass().getAnnotation(CacheName.class).value();
+        this.cache = (AdvancedCache<K, V>) cacheManager.getCache(cacheName).getAdvancedCache();
         this.cache = cache.withFlags(Flag.IGNORE_RETURN_VALUES);
     }
 
-    public V get(K key)
+    protected V get(K key)
     {
         return cache.get(key);
     }
     
-    public Map<K, V> getAll(K... keys)
+    protected Map<K, V> getAll(K... keys)
     {
         return getAll(Arrays.asList(keys));
     }
     
-    public Map<K, V> getAll(Collection<K> keys){
+    protected Map<K, V> getAll(Collection<K> keys){
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
@@ -64,40 +74,43 @@ public class InfinispanCache<K, V>
         return values;
     }
     
-    public void lock(K key){
+    protected void lock(K key){
         cache.lock(key);
     }
     
-    public void lock(K... keys)
+    protected void lock(K... keys)
     {
         cache.lock(keys);
     }
     
-    public void lock(Collection<K> keys){
+    protected void lock(Collection<K> keys){
         cache.lock(keys);
     }
     
-    public void put(K key, V value)
+    protected void put(K key, V value)
     {
         cache.put(key, value);
     }
     
-    public void putAll(Map<K, V> m)
+    protected void putAll(Map<K, V> m)
     {
         cache.putAll(m);
     }
 
-    public void remove(K key)
+    /**
+     * Note : if pessimistic transaction are used, ensure {@link #lock(key)} has been called before
+     */
+    protected void remove(K key)
     {
         cache.remove(key);
     }
     
-    public void removeAll(K... keys)
+    protected void removeAll(K... keys)
     {
         removeAll(Arrays.asList(keys));
     }
     
-    public void removeAll(Collection<K> keys){
+    protected void removeAll(Collection<K> keys){
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
@@ -123,22 +136,22 @@ public class InfinispanCache<K, V>
         }
     }
     
-    public int size()
+    protected int size()
     {
         return cache.size();
     }
 
-    public Collection<V> values()
+    protected Collection<V> values()
     {
         return cache.values();
     }
 
-    public void clear()
+    protected void clear()
     {
         cache.clear();
     }
 
-    public <KOut, VOut> Map<KOut, VOut> performMapReduce(
+    protected <KOut, VOut> Map<KOut, VOut> performMapReduce(
             Mapper<K,V,KOut,VOut> mapper,
             Reducer<KOut, VOut> reducer){
         return new MapReduceTask<K, V, KOut, VOut>(cache)
@@ -147,7 +160,7 @@ public class InfinispanCache<K, V>
                 .execute();
     }
     
-    public <KOut, VOut, R> R performMapReduce(
+    protected <KOut, VOut, R> R performMapReduce(
             Mapper<K,V,KOut,VOut> mapper,
             Reducer<KOut, VOut> reducer,
             Collator<KOut, VOut, R> collator){

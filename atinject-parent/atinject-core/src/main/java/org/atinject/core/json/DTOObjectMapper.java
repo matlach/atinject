@@ -1,5 +1,6 @@
 package org.atinject.core.json;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.atinject.core.dto.BaseDTO;
@@ -16,6 +17,7 @@ public class DTOObjectMapper
 {
     private ObjectMapper mapper;
     
+    @PostConstruct
     public void initialize(){
         mapper = new ObjectMapper()
         .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)

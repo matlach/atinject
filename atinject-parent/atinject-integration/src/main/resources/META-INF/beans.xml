@@ -11,8 +11,8 @@
 		<class>org.atinject.core.transaction.InfinispanTransactionalInterceptor</class>
 	</interceptors>
 
-	<alternatives>
+<!-- 	<alternatives>
 		<stereotype>org.atinject.core.environment.Local</stereotype>
-	</alternatives>
+	</alternatives> -->
 
 </beans>

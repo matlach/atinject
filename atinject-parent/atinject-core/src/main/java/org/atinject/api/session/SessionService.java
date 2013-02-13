@@ -46,7 +46,6 @@ public class SessionService{
     }
     
     public void updateSession(Session session){
-        sessionCache.lock(session.getSessionId());
         sessionCache.put(session);
     }
 }

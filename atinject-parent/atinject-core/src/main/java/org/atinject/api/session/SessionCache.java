@@ -5,34 +5,30 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import org.atinject.core.cache.CacheName;
-import org.atinject.core.cache.InfinispanCache;
+import org.atinject.core.cache.ClusteredCache;
 import org.infinispan.distexec.mapreduce.Collator;
 import org.infinispan.distexec.mapreduce.Collector;
 import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 
 /**
- * Note : session cache should not be persisted by any mean
+ * Note : session cache be replicated, optimistic and should not be persisted by any mean
  */
+@CacheName("session")
 @ApplicationScoped
-public class SessionCache
+public class SessionCache extends ClusteredCache<String, Session>
 {
-
-    @Inject @CacheName("session")
-    private InfinispanCache<String, Session> cache;
-    
     public Session getSession(String sessionId){
-        return cache.get(sessionId);
+        return get(sessionId);
     }
 
     /**
      * Note : this method use map reduce operation to search
      */
     public Session getSessionByUserId(String userId){
-        return cache.performMapReduce(
+        return performMapReduce(
                 new GetSessionByUserIdMapper(userId),
                 new GetSessionByUserIdReducer(),
                 new GetSessionByUserIdCollator());
@@ -80,11 +76,11 @@ public class SessionCache
     }
     
     public Map<String, Session> getAllSessions(String... sessionIds){
-        return cache.getAll(sessionIds);
+        return getAll(sessionIds);
     }
     
     public Map<String, Session> getAllSessions(List<String> sessionIds){
-        return cache.getAll(sessionIds);
+        return getAll(sessionIds);
     }
     
     public List<Session> getAllSessionsByMachineId(){
@@ -99,23 +95,11 @@ public class SessionCache
         return null;
     }
     
-    public void lock(String sessionId){
-        cache.lock(sessionId);
-    }
-    
-    public void lock(String... sessionIds){
-        cache.lock(sessionIds);
-    }
-    
-    public void lock(List<String> sessionIds){
-        cache.lock(sessionIds);
-    }
-    
     public void put(Session session){
-        cache.put(session.getSessionId(), session);
+        put(session.getSessionId(), session);
     }
     
     public void remove(Session session){
-        cache.remove(session.getSessionId());
+        remove(session.getSessionId());
     }
 }
