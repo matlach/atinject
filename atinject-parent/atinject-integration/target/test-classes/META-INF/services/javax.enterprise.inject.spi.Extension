@@ -1,5 +1,0 @@
-org.atinject.core.cdi.BeanManagerExtension
-org.atinject.core.concurrent.AsynchronousServiceExtension
-org.atinject.core.cache.ClusteredCacheExtension
-org.atinject.core.websocket.WebSocketExtension
-org.atinject.core.startup.StartupExtension
