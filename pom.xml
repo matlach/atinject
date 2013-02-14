@@ -6,6 +6,36 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
+  <name>atinject</name>
+  <url>https://github.com/matlach/atinject</url>
+  <description>
+    atinject is a framework for 
+    rapid development of highly scalable websocket application.
+  </description>
+
+  <organization>
+    <name>the atinject project</name>
+    <url>https://github.com/matlach/atinject</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <inceptionYear>2013</inceptionYear>
+
+  <developers>
+    <developer>
+      <id>org.atinject</id>
+      <name>the atinject project contributors</name>
+      <url>https://github.com/matlach/atinject</url>
+      <organization>the atinject project</organization>
+      <organizationUrl>https://github.com/matlach/atinject</organizationUrl>
+    </developer>
+  </developers>
+
 	<repositories>
 		<repository>
 			<id>jboss-public-repository-group</id>
@@ -24,6 +54,7 @@
 	</repositories>
 
 	<properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<slf4j.version>1.7.2</slf4j.version>
 		<logback.version>1.0.9</logback.version>
 		<weld.version>2.0.0.Beta3</weld.version>
@@ -185,5 +216,55 @@
 		<module>atinject-core</module>
 		<module>atinject-integration</module>
 	</modules>
+	
+		<build>
+		<pluginManagement>
+			<plugins>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <id>enforce-tools</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <!-- Enforce java 1.7 as minimum for compiling -->
+                  <version>[1.7.0,)</version>
+                </requireJavaVersion>
+                <requireMavenVersion>
+                  <version>[3.0.2,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+				      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <compilerVersion>1.7</compilerVersion>
+          <fork>true</fork>
+          <source>1.7</source>
+          <target>1.7</target>
+          <debug>true</debug>
+          <optimize>true</optimize>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <compilerArguments>
+            <Xlint:-options/>
+            <Xlint:unchecked/>
+            <Xlint:deprecation/>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 </project>
