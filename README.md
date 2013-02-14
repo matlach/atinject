@@ -1,2 +1,12 @@
 atinject
 ========
+
+
+contributors
+=======
+
+requirements
+=======
+
+installation
+=======
