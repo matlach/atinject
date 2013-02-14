@@ -1,0 +1,107 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>atinject</artifactId>
+		<groupId>org.atinject</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>atinject-core</artifactId>
+
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <name>atinject</name>
+  <url>https://github.com/matlach/atinject</url>
+  <description>
+    atinject is a framework for 
+    rapid development of highly scalable websocket application.
+  </description>
+
+  <organization>
+    <name>the atinject project</name>
+    <url>https://github.com/matlach/atinject</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
+  <inceptionYear>2013</inceptionYear>
+
+  <developers>
+    <developer>
+      <id>org.atinject</id>
+      <name>the atinject project contributors</name>
+      <url>https://github.com/matlach/atinject</url>
+      <organization>the atinject project</organization>
+      <organizationUrl>https://github.com/matlach/atinject</organizationUrl>
+    </developer>
+  </developers>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+			<!-- Workaround for the 'M2E plugin execution not covered' problem.
+             See: http://wiki.eclipse.org/M2E_plugin_execution_not_covered -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>license-maven-plugin</artifactId>
+										<versionRange>1.4</versionRange>
+										<goals>
+											<goal>update-file-header</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<verbose>true</verbose>
+				</configuration>
+				<executions>
+					<execution>
+						<id>first</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<configuration>
+							<licenseName>apache_v2</licenseName>
+							
+							<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+							<canUpdateCopyright>true</canUpdateCopyright>
+							<canUpdateDescription>true</canUpdateDescription>
+							<canUpdateLicense>true</canUpdateLicense>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

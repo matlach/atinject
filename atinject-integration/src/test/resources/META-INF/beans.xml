@@ -1,0 +1,18 @@
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+	http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+	<interceptors>
+		<class>org.atinject.core.concurrent.AsynchronousInterceptor</class>
+		<class>org.atinject.core.concurrent.RetryInterceptor</class>
+		<class>org.atinject.core.profiling.ProfileInterceptor</class>
+		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
+		<class>org.atinject.core.transaction.InfinispanTransactionalInterceptor</class>
+	</interceptors>
+	
+	<alternatives>
+		<stereotype>org.atinject.core.environment.JUnit</stereotype>
+	</alternatives>
+
+</beans>
