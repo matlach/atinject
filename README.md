@@ -1,4 +1,12 @@
 # atinject
+realtime, scalable, cdi enhanced,
+3-tier architecture
+
+key components :
+[weld](http://seamframework.org/Weld)
+[netty](https://netty.io)
+[infinispan](http://www.jboss.org/infinispan)
+[jackson](https://github.com/FasterXML/jackson-core)
 
 ##contributors
 =======
