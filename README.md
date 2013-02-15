@@ -10,7 +10,7 @@ key components :
 
 ##contributors
 =======
-[matlach](ca.linkedin.com/in/lachancemathieu/)
+[matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
 
