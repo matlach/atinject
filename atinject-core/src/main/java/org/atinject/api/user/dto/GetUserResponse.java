@@ -4,6 +4,7 @@ import org.atinject.core.websocket.dto.BaseWebSocketResponse;
 
 public class GetUserResponse extends BaseWebSocketResponse
 {
+    private static final long serialVersionUID = 1L;
 
     private User user;
 

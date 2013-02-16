@@ -2,9 +2,9 @@ package org.atinject.api.user.event;
 
 import org.atinject.api.session.Session;
 import org.atinject.api.user.entity.UserEntity;
-import org.atinject.core.event.BaseEvent;
+import org.atinject.core.event.Event;
 
-public class UserLoggedIn extends BaseEvent
+public class UserLoggedIn extends Event
 {
     private static final long serialVersionUID = 1L;
 

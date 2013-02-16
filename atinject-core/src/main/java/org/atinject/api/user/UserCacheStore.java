@@ -1,21 +1,39 @@
 package org.atinject.api.user;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.core.cache.CacheName;
+import org.atinject.core.cache.ClusteredCache;
 
-public interface UserCacheStore
+@CacheName("user")
+@ApplicationScoped
+public class UserCacheStore extends ClusteredCache<String, UserEntity>
 {
-
-    UserEntity getUser(String userId);
-
+    
+    public UserEntity getUser(String userId){
+        return get(userId);
+    }
+    
     /**
      * Note : this will perform a map reduce search
      */
-    UserEntity getUserByName(String name);
+    public UserEntity getUserByName(String name){
+        return null;
+    }
+
+    public void lockUser(String userId)
+    {
+        lock(userId);
+    }
     
-    void lockUser(String userId);
+    public void putUser(UserEntity user)
+    {
+        put(user.getId(), user);
+    }
     
-    void putUser(UserEntity user);
-    
-    void removeUser(UserEntity user);
-    
+    public void removeUser(UserEntity user){
+        remove(user.getId());
+    }
+
 }

@@ -1,9 +1,8 @@
-package org.atinject.core.json;
+package org.atinject.core.dto;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.atinject.core.dto.BaseDTO;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -28,7 +27,7 @@ public class DTOObjectMapper
         .setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
     }
     
-    public byte[] writeValueAsBytes(BaseDTO value)
+    public byte[] writeValueAsBytes(DTO value)
     {
         try
         {
@@ -40,7 +39,7 @@ public class DTOObjectMapper
         }
     }
     
-    public String writeValueAsString(BaseDTO value)
+    public String writeValueAsString(DTO value)
     {
         try
         {
@@ -52,11 +51,11 @@ public class DTOObjectMapper
         }
     }
     
-    public <T extends BaseDTO> T readValue(byte[] content)
+    public <T extends DTO> T readValue(byte[] content)
     {
         try
         {
-            return (T) mapper.readValue(content, BaseDTO.class);
+            return (T) mapper.readValue(content, DTO.class);
         }
         catch (Exception e)
         {
@@ -64,11 +63,11 @@ public class DTOObjectMapper
         }
     }
     
-    public <T extends BaseDTO> T readValue(String content)
+    public <T extends DTO> T readValue(String content)
     {
         try
         {
-            return (T) mapper.readValue(content, BaseDTO.class);
+            return (T) mapper.readValue(content, DTO.class);
         }
         catch (Exception e)
         {

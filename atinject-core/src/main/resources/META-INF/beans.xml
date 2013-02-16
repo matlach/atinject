@@ -8,6 +8,6 @@
 		<class>org.atinject.core.concurrent.RetryInterceptor</class>
 		<class>org.atinject.core.profiling.ProfileInterceptor</class>
 		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
-		<class>org.atinject.core.transaction.InfinispanTransactionalInterceptor</class>
+		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
 	</interceptors>
 </beans>

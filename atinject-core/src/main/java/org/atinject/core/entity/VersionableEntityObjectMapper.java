@@ -1,4 +1,4 @@
-package org.atinject.core.json;
+package org.atinject.core.entity;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -6,8 +6,6 @@ import java.io.ObjectOutput;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-
-import org.atinject.core.entity.AbstractEntity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -17,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 @ApplicationScoped
-public class EntityVersioningObjectMapper
+public class VersionableEntityObjectMapper
 {
     private ObjectMapper mapper;
 
@@ -32,7 +30,7 @@ public class EntityVersioningObjectMapper
         .setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
     }
     
-    public void writeObject(ObjectOutput output, AbstractEntity entity, int version) throws IOException
+    public void writeObject(ObjectOutput output, VersionableEntity entity, int version) throws IOException
     {
         output.writeInt(version);
         byte[] json = writeValueAsBytes(entity);
@@ -75,7 +73,7 @@ public class EntityVersioningObjectMapper
         }
     }
     
-    public <T> T readValue(byte[] content, Class<T> valueType)
+    public <T extends VersionableEntity> T readValue(byte[] content, Class<T> valueType)
     {
         try
         {
@@ -87,7 +85,7 @@ public class EntityVersioningObjectMapper
         }
     }
     
-    public <T> T readValue(String content, Class<T> valueType)
+    public <T extends VersionableEntity> T readValue(String content, Class<T> valueType)
     {
         try
         {

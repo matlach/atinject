@@ -1,8 +1,8 @@
 package org.atinject.api.user.dto;
 
-import org.atinject.core.dto.BaseDTO;
+import org.atinject.core.dto.DTO;
 
-public class User extends BaseDTO {
+public class User extends DTO {
 
     private static final long serialVersionUID = 1L;
 

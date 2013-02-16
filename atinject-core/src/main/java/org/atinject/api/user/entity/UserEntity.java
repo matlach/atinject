@@ -6,12 +6,12 @@ import java.io.ObjectOutput;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
 import org.atinject.core.cdi.BeanManagerExtension;
-import org.atinject.core.entity.AbstractEntity;
+import org.atinject.core.entity.VersionableEntity;
 import org.infinispan.marshall.Externalizer;
 import org.infinispan.marshall.SerializeWith;
 
 @SerializeWith(UserExternalizer.class)
-public class UserEntity extends AbstractEntity
+public class UserEntity extends VersionableEntity
 {
     private static final long serialVersionUID = 1L;
 

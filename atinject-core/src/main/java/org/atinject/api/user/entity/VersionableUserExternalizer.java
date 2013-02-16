@@ -7,8 +7,8 @@ import java.io.ObjectOutput;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.json.EntityVersioningObjectMapper;
-import org.atinject.core.versioning.VersionableEntityExternalizer;
+import org.atinject.core.entity.VersionableEntityExternalizer;
+import org.atinject.core.entity.VersionableEntityObjectMapper;
 
 @ApplicationScoped
 public class VersionableUserExternalizer implements VersionableEntityExternalizer<UserEntity>
@@ -17,7 +17,7 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
     private static final int CURRENT_VERSION = 1;
     
     @Inject
-    private EntityVersioningObjectMapper objectMapper;
+    private VersionableEntityObjectMapper objectMapper;
     
     @Override
     public void writeObject(ObjectOutput output, UserEntity user) throws IOException

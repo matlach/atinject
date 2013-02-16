@@ -9,7 +9,7 @@ public abstract class MarshallableObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
-	// TODO this need to be configurated optimally
+	// TODO this need to be configured optimally
 	private static final ObjectMapper mapper = new ObjectMapper(new SmileFactory());
 	
 	/**

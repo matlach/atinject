@@ -12,17 +12,19 @@ public class NotificationEvent
     {
         return session;
     }
-    public void setSession(Session session)
+    public NotificationEvent setSession(Session session)
     {
         this.session = session;
+        return this;
     }
     public BaseWebSocketNotification getNotification()
     {
         return notification;
     }
-    public void setNotification(BaseWebSocketNotification notification)
+    public NotificationEvent setNotification(BaseWebSocketNotification notification)
     {
         this.notification = notification;
+        return this;
     }
     
     

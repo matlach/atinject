@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.concurrent.AsynchronousService;
-import org.atinject.core.event.BaseEvent;
+import org.atinject.core.event.Event;
 import org.atinject.core.startup.Startup;
 import org.infinispan.Cache;
 import org.infinispan.distexec.DefaultExecutorService;
@@ -37,7 +37,7 @@ public class DistributedEventBus
         distributedExecutorService = new DefaultExecutorService(masterCacheNode, localExecutorService);
     }
     
-    public List<Future<Void>> onDistributedEventFired(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Distributed final BaseEvent event)
+    public List<Future<Void>> onDistributedEventFired(@Observes(during=TransactionPhase.AFTER_SUCCESS) @Distributed final Event event)
     {
         DistributedEventTask distributedEventTask = new DistributedEventTask();
         distributedEventTask.setEvent(event);
@@ -48,14 +48,14 @@ public class DistributedEventBus
     {
         private static final long serialVersionUID = 1L;
 
-        private BaseEvent event;
+        private Event event;
         
         public DistributedEventTask()
         {
             
         }
         
-        public void setEvent(BaseEvent event)
+        public void setEvent(Event event)
         {
             this.event = event;
         }

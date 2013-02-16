@@ -35,8 +35,8 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.session.dto.SessionOpenedNotification;
-import org.atinject.core.dto.BaseDTO;
-import org.atinject.core.json.DTOObjectMapper;
+import org.atinject.core.dto.DTO;
+import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.dto.BaseWebSocketRequest;
@@ -234,7 +234,7 @@ public class WebSocketClient {
             ByteBuf byteBuf = frame.getBinaryData();
             
             String json = ByteBufUtil.readUTF8(byteBuf);
-            BaseDTO dto = dtoObjectMapper.readValue(json);
+            DTO dto = dtoObjectMapper.readValue(json);
             if (dto instanceof SessionOpenedNotification){
                 SessionOpenedNotification notification = (SessionOpenedNotification) dto;
                 sessionId = notification.getSessionId();

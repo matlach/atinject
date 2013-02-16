@@ -50,7 +50,7 @@ import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.distexec.TopologyService;
 import org.atinject.core.distexec.UserKey;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
-import org.atinject.core.json.DTOObjectMapper;
+import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
 import org.atinject.core.websocket.WebSocketEndpoint;
