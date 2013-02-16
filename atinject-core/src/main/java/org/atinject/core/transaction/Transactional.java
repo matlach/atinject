@@ -1,5 +1,6 @@
 package org.atinject.core.transaction;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
@@ -10,9 +11,10 @@ import javax.interceptor.InterceptorBinding;
 
 @InterceptorBinding
 @Inherited
+@Documented
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface InfinispanTransactional
+public @interface Transactional
 {
 
 }

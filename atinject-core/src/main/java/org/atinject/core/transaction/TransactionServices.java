@@ -5,9 +5,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.jboss.weld.transaction.spi.TransactionServices;
-
-public class InfinispanTransactionServices implements TransactionServices
+public class TransactionServices implements org.jboss.weld.transaction.spi.TransactionServices
 {
 
     @Override
@@ -21,7 +19,7 @@ public class InfinispanTransactionServices implements TransactionServices
     {
         try
         {
-            InfinispanTransactionManager.registerSynchronization(synchronizedObserver);
+            TransactionManager.registerSynchronization(synchronizedObserver);
         }
         catch (RollbackException | SystemException e)
         {
@@ -34,7 +32,7 @@ public class InfinispanTransactionServices implements TransactionServices
     {
         try
         {
-            return InfinispanTransactionManager.isStatusActive();
+            return TransactionManager.isStatusActive();
         }
         catch (SystemException e)
         {
@@ -45,7 +43,7 @@ public class InfinispanTransactionServices implements TransactionServices
     @Override
     public UserTransaction getUserTransaction()
     {
-        return InfinispanTransactionManager.getUserTransaction();
+        return TransactionManager.getUserTransaction();
     }
 
 }

@@ -11,7 +11,7 @@ import javax.transaction.UserTransaction;
 
 import org.infinispan.transaction.tm.DummyTransactionManager;
 
-public class InfinispanTransactionManager
+public class TransactionManager
 {
     public static UserTransaction getUserTransaction()
     {

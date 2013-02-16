@@ -4,18 +4,18 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-@InfinispanTransactional
+@Transactional
 @Interceptor
-public class InfinispanTransactionalInterceptor
+public class TransactionalInterceptor
 {
 
     @AroundInvoke 
     public Object manageTransaction(InvocationContext ctx) throws Exception
     {
         boolean firstInChain = false;
-        if (InfinispanTransactionManager.isStatusNoTransaction())
+        if (TransactionManager.isStatusNoTransaction())
         {
-            InfinispanTransactionManager.begin();
+            TransactionManager.begin();
             firstInChain = true;
         }
         
@@ -25,20 +25,20 @@ public class InfinispanTransactionalInterceptor
         }
         catch (Exception e)
         {
-            InfinispanTransactionManager.setRollbackOnly();
+            TransactionManager.setRollbackOnly();
             throw e;
         }
         finally
         {
             if (firstInChain)
             {
-                if (InfinispanTransactionManager.isStatusActive())
+                if (TransactionManager.isStatusActive())
                 {
-                    InfinispanTransactionManager.commit();
+                    TransactionManager.commit();
                 }
                 else
                 {
-                    InfinispanTransactionManager.rollback();
+                    TransactionManager.rollback();
                 }
             }
         }

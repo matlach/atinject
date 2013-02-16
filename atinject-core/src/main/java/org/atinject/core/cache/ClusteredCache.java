@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.atinject.core.tiers.AbstractCacheStore;
+import org.atinject.core.tiers.CacheStore;
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
 import org.infinispan.distexec.mapreduce.Collator;
@@ -19,7 +19,7 @@ import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.util.concurrent.NotifyingFuture;
 
-public abstract class ClusteredCache<K, V> extends AbstractCacheStore
+public abstract class ClusteredCache<K, V> extends CacheStore
 {
 
     @Inject

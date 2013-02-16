@@ -15,12 +15,11 @@ import org.atinject.api.user.event.UserLoggedIn;
 import org.atinject.core.concurrent.Asynchronous;
 import org.atinject.core.distevent.Distributed;
 import org.atinject.core.event.BaseEvent;
-import org.atinject.core.transaction.InfinispanTransactional;
+import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
-@InfinispanTransactional
 @ApplicationScoped
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl extends Service implements UserService{
     
     @Inject
     private Logger logger;
