@@ -26,15 +26,28 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.handler.stream.ChunkedFile;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import io.netty.util.CharsetUtil;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -99,6 +112,10 @@ public class WebSocketServerHandler {
     @Inject
     private AsynchronousService asynchronousService;
     
+    public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
+    public static final int HTTP_CACHE_SECONDS = 60;
+    
     @PostConstruct
     public void initialize(){
         handler = new ChannelInboundMessageHandlerAdapterHolder();
@@ -155,15 +172,21 @@ public class WebSocketServerHandler {
                 return;
             }
 
-            // handle index
+            // handle index (special static content)
             if (req.getUri().equals("/")) {
                 handleHttpIndexPage(ctx, req);
                 return;
             }
             
-            // send favicon.ico
+            // send favicon.ico (special static content)
             if (req.getUri().equals("/favicon.ico")) {
                 handleHttpFavico(ctx, req);
+                return;
+            }
+            
+            // handle file
+            if (req.getUri().startsWith("/file")){
+                handleHttpStaticContent(ctx, req);
                 return;
             }
 
@@ -200,6 +223,162 @@ public class WebSocketServerHandler {
         private void handleHttpFavico(ChannelHandlerContext ctx, HttpRequest req){
             HttpResponse res = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
             sendHttpResponse(ctx, req, res);
+        }
+        
+        private void handleHttpStaticContent(ChannelHandlerContext ctx, HttpRequest request){
+            try
+            {
+                final String uri = request.getUri();
+                final String path = sanitizeUri(uri);
+                if (path == null) {
+                    sendError(ctx, HttpResponseStatus.NOT_FOUND);
+                    return;
+                }
+    
+                File file = new File(path);
+                if (file.isHidden() || !file.exists()) {
+                    sendError(ctx, HttpResponseStatus.NOT_FOUND);
+                    return;
+                }
+    
+                if (file.isDirectory()) {
+                    // make sure directory listing is forbidden
+                    sendError(ctx, HttpResponseStatus.FORBIDDEN);
+                    return;
+                }
+    
+                if (!file.isFile()) {
+                    sendError(ctx, HttpResponseStatus.FORBIDDEN);
+                    return;
+                }
+    
+                // Cache Validation
+                String ifModifiedSince = request.getHeader(HttpHeaders.Names.IF_MODIFIED_SINCE);
+                if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
+                    SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
+                    Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
+    
+                    // Only compare up to the second because the datetime format we send to the client
+                    // does not have milliseconds
+                    long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
+                    long fileLastModifiedSeconds = file.lastModified() / 1000;
+                    if (ifModifiedSinceDateSeconds == fileLastModifiedSeconds) {
+                        sendNotModified(ctx);
+                        return;
+                    }
+                }
+    
+                // TODO use mapped byte buffer here ? 
+                RandomAccessFile raf;
+                try {
+                    raf = new RandomAccessFile(file, "r");
+                } catch (FileNotFoundException fnfe) {
+                    sendError(ctx, HttpResponseStatus.NOT_FOUND);
+                    return;
+                }
+                long fileLength = raf.length();
+    
+                HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                setContentLength(response, fileLength);
+                setContentTypeHeader(response, file);
+                setDateAndCacheHeaders(response, file);
+                if (HttpHeaders.isKeepAlive(request)) {
+                    response.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                }
+    
+                // Write the initial line and the header.
+                ctx.write(response);
+    
+                // Write the content.
+                ChannelFuture writeFuture = ctx.write(new ChunkedFile(raf, 0, fileLength, 8192));
+    
+                // Decide whether to close the connection or not.
+                if (!HttpHeaders.isKeepAlive(request)) {
+                    // Close the connection when the whole content is written out.
+                    writeFuture.addListener(ChannelFutureListener.CLOSE);
+                }
+            }
+            catch (Exception e){
+                throw new RuntimeException(e);
+            }
+        }
+        
+        private String sanitizeUri(String uri) {
+            // Decode the path.
+            try {
+                uri = URLDecoder.decode(uri, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                try {
+                    uri = URLDecoder.decode(uri, "ISO-8859-1");
+                } catch (UnsupportedEncodingException e1) {
+                    throw new Error();
+                }
+            }
+
+            if (!uri.startsWith("/")) {
+                return null;
+            }
+
+            // Convert file separators.
+            uri = uri.replace('/', File.separatorChar);
+
+            // Simplistic dumb security check.
+            // You will have to do something serious in the production environment.
+            if (uri.contains(File.separator + '.') ||
+                uri.contains('.' + File.separator) ||
+                uri.startsWith(".") || uri.endsWith(".") ||
+                uri.contains("../")) {
+                return null;
+            }
+
+            // Convert to absolute path.
+            return System.getProperty("user.dir") + File.separator + uri;
+        }
+        
+        private void sendNotModified(ChannelHandlerContext ctx) {
+            HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_MODIFIED);
+            setDateHeader(response);
+
+            // Close the connection as soon as the error message is sent.
+            ctx.write(response).addListener(ChannelFutureListener.CLOSE);
+        }
+
+        private void setDateHeader(HttpResponse response) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
+            dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+
+            Calendar time = new GregorianCalendar();
+            response.setHeader(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
+        }
+
+        private void setDateAndCacheHeaders(HttpResponse response, File fileToCache) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
+            dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+
+            // Date header
+            Calendar time = new GregorianCalendar();
+            response.setHeader(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
+
+            // Add cache headers
+            time.add(Calendar.SECOND, HTTP_CACHE_SECONDS);
+            response.setHeader(HttpHeaders.Names.EXPIRES, dateFormatter.format(time.getTime()));
+            response.setHeader(HttpHeaders.Names.CACHE_CONTROL, "private, max-age=" + HTTP_CACHE_SECONDS);
+            response.setHeader(HttpHeaders.Names.LAST_MODIFIED, dateFormatter.format(new Date(fileToCache.lastModified())));
+        }
+
+        private void setContentTypeHeader(HttpResponse response, File file) {
+            MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+            response.setHeader(HttpHeaders.Names.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
+        }
+        
+        private void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
+            HttpResponse response = new DefaultHttpResponse(
+                    HttpVersion.HTTP_1_1, status);
+            response.setContent(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
+            response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
+
+            // Close the connection as soon as the error message is sent.
+            ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         }
         
         private void handleHttpWebSocketHandshake(ChannelHandlerContext ctx, HttpRequest req){
