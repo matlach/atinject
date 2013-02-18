@@ -39,19 +39,12 @@ feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
 
-### clone git
+atinject is built with maven. the easiest way to checkout, build and start using atinject is to follow the following steps.
 
-TODO
-
-### eclipse
-
-TODO juno
-
-### maven
-
-TODO m2eclipse plugin
-
-TODO mvn clean install
+1. download eclipse juno
+2. install maven integration for eclipse (m2e) plugin from eclipse marketplace
+3. install git scm connector from m2e marketplace
+4. checkout maven project from scm
 
 ## licence
 
