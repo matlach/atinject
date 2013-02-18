@@ -39,10 +39,10 @@ feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
 
-atinject is built with maven. the easiest way to checkout, build and start using atinject is to follow the following steps.
+atinject is built with [maven](http://maven.apache.org) and require jdk7 to build and run. the easiest way to checkout, build and start using atinject is to follow the following steps:
 
-1. download eclipse juno
-2. install maven integration for eclipse (m2e) plugin from eclipse marketplace
+1. download [eclipse juno](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/junosr1)
+2. install [maven integration for eclipse (m2e)](http://marketplace.eclipse.org/content/maven-integration-eclipse) plugin from eclipse marketplace
 3. install git scm connector from m2e marketplace
 4. checkout maven project from scm
 
