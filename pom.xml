@@ -26,6 +26,13 @@
   </licenses>
   <inceptionYear>2013</inceptionYear>
 
+<scm>
+    <url>https://github.com/matlach/atinject</url>
+    <connection>scm:git:git://github.com/matlach/atinject.git</connection>
+    <developerConnection>scm:git:https://github.com/matlach/atinject.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <developers>
     <developer>
       <id>org.atinject</id>
