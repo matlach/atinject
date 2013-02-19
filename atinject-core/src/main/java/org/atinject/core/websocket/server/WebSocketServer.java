@@ -2,8 +2,7 @@ package org.atinject.core.websocket.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.socket.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import javax.annotation.PostConstruct;
@@ -69,7 +68,6 @@ public class WebSocketServer
         b = new ServerBootstrap();
         b.group(new NioEventLoopGroup(), new NioEventLoopGroup())
          .channel(NioServerSocketChannel.class)
-             .option(ChannelOption.TCP_NODELAY, true) // TODO this will be set true by default in next netty's version
          .localAddress(port)
          .childHandler(webSocketServerInitializer.getInitializer());
 

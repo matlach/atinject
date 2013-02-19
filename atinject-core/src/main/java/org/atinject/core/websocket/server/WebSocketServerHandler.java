@@ -11,11 +11,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -147,8 +147,8 @@ public class WebSocketServerHandler {
         
         @Override
         public void messageReceived(ChannelHandlerContext ctx, Object msg) {
-            if (msg instanceof HttpRequest) {
-                handleHttpRequest(ctx, (HttpRequest) msg);
+            if (msg instanceof FullHttpRequest) {
+                handleHttpRequest(ctx, (FullHttpRequest) msg);
                 return;
             }
             
@@ -159,7 +159,7 @@ public class WebSocketServerHandler {
         }
         
         // TODO this method could be upgraded to handle REST/JAX-RS request
-        private void handleHttpRequest(ChannelHandlerContext ctx, HttpRequest req) {
+        private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
             // Handle a bad request.
             if (!req.getDecoderResult().isSuccess()) {
                 handleHttpBadRequest(ctx, req);
@@ -200,32 +200,32 @@ public class WebSocketServerHandler {
             handleHttpNotFound(ctx, req);
         }
 
-        private void handleHttpBadRequest(ChannelHandlerContext ctx, HttpRequest req){
-            sendHttpResponse(ctx, req, new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
+        private void handleHttpBadRequest(ChannelHandlerContext ctx, FullHttpRequest req){
+            sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
         }
         
-        private void handleHttpNonGetRequest(ChannelHandlerContext ctx, HttpRequest req){
-            sendHttpResponse(ctx, req, new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN));
+        private void handleHttpNonGetRequest(ChannelHandlerContext ctx, FullHttpRequest req){
+            sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN));
         }
         
-        private void handleHttpIndexPage(ChannelHandlerContext ctx, HttpRequest req){
-            HttpResponse res = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+        private void handleHttpIndexPage(ChannelHandlerContext ctx, FullHttpRequest req){
+            FullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
             ByteBuf content = webSocketServerIndexPage.getContent(getWebSocketLocation(req));
 
-            res.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
+            res.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
             setContentLength(res, content.readableBytes());
 
-            res.setContent(content);
+            res.data().writeBytes(content);
             sendHttpResponse(ctx, req, res);
         }
         
-        private void handleHttpFavico(ChannelHandlerContext ctx, HttpRequest req){
-            HttpResponse res = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
+        private void handleHttpFavico(ChannelHandlerContext ctx, FullHttpRequest req){
+            FullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
             sendHttpResponse(ctx, req, res);
         }
         
-        private void handleHttpStaticContent(ChannelHandlerContext ctx, HttpRequest request){
+        private void handleHttpStaticContent(ChannelHandlerContext ctx, FullHttpRequest request){
             try
             {
                 final String uri = request.getUri();
@@ -253,7 +253,7 @@ public class WebSocketServerHandler {
                 }
     
                 // Cache Validation
-                String ifModifiedSince = request.getHeader(HttpHeaders.Names.IF_MODIFIED_SINCE);
+                String ifModifiedSince = request.headers().get(HttpHeaders.Names.IF_MODIFIED_SINCE);
                 if (ifModifiedSince != null && !ifModifiedSince.isEmpty()) {
                     SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
                     Date ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
@@ -278,12 +278,12 @@ public class WebSocketServerHandler {
                 }
                 long fileLength = raf.length();
     
-                HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
                 setContentLength(response, fileLength);
                 setContentTypeHeader(response, file);
                 setDateAndCacheHeaders(response, file);
                 if (HttpHeaders.isKeepAlive(request)) {
-                    response.setHeader(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                    response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
                 }
     
                 // Write the initial line and the header.
@@ -336,52 +336,52 @@ public class WebSocketServerHandler {
         }
         
         private void sendNotModified(ChannelHandlerContext ctx) {
-            HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_MODIFIED);
+            FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_MODIFIED);
             setDateHeader(response);
 
             // Close the connection as soon as the error message is sent.
             ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         }
 
-        private void setDateHeader(HttpResponse response) {
+        private void setDateHeader(FullHttpResponse response) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
 
             Calendar time = new GregorianCalendar();
-            response.setHeader(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
+            response.headers().set(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
         }
 
-        private void setDateAndCacheHeaders(HttpResponse response, File fileToCache) {
+        private void setDateAndCacheHeaders(FullHttpResponse response, File fileToCache) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
 
             // Date header
             Calendar time = new GregorianCalendar();
-            response.setHeader(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
+            response.headers().set(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
 
             // Add cache headers
             time.add(Calendar.SECOND, HTTP_CACHE_SECONDS);
-            response.setHeader(HttpHeaders.Names.EXPIRES, dateFormatter.format(time.getTime()));
-            response.setHeader(HttpHeaders.Names.CACHE_CONTROL, "private, max-age=" + HTTP_CACHE_SECONDS);
-            response.setHeader(HttpHeaders.Names.LAST_MODIFIED, dateFormatter.format(new Date(fileToCache.lastModified())));
+            response.headers().set(HttpHeaders.Names.EXPIRES, dateFormatter.format(time.getTime()));
+            response.headers().set(HttpHeaders.Names.CACHE_CONTROL, "private, max-age=" + HTTP_CACHE_SECONDS);
+            response.headers().set(HttpHeaders.Names.LAST_MODIFIED, dateFormatter.format(new Date(fileToCache.lastModified())));
         }
 
-        private void setContentTypeHeader(HttpResponse response, File file) {
+        private void setContentTypeHeader(FullHttpResponse response, File file) {
             MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-            response.setHeader(HttpHeaders.Names.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
+            response.headers().set(HttpHeaders.Names.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
         }
         
         private void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
-            HttpResponse response = new DefaultHttpResponse(
+            FullHttpResponse response = new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1, status);
-            response.setContent(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
-            response.setHeader(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
+            response.data().writeBytes(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
+            response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
 
             // Close the connection as soon as the error message is sent.
             ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         }
         
-        private void handleHttpWebSocketHandshake(ChannelHandlerContext ctx, HttpRequest req){
+        private void handleHttpWebSocketHandshake(ChannelHandlerContext ctx, FullHttpRequest req){
             // TODO this probably can be instantiated only once
             WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
                     getWebSocketLocation(req), null, false);
@@ -389,7 +389,7 @@ public class WebSocketServerHandler {
             Attribute<WebSocketServerHandshaker> handshakerAttribute = ctx.channel().attr(WEB_SOCKET_SERVER_HANDSHAKER_KEY);
             handshakerAttribute.set(handshaker);
             if (handshaker == null) {
-                wsFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel());
+                WebSocketServerHandshakerFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel());
             } else {
                 handshaker.handshake(ctx.channel(), req);
                 
@@ -414,20 +414,20 @@ public class WebSocketServerHandler {
             }
         }
         
-        private void handleHttpNotFound(ChannelHandlerContext ctx, HttpRequest req){
-            sendHttpResponse(ctx, req, new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
+        private void handleHttpNotFound(ChannelHandlerContext ctx, FullHttpRequest req){
+            sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
         }
         
-        private void sendHttpResponse(ChannelHandlerContext ctx, HttpRequest req, HttpResponse res) {
-            // Generate an error page if response status code is not OK (200).
-            if (res.getStatus().getCode() != 200) {
-                res.setContent(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
-                setContentLength(res, res.getContent().readableBytes());
+        private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
+            // Generate an error page if response getStatus code is not OK (200).
+            if (res.getStatus().code() != 200) {
+                res.data().writeBytes(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
+                setContentLength(res, res.data().readableBytes());
             }
 
             // Send the response and close the connection if necessary.
             ChannelFuture f = ctx.channel().write(res);
-            if (!HttpHeaders.isKeepAlive(req) || res.getStatus().getCode() != 200) {
+            if (!HttpHeaders.isKeepAlive(req) || res.getStatus().code() != 200) {
                 f.addListener(ChannelFutureListener.CLOSE);
             }
         }
@@ -462,12 +462,12 @@ public class WebSocketServerHandler {
         }
         
         private void handlePingWebSocketFrame(ChannelHandlerContext ctx, PingWebSocketFrame frame){
-            ctx.channel().write(new PongWebSocketFrame(frame.getBinaryData()));
+            ctx.channel().write(new PongWebSocketFrame(frame.data()));
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
             // binary data should looks like : UTF8(sessionId) | UTF8(request)
-            ByteBuf byteBuf = frame.getBinaryData();
+            ByteBuf byteBuf = frame.data();
             
             // read session id
             final String sessionId = ByteBufUtil.readUTF8(byteBuf);
@@ -601,7 +601,7 @@ public class WebSocketServerHandler {
         
         private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
             // Send the uppercase string back.
-            String request = frame.getText();
+            String request = frame.text();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Channel %s received %s", ctx.channel().id(), request));
             }
@@ -640,8 +640,8 @@ public class WebSocketServerHandler {
             logger.info("channel unregistered");
         }
 
-        private String getWebSocketLocation(HttpRequest req) {
-            return "ws://" + req.getHeader(HttpHeaders.Names.HOST) + WEBSOCKET_PATH;
+        private String getWebSocketLocation(FullHttpRequest req) {
+            return "ws://" + req.headers().get(HttpHeaders.Names.HOST) + WEBSOCKET_PATH;
         }
     }
     

@@ -2,8 +2,9 @@ package org.atinject.core.websocket.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.DefaultEventExecutorGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpChunkAggregator;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 
@@ -24,15 +25,17 @@ public class WebSocketServerInitializer {
     
     @PostConstruct
     public void initialize(){
+        final DefaultEventExecutorGroup executor = new DefaultEventExecutorGroup(Runtime.getRuntime().availableProcessors()*2);
+        
         initializer = new ChannelInitializer<SocketChannel>(){
             @Override
             public void initChannel(SocketChannel ch) throws Exception
             {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("decoder", new HttpRequestDecoder());
-                pipeline.addLast("aggregator", new HttpChunkAggregator(65536));
+                pipeline.addLast("aggregator", new HttpObjectAggregator(65536));
                 pipeline.addLast("encoder", new HttpResponseEncoder());
-                pipeline.addLast("handler", webSocketServerHandler.get());
+                pipeline.addLast(executor, "handler", webSocketServerHandler.get());
             }
         };
     }

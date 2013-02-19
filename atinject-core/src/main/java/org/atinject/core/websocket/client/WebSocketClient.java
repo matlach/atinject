@@ -9,11 +9,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestEncoder;
-import io.netty.handler.codec.http.HttpResponse;
 import io.netty.handler.codec.http.HttpResponseDecoder;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -115,7 +117,7 @@ public class WebSocketClient {
         // HttpResponseDecoder to WebSocketHttpResponseDecoder in the pipeline.
         final WebSocketClientHandler handler =
                 new WebSocketClientHandler(
-                        new WebSocketClientHandshakerFactory().newHandshaker(
+                        WebSocketClientHandshakerFactory.newHandshaker(
                                 uri, WebSocketVersion.V13, null, false, null));
 
         b.group(new NioEventLoopGroup())
@@ -127,6 +129,7 @@ public class WebSocketClient {
                  ChannelPipeline pipeline = ch.pipeline();
                  pipeline.addLast("decoder", new HttpResponseDecoder());
                  pipeline.addLast("encoder", new HttpRequestEncoder());
+                 pipeline.addLast("aggregator", new HttpObjectAggregator(8192));
                  pipeline.addLast("ws-handler", handler);
              }
          });
@@ -174,19 +177,19 @@ public class WebSocketClient {
     public class WebSocketClientHandler extends ChannelInboundMessageHandlerAdapter<Object> {
 
         private final WebSocketClientHandshaker handshaker;
-        private ChannelFuture handshakeFuture;
+        private ChannelPromise handshakeFuture;
 
         public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
             this.handshaker = handshaker;
         }
 
-        public ChannelFuture handshakeFuture() {
+        public ChannelPromise handshakeFuture() {
             return handshakeFuture;
         }
 
         @Override
         public void beforeAdd(ChannelHandlerContext ctx) throws Exception {
-            handshakeFuture = ctx.newFuture();
+            handshakeFuture = ctx.newPromise();
         }
 
         @Override
@@ -203,22 +206,22 @@ public class WebSocketClient {
         public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
             Channel ch = ctx.channel();
             if (!handshaker.isHandshakeComplete()) {
-                handshaker.finishHandshake(ch, (HttpResponse) msg);
+                handshaker.finishHandshake(ch, (FullHttpResponse) msg);
                 logger.info("WebSocket Client connected!");
                 handshakeFuture.setSuccess();
                 return;
             }
 
-            if (msg instanceof HttpResponse) {
-                HttpResponse response = (HttpResponse) msg;
+            if (msg instanceof FullHttpResponse) {
+                FullHttpResponse response = (FullHttpResponse) msg;
                 throw new Exception("Unexpected HttpResponse (status=" + response.getStatus() + ", content="
-                        + response.getContent().toString(CharsetUtil.UTF_8) + ")");
+                        + response.data().toString(CharsetUtil.UTF_8) + ")");
             }
 
             WebSocketFrame frame = (WebSocketFrame) msg;
             if (frame instanceof TextWebSocketFrame) {
                 TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-                logger.info("WebSocket Client received message: " + textFrame.getText());
+                logger.info("WebSocket Client received message: " + textFrame.text());
             } else if (frame instanceof PongWebSocketFrame) {
                 logger.info("WebSocket Client received pong");
             } else if (frame instanceof BinaryWebSocketFrame) {
@@ -231,7 +234,7 @@ public class WebSocketClient {
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
-            ByteBuf byteBuf = frame.getBinaryData();
+            ByteBuf byteBuf = frame.data();
             
             String json = ByteBufUtil.readUTF8(byteBuf);
             DTO dto = dtoObjectMapper.readValue(json);
