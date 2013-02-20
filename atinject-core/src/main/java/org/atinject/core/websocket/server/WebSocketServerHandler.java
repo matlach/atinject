@@ -1,6 +1,5 @@
 package org.atinject.core.websocket.server;
 
-import static io.netty.handler.codec.http.HttpHeaders.setContentLength;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -96,7 +95,7 @@ public class WebSocketServerHandler {
     
     private String WEBSOCKET_PATH = "/websocket";
 
-    private ChannelInboundMessageHandlerAdapter<Object> handler;
+    private ChannelInboundMessageHandlerAdapterHolder handler;
     
     private static final AttributeKey<Session> SESSION_ATTRIBUTE_KEY = new AttributeKey<>("session");
     private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = new AttributeKey<>("handshaker");
@@ -111,6 +110,9 @@ public class WebSocketServerHandler {
     
     @Inject
     private AsynchronousService asynchronousService;
+    
+    // maybe this could be stored per client
+    private boolean binary = false;
     
     public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
@@ -128,7 +130,12 @@ public class WebSocketServerHandler {
             return;
         }
         // send to websocket
-        
+        if (binary){
+            handler.sendNotificationAsBinary(channel, event.getNotification());
+        }
+        else{
+            handler.sendNotificationAsText(channel, event.getNotification());
+        }
     }
     
     @Sharable
@@ -172,13 +179,13 @@ public class WebSocketServerHandler {
                 return;
             }
 
-            // handle index (special static content)
+            // handle index
             if (req.getUri().equals("/")) {
                 handleHttpIndexPage(ctx, req);
                 return;
             }
             
-            // send favicon.ico (special static content)
+            // send favicon.ico
             if (req.getUri().equals("/favicon.ico")) {
                 handleHttpFavico(ctx, req);
                 return;
@@ -214,7 +221,7 @@ public class WebSocketServerHandler {
             ByteBuf content = webSocketServerIndexPage.getContent(getWebSocketLocation(req));
 
             res.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
-            setContentLength(res, content.readableBytes());
+            HttpHeaders.setContentLength(res, content.readableBytes());
 
             res.data().writeBytes(content);
             sendHttpResponse(ctx, req, res);
@@ -279,7 +286,7 @@ public class WebSocketServerHandler {
                 long fileLength = raf.length();
     
                 FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                setContentLength(response, fileLength);
+                HttpHeaders.setContentLength(response, fileLength);
                 setContentTypeHeader(response, file);
                 setDateAndCacheHeaders(response, file);
                 if (HttpHeaders.isKeepAlive(request)) {
@@ -409,8 +416,12 @@ public class WebSocketServerHandler {
                 // send notification to provide session id to the client
                 SessionOpenedNotification notification = new SessionOpenedNotification();
                 notification.setSessionId(session.getSessionId());
-                
-                sendNotification(ctx, notification);
+                if (binary){
+                    sendNotificationAsBinary(ctx.channel(), notification);
+                }
+                else{
+                    sendNotificationAsText(ctx.channel(), notification);
+                }
             }
         }
         
@@ -422,7 +433,7 @@ public class WebSocketServerHandler {
             // Generate an error page if response getStatus code is not OK (200).
             if (res.getStatus().code() != 200) {
                 res.data().writeBytes(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
-                setContentLength(res, res.data().readableBytes());
+                HttpHeaders.setContentLength(res, res.data().readableBytes());
             }
 
             // Send the response and close the connection if necessary.
@@ -442,10 +453,16 @@ public class WebSocketServerHandler {
                 return;
             }
             if (frame instanceof BinaryWebSocketFrame){
+                if (!binary){
+                    throw new RuntimeException("server is not in binary mode");
+                }
                 handleBinaryWebSocketFrame(ctx, (BinaryWebSocketFrame) frame);
                 return;
             }
             if (frame instanceof TextWebSocketFrame){
+                if (binary){
+                    throw new RuntimeException("server is not in text mode");
+                }
                 handleTextWebSocketFrame(ctx, (TextWebSocketFrame) frame);
                 return;
             }
@@ -466,33 +483,70 @@ public class WebSocketServerHandler {
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
-            // binary data should looks like : UTF8(sessionId) | UTF8(request)
-            ByteBuf byteBuf = frame.data();
-            
-            // read session id
-            final String sessionId = ByteBufUtil.readUTF8(byteBuf);
-            
             // validate session (need to be bound at that point)
             Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
             Session session = sessionAttribute.get();
             if (session == null){
                 throw new RuntimeException("handshake is not complete, kick");
             }
-            if (! session.getSessionId().equals(sessionId)){
-                throw new RuntimeException("wrong session id, potential hack, kick");
+            
+            // decode binary web socket frame
+            BaseWebSocketRequest request = decodeBinaryWebSocketFrame(frame);
+            
+            // perform request
+            BaseWebSocketResponse response = performRequest(session, request);
+            
+            // send response
+            sendResponseAsBinary(ctx.channel(), response);
+        }
+        
+        private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
+            // validate session (need to be bound at that point)
+            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
+            Session session = sessionAttribute.get();
+            if (session == null){
+                throw new RuntimeException("handshake is not complete, kick");
             }
             
+            // decode text web socket frame
+            BaseWebSocketRequest request = decodeTextWebSocketFrame(frame);
+            
+            // perform request
+            BaseWebSocketResponse response = performRequest(session, request);
+            
+            // send response
+            sendResponseAsText(ctx.channel(), response);
+        }
+        
+        private BaseWebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
             // read json
-            final String json = ByteBufUtil.readUTF8(byteBuf);
+            final String json = ByteBufUtil.readUTF8(frame.data());
             
             // unserialize json
             final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
-
+            
+            return request;
+        }
+        
+        private BaseWebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
+            // read json
+            final String json = frame.text();
+            
+            // unserialize json
+            final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
+            
+            return request;
+        }
+        
+        private BaseWebSocketResponse performRequest(Session session, BaseWebSocketRequest request){
             // build task
             WebSocketMessageTask task = new WebSocketMessageTask()
                 .setSession(session)
                 .setRequest(request);
             
+            // should we use a future here to wait for response ?
+            // response could be sent asynchronously instead ?
+            // should we use completion service ?
             Future<BaseWebSocketResponse> future;
             if (session.getUserId() == null){
                 // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
@@ -512,36 +566,7 @@ public class WebSocketServerHandler {
             // bind the original request id back in the response
             response.setRequestId(request.getRequestId());
             
-            // send response
-            sendResponse(ctx, response);
-        }
-        
-        private ChannelFuture sendNotification(ChannelHandlerContext ctx, BaseWebSocketNotification notification){
-            ByteBuf byteBuf = Unpooled.buffer();
-            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
-            return ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
-        }
-        
-        private ChannelFuture sendResponse(ChannelHandlerContext ctx, BaseWebSocketResponse response){
-            ByteBuf byteBuf = Unpooled.buffer();
-            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
-            return ctx.channel().write(new BinaryWebSocketFrame(byteBuf));
-        }
-        
-        private BaseWebSocketResponse getWebSocketResponseFromFuture(Future<BaseWebSocketResponse> future){
-            try
-            {
-                return future.get();
-            }
-            catch (InterruptedException e)
-            {
-                Thread.currentThread().interrupt();
-                return null;
-            }
-            catch (ExecutionException e)
-            {
-                throw new RuntimeException(e);
-            }
+            return response;
         }
         
         public class WebSocketMessageTask implements Callable<BaseWebSocketResponse>{
@@ -599,18 +624,47 @@ public class WebSocketServerHandler {
             }
         }
         
-        private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
-            // Send the uppercase string back.
-            String request = frame.text();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Channel %s received %s", ctx.channel().id(), request));
+        private BaseWebSocketResponse getWebSocketResponseFromFuture(Future<BaseWebSocketResponse> future){
+            try
+            {
+                return future.get();
             }
-            ctx.channel().write(new TextWebSocketFrame(request.toUpperCase()));
+            catch (InterruptedException e)
+            {
+                Thread.currentThread().interrupt();
+                return null;
+            }
+            catch (ExecutionException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+        
+        private ChannelFuture sendNotificationAsBinary(Channel channel, BaseWebSocketNotification notification){
+            ByteBuf byteBuf = Unpooled.buffer();
+            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
+            return channel.write(new BinaryWebSocketFrame(byteBuf));
+        }
+        
+        private ChannelFuture sendResponseAsBinary(Channel channel, BaseWebSocketResponse response){
+            ByteBuf byteBuf = Unpooled.buffer();
+            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
+            return channel.write(new BinaryWebSocketFrame(byteBuf));
+        }
+        
+        private ChannelFuture sendNotificationAsText(Channel channel, BaseWebSocketNotification notification){
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(notification));
+            return channel.write(new TextWebSocketFrame(byteBuf));
+        }
+        
+        private ChannelFuture sendResponseAsText(Channel channel, BaseWebSocketResponse response){
+            ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(response));
+            return channel.write(new TextWebSocketFrame(byteBuf));
         }
         
         @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            logger.info(cause.getMessage());
+            logger.warn(cause.getMessage());
             ctx.close();
         }
         
