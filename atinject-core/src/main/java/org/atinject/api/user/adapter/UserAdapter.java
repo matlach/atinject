@@ -11,6 +11,9 @@ public class UserAdapter
 
     public User userEntityToUser(UserEntity entity)
     {
+        if (entity == null){
+            return null;
+        }
         return new User()
             .setId(entity.getId())
             .setName(entity.getName())
