@@ -68,8 +68,6 @@ public class WebSocketClient {
     private Bootstrap b;
     private Channel ch;
     
-    private boolean binary = false;
-    
     @PostConstruct
     public void initialize() throws Exception
     {
@@ -143,24 +141,19 @@ public class WebSocketClient {
     
     public ChannelFuture send(BaseWebSocketRequest request) throws Exception
     {
-        
+        ByteBuf byteBuf = Unpooled.buffer();
         while (sessionId == null){
             logger.info("waiting 1 sec to wait for handshake to complete, session is null");
             Thread.sleep(1000L);
         }
         
-        ByteBuf byteBuf = Unpooled.buffer();
-        if (binary)
-        {
-            // write json as binary
-            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(request));
-            return ch.write(new BinaryWebSocketFrame(byteBuf));
-        }
-        else{
-            // write json as text
-            byteBuf.writeBytes(dtoObjectMapper.writeValueAsBytes(request));
-            return ch.write(new BinaryWebSocketFrame(byteBuf));
-        }
+        // write session id
+        ByteBufUtil.writeUTF8(byteBuf, sessionId);
+        
+        // write json
+        ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(request));
+        
+        return ch.write(new BinaryWebSocketFrame(byteBuf));
     }
     
     public void sendPing()
@@ -228,7 +221,6 @@ public class WebSocketClient {
             WebSocketFrame frame = (WebSocketFrame) msg;
             if (frame instanceof TextWebSocketFrame) {
                 TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
-                handleTextWebSocketFrame(ctx, textFrame);
                 logger.info("WebSocket Client received message: " + textFrame.text());
             } else if (frame instanceof PongWebSocketFrame) {
                 logger.info("WebSocket Client received pong");
@@ -245,18 +237,6 @@ public class WebSocketClient {
             ByteBuf byteBuf = frame.data();
             
             String json = ByteBufUtil.readUTF8(byteBuf);
-            DTO dto = dtoObjectMapper.readValue(json);
-            if (dto instanceof SessionOpenedNotification){
-                SessionOpenedNotification notification = (SessionOpenedNotification) dto;
-                sessionId = notification.getSessionId();
-            }
-//            else if(dto instanceof ){
-//                
-//            }
-        }
-        
-        private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
-            String json = frame.text();
             DTO dto = dtoObjectMapper.readValue(json);
             if (dto instanceof SessionOpenedNotification){
                 SessionOpenedNotification notification = (SessionOpenedNotification) dto;
