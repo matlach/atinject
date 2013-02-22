@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+
+<script>
+
+// randomUUID
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000)
+             .toString(16)
+             .substring(1);
+};
+
+function randomUUID() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+};
+
+// dto
+
+function DTO () {
+};
+
+DTO.prototype.getClass = function() {
+    return this._class;
+};
+
+function BaseWebSocketRequest() {
+};
+
+BaseWebSocketRequest.prototype = new DTO();
+
+BaseWebSocketRequest.prototype.getRequestId = function() {
+    return this.requestId;
+};
+
+BaseWebSocketRequest.prototype.setRequestId = function(requestId) {
+    this.requestId = requestId;
+    return this;
+};
+
+function GetUserRequest() {
+	this._class = "org.atinject.api.user.dto.GetUserRequest";
+};
+
+GetUserRequest.prototype = new BaseWebSocketRequest();
+
+var getUserRequest = new GetUserRequest();
+var getUserRequestString = JSON.stringify(getUserRequest);
+alert(getUserRequestString);
+var getUserRequestObject = JSON.parse(getUserRequestString);
+alert(getUserRequestObject);
+
+</script>
+
+</body>
+</html>
