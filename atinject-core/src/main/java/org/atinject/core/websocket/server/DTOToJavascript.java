@@ -38,6 +38,12 @@ public class DTOToJavascript
         for (Class<? extends DTO> dtoClass : dtoClasses){
             javascript = javascript + generate(dtoClass);
         }
+        
+        javascript = javascript + "var classAlias = new Array();" + NEWLINE;
+        for (Class<? extends DTO> dtoClass : dtoClasses){ // should only get non abstract class ?
+            javascript = javascript + generateAlias(dtoClass);
+        }
+        
         // save generated javascript to file ?
         // that way we could ease frontend development ?
     }
@@ -160,7 +166,7 @@ public class DTOToJavascript
 "};" + NEWLINE +
 "" +  NEWLINE;
     public static final String setterTemplate =
-"${dtoClassSimpleName}.prototype.get${capitalizedProperty} = function(${property}) {" + NEWLINE +
+"${dtoClassSimpleName}.prototype.set${capitalizedProperty} = function(${property}) {" + NEWLINE +
 "    this.${property} = ${property};" + NEWLINE +
 "    return this;" + NEWLINE +
 "};" + NEWLINE +
@@ -171,7 +177,7 @@ public class DTOToJavascript
         String dtoSuperClassSimpleName = dtoClass.getSuperclass().getSimpleName();
         
         String getterSetters = "";
-        for (Field field : getDeclaredNonTransientFields(dtoClass)){
+        for (Field field : getDeclaredNonTransientNonStaticFields(dtoClass)){
             String capitalizedProperty = capitalizeFirstLetter(field.getName());
             String property = field.getName();
             String getter = getterTemplate
@@ -192,11 +198,22 @@ public class DTOToJavascript
         return generated;
     }
     
-    private static List<Field> getDeclaredNonTransientFields(Class<?> clazz){
+    public static final String aliasTemplate =
+"classAlias[\"${dtoClassCanonicalName}\"] = ${dtoClassSimpleName};" + NEWLINE;
+    
+    public static String generateAlias(Class<? extends DTO> dtoClass){
+        String dtoClassCanonicalName = dtoClass.getCanonicalName();
+        String dtoClassSimpleName = dtoClass.getSimpleName();
+        return aliasTemplate
+                .replace("${dtoClassCanonicalName}", dtoClassCanonicalName)
+                .replace("${dtoClassSimpleName}", dtoClassSimpleName);
+    }
+    
+    private static List<Field> getDeclaredNonTransientNonStaticFields(Class<?> clazz){
         List<Field> fields = new ArrayList<>(clazz.getDeclaredFields().length);
         for (Field field : clazz.getDeclaredFields()){
-            if (Modifier.isTransient(field.getModifiers())){
-                // skip transient field
+            if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers())){
+                // skip transient and static field
                 continue;
             }
             fields.add(field);

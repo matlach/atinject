@@ -19,6 +19,17 @@ function randomUUID() {
          s4() + '-' + s4() + s4() + s4();
 };
 
+// cast
+function cast(rawObj, constructor)
+{
+    var obj = new constructor();
+    for(var i in rawObj){
+    	alert(rawObj[i]);
+        obj[i] = rawObj[i];
+    }
+    return obj;
+};
+
 // dto
 
 function DTO () {
@@ -46,13 +57,23 @@ function GetUserRequest() {
 	this._class = "org.atinject.api.user.dto.GetUserRequest";
 };
 
+// class alias
+var classAliases = new Array();
+classAliases["org.atinject.api.user.dto.GetUserRequest"] = GetUserRequest;
+
+// test
 GetUserRequest.prototype = new BaseWebSocketRequest();
 
 var getUserRequest = new GetUserRequest();
+getUserRequest.setRequestId("abc");
 var getUserRequestString = JSON.stringify(getUserRequest);
 alert(getUserRequestString);
-var getUserRequestObject = JSON.parse(getUserRequestString);
-alert(getUserRequestObject);
+
+
+var getUserRequestRawObject = JSON.parse(getUserRequestString);
+alert(getUserRequestRawObject.requestId);
+var getUserRequestObject = cast(getUserRequestRawObject, classAliases[getUserRequestRawObject._class]);
+alert(getUserRequestObject.getRequestId());
 
 </script>
 
