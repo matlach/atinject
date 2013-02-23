@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.util.CharsetUtil;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.atinject.core.websocket.WebSocketEndpoint;
 
@@ -14,11 +15,15 @@ public class WebSocketServerIndexPage {
 
     private static final String NEWLINE = "\r\n";
 
+    @Inject
+    private DTOToJavascript dtoToJavascript;
+    
     public ByteBuf getContent(String webSocketLocation) {
         return Unpooled.copiedBuffer(
                 "<html><head><title>Web Socket Test</title></head>" + NEWLINE +
                 "<body>" + NEWLINE +
                 "<script type=\"text/javascript\">" + NEWLINE +
+                dtoToJavascript.getGeneratedJavascript() +
                 "var socket;" + NEWLINE +
                 "if (!window.WebSocket) {" + NEWLINE +
                 "  window.WebSocket = window.MozWebSocket;" + NEWLINE +
