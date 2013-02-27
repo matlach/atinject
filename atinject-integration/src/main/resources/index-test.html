@@ -24,20 +24,23 @@ function cast(rawObj, constructor)
 {
     var obj = new constructor();
     for(var i in rawObj){
-    	alert(rawObj[i]);
         obj[i] = rawObj[i];
     }
     return obj;
 };
 
 // dto
-
-function DTO () {
+function DTO() {
 };
 
 DTO.prototype.getClass = function() {
     return this._class;
+}
+function BaseWebSocketNotification() {
 };
+
+BaseWebSocketNotification.prototype = new DTO();
+
 
 function BaseWebSocketRequest() {
 };
@@ -53,29 +56,223 @@ BaseWebSocketRequest.prototype.setRequestId = function(requestId) {
     return this;
 };
 
-function GetUserRequest() {
-	this._class = "org.atinject.api.user.dto.GetUserRequest";
+
+function SessionOpenedNotification() {
 };
 
-// class alias
-var classAliases = new Array();
-classAliases["org.atinject.api.user.dto.GetUserRequest"] = GetUserRequest;
+SessionOpenedNotification.prototype = new BaseWebSocketNotification();
+
+SessionOpenedNotification.prototype.getSessionId = function() {
+    return this.sessionId;
+};
+
+SessionOpenedNotification.prototype.setSessionId = function(sessionId) {
+    this.sessionId = sessionId;
+    return this;
+};
+
+
+function User() {
+};
+
+User.prototype = new DTO();
+
+User.prototype.getId = function() {
+    return this.id;
+};
+
+User.prototype.setId = function(id) {
+    this.id = id;
+    return this;
+};
+
+User.prototype.getName = function() {
+    return this.name;
+};
+
+User.prototype.setName = function(name) {
+    this.name = name;
+    return this;
+};
+
+User.prototype.getPassword = function() {
+    return this.password;
+};
+
+User.prototype.setPassword = function(password) {
+    this.password = password;
+    return this;
+};
+
+
+function UserAffinityNotification() {
+};
+
+UserAffinityNotification.prototype = new BaseWebSocketNotification();
+
+UserAffinityNotification.prototype.getUrl = function() {
+    return this.url;
+};
+
+UserAffinityNotification.prototype.setUrl = function(url) {
+    this.url = url;
+    return this;
+};
+
+
+function BaseWebSocketResponse() {
+};
+
+BaseWebSocketResponse.prototype = new DTO();
+
+BaseWebSocketResponse.prototype.getRequestId = function() {
+    return this.requestId;
+};
+
+BaseWebSocketResponse.prototype.setRequestId = function(requestId) {
+    this.requestId = requestId;
+    return this;
+};
+
+
+function GetUserRequest() {
+};
+
+GetUserRequest.prototype = new BaseWebSocketRequest();
+
+GetUserRequest.prototype.getUuid = function() {
+    return this.uuid;
+};
+
+GetUserRequest.prototype.setUuid = function(uuid) {
+    this.uuid = uuid;
+    return this;
+};
+
+
+function GetUserResponse() {
+};
+
+GetUserResponse.prototype = new BaseWebSocketResponse();
+
+GetUserResponse.prototype.getUser = function() {
+    return this.user;
+};
+
+GetUserResponse.prototype.setUser = function(user) {
+    this.user = user;
+    return this;
+};
+
+
+var classAlias = new Array();
+classAlias["org.atinject.core.dto.DTO"] = DTO;
+classAlias["org.atinject.core.websocket.dto.BaseWebSocketNotification"] = BaseWebSocketNotification;
+classAlias["org.atinject.core.websocket.dto.BaseWebSocketRequest"] = BaseWebSocketRequest;
+classAlias["org.atinject.api.session.dto.SessionOpenedNotification"] = SessionOpenedNotification;
+classAlias["org.atinject.api.user.dto.User"] = User;
+classAlias["org.atinject.api.user.dto.UserAffinityNotification"] = UserAffinityNotification;
+classAlias["org.atinject.core.websocket.dto.BaseWebSocketResponse"] = BaseWebSocketResponse;
+classAlias["org.atinject.api.user.dto.GetUserRequest"] = GetUserRequest;
+classAlias["org.atinject.api.user.dto.GetUserResponse"] = GetUserResponse;
+
+// event test
+
+/* function onGetUserResponseEvent(getUserResponseEvent){
+	
+};
+
+addEventListener("GetUserResponseEvent", onGetUserResponseEvent, false);
+
+var event = document.createEvent("GetUserResponseEvent");
+  event.initEvent("GetUserResponseEvent", true, true);
+  event.customData = new GetUserResponse();
+  window.dispatchEvent(event);
+ */
+ 
+//add an appropriate event listener
+ window.addEventListener("cat", function(e) { alert(e.detail) });
+
+ // create and dispatch the event
+ var event = new CustomEvent("cat", {"detail":{"hazcheeseburger":true}});
+ window.dispatchEvent(event);
 
 // test
-GetUserRequest.prototype = new BaseWebSocketRequest();
+/* GetUserRequest.prototype = new BaseWebSocketRequest();
 
 var getUserRequest = new GetUserRequest();
 getUserRequest.setRequestId("abc");
 var getUserRequestString = JSON.stringify(getUserRequest);
 alert(getUserRequestString);
-
+function getClassAlias(fqn){
+	return classAlias[fqn];
+}
 
 var getUserRequestRawObject = JSON.parse(getUserRequestString);
 alert(getUserRequestRawObject.requestId);
-var getUserRequestObject = cast(getUserRequestRawObject, classAliases[getUserRequestRawObject._class]);
-alert(getUserRequestObject.getRequestId());
+var getUserRequestObject = cast(getUserRequestRawObject, classAlias[getUserRequestRawObject._class]);
+alert(getUserRequestObject.getRequestId()); */
+
+function onWebSocketOpened(event){
+	var io = document.getElementById("io");
+    io.value = io.value + "Web Socket opened!";
+};
+
+function onWebSocketMessage(event){
+	var io = document.getElementById("io");
+    io.value = io.value + "\n" + event.data
+};
+
+function onWebSocketClosed(event){
+	var io = document.getElementById('io');
+    io.value = io.value + "Web Socket closed";
+};
+
+var socket;
+function openWebSocket(){
+	if (!window.WebSocket) {
+	  window.WebSocket = window.MozWebSocket;
+	}
+	if (window.WebSocket) {
+	  socket = new WebSocket("ws://localhost:8080/websocket");
+	  socket.onopen = onWebSocketOpened;
+	  socket.onmessage = onWebSocketMessage;
+	  socket.onclose = onWebSocketClosed;
+	} else {
+	  alert("Your browser does not support Web Socket.");
+	}	
+};
+
+function sendWebSocketMessage() {
+  if (!window.WebSocket) { return; }
+  if (socket.readyState == WebSocket.OPEN) {
+	  var input = document.getElementById("input");
+	  var message = input.value;
+    socket.send(message);
+  } else {
+    alert("The socket is not open.");
+  }
+};
+
+function closeWebSocket(){
+	if (!window.WebSocket) { return; }
+	socket.close();
+};
 
 </script>
+<div id="websocketConsole">
+<form>
+
+    <input type="button" value="open" onclick="openWebSocket();" />
+    <input type="button" value="close" onclick="closeWebSocket();" />
+    <label for="input">input :</label>
+    <input id="input" name="input" type="text" />
+    <input type="button" value="send" onclick="sendWebSocketMessage();" />
+    <label for="io">input / output :</label>
+    <textarea id="io"></textarea>
+
+</form>
+</div>
 
 </body>
 </html>
