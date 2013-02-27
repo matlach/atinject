@@ -16,6 +16,7 @@
  */
 package org.jboss.weld.bean.builtin;
 
+import java.io.ObjectStreamException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -47,11 +48,10 @@ public class BeanManagerProxy extends ForwardingBeanManager {
     private static final long serialVersionUID = -6990849486568169846L;
 
     private final BeanManagerImpl manager;
-    private final transient Container container;
+    private transient volatile Container container;
 
     public BeanManagerProxy(BeanManagerImpl manager) {
         this.manager = manager;
-        this.container = Container.instance();
     }
 
     @Override
@@ -119,7 +119,7 @@ public class BeanManagerProxy extends ForwardingBeanManager {
         return super.resolveInterceptors(type, interceptorBindings);
     }
 
-    protected Object readResolve() {
+    protected Object readResolve() throws ObjectStreamException {
         return new BeanManagerProxy(this.manager);
     }
 
@@ -132,6 +132,9 @@ public class BeanManagerProxy extends ForwardingBeanManager {
      * @throws IllegalStateException If the application initialization is not finished yet
      */
     private void checkContainerInitialized(String methodName, ContainerState... allowedStates) {
+        if (this.container == null) {
+            this.container = Container.instance();
+        }
         if (allowedStates == null || allowedStates.length == 0) {
             if (ContainerState.INITIALIZED.equals(container.getState())) {
                 return;
