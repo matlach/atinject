@@ -8,6 +8,8 @@ public abstract class BaseWebSocketResponse extends DTO
 
     private String requestId;
     
+    private WebSocketResponseException exception;
+    
     public BaseWebSocketResponse(){
         super();
     }
@@ -22,4 +24,16 @@ public abstract class BaseWebSocketResponse extends DTO
         this.requestId = requestId;
         return this;
     }
+
+    public WebSocketResponseException getException()
+    {
+        return exception;
+    }
+
+    public BaseWebSocketResponse setException(WebSocketResponseException exception)
+    {
+        this.exception = exception;
+        return this;
+    }
+    
 }
