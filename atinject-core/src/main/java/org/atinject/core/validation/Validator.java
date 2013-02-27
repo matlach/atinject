@@ -6,9 +6,9 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.validation.ConstraintViolation;
-import javax.validation.MethodValidator;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
+import javax.validation.executable.ExecutableValidator;
 
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.HibernateValidatorConfiguration;
@@ -17,7 +17,7 @@ import org.hibernate.validator.HibernateValidatorConfiguration;
 public class Validator
 {
     private javax.validation.Validator validator;
-    private MethodValidator methodValidator;
+    private ExecutableValidator executableValidator;
 
     @PostConstruct
     public void initialize()
@@ -27,17 +27,17 @@ public class Validator
                 .failFast(true)
                 .buildValidatorFactory();
         this.validator = factory.getValidator();
-        this.methodValidator = validator.forMethods();
+        this.executableValidator = validator.forExecutables();
     }
 
     public <T> Set<ConstraintViolation<T>> validateParameters(T object, Method method, Object[] parameterValues)
     {
-        return methodValidator.validateParameters(object, method, parameterValues);
+        return executableValidator.validateParameters(object, method, parameterValues);
     }
 
     public <T> Set<ConstraintViolation<T>> validateReturnValue(T object, Method method, Object returnValue)
     {
-        return methodValidator.validateReturnValue(object, method, returnValue);
+        return executableValidator.validateReturnValue(object, method, returnValue);
     }
 
     public <T> Set<ConstraintViolation<T>> validate(T object)
