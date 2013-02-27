@@ -18,6 +18,7 @@ public class ProfileInterceptor {
         try{
             return invocationContext.proceed();
         }
+        // consider catching exception to gather exception statistics
         finally{
             profilingService.addProfiling(invocationContext, System.nanoTime() - t0);
         }
