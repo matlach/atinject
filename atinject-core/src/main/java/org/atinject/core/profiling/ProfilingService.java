@@ -1,8 +1,8 @@
 package org.atinject.core.profiling;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -55,13 +55,11 @@ public class ProfilingService
         }
     }
     
-    // TODO use long[] array that will grow if needed instead of relying on arraylist, that way we can eliminate boxing conversion between Long and long
     private static class CurrentStatistics{
-        private List<Long> invocations = new ArrayList<>();
+        private DynamicLongArray invocations = new DynamicLongArray();
         
         public void add(long t){
             synchronized(this){
-                // TODO consider adding a max size to the sampling to prevent OOME
                 invocations.add(t);
             }
         }
@@ -72,14 +70,14 @@ public class ProfilingService
                 long sum = 0;
                 long min = Long.MAX_VALUE;
                 long max = Long.MIN_VALUE;
-                for (Long t : invocations){
+                for (long t : invocations.elementData){
                     min = Math.min(min, t);
                     max = Math.max(max, t);
                     sum = sum + t;
                 }
-                int count = invocations.size();
+                int count = invocations.size;
                 long mean = sum / (count + 1);
-                invocations.clear();
+                invocations.size = 0;
                 
                 CompressedStatistics compressedStatistics = new CompressedStatistics();
                 compressedStatistics.count = count; compressedStatistics.mean = mean;
@@ -97,12 +95,58 @@ public class ProfilingService
         long max;
     }
     
+    private static class DynamicLongArray{
+        private long[] elementData;
+
+        private int size;
+        
+        public DynamicLongArray() {
+            this.elementData = new long[10];
+        }
+        
+        public boolean add(long e) {
+            ensureCapacityInternal(size + 1);
+            elementData[size++] = e;
+            return true;
+        }
+
+        private void ensureCapacityInternal(int minCapacity) {
+            if (minCapacity - elementData.length > 0){
+                grow(minCapacity);
+            }
+        }
+
+        private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+
+        private void grow(int minCapacity) {
+            // overflow-conscious code
+            int oldCapacity = elementData.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            if (newCapacity - minCapacity < 0)
+                newCapacity = minCapacity;
+            if (newCapacity - MAX_ARRAY_SIZE > 0)
+                newCapacity = hugeCapacity(minCapacity);
+            // minCapacity is usually close to size, so this is a win:
+            elementData = Arrays.copyOf(elementData, newCapacity);
+        }
+
+        private int hugeCapacity(int minCapacity) {
+            if (minCapacity < 0) // overflow
+                throw new OutOfMemoryError();
+            return (minCapacity > MAX_ARRAY_SIZE) ?
+                Integer.MAX_VALUE :
+                MAX_ARRAY_SIZE;
+        }
+        
+    }
+    
     @PostConstruct
     public void initialize()
     {
         currentStatistics = new ConcurrentHashMap<>();
         lastThreeHoursMinutelySmoothed = new ConcurrentHashMap<>();
-        long millisUntilNextMinute = 60 * 1000; // TODO to calculate
+        
+        long millisUntilNextMinute = millisUntilNextMinute();
         // schedule each minute
         schedulingService.scheduleAtFixedRate(new Runnable(){
             @Override
@@ -111,6 +155,16 @@ public class ProfilingService
             }
             
         }, millisUntilNextMinute, 60 * 1000, TimeUnit.MILLISECONDS);
+    }
+    
+    private long millisUntilNextMinute(){
+        Calendar c = Calendar.getInstance();
+        long now = c.getTimeInMillis();
+        c.add(Calendar.MINUTE, 1);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return c.getTimeInMillis() - now;
     }
     
     @Asynchronous
@@ -140,7 +194,7 @@ public class ProfilingService
                     statistics = newStatistics;
                 }
             }
-            if (entry.getValue().invocations.isEmpty()){
+            if (entry.getValue().invocations.size == 0){
                 statistics.add(null); // no significant value, add blank
             }
             else{
