@@ -17,6 +17,7 @@ public class RetryInterceptor
 
     private static ThreadLocal<Object> hack = new ThreadLocal<Object>();
     
+    // TODO retry count and timeout should be in the @Retry annotation instead
     private int RETRY_COUNT = 3;
     private int MIN_TIMEOUT = 100;
     

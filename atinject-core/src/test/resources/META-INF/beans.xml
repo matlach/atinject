@@ -8,6 +8,9 @@
 		<class>org.atinject.core.concurrent.RetryInterceptor</class>
 		<class>org.atinject.core.profiling.ProfileInterceptor</class>
 		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
+		<class>org.atinject.core.exception.HandleControllerExceptionInterceptor</class>
+		<class>org.atinject.core.exception.HandleServiceExceptionInterceptor</class>
+		<class>org.atinject.core.exception.HandleCacheStoreExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
 	</interceptors>
 </beans>

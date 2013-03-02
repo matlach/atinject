@@ -7,9 +7,9 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
-@ServiceExceptionHandler
+@HandleServiceException
 @Interceptor
-public class ServiceExceptionHandlerInterceptor {
+public class HandleServiceExceptionInterceptor {
     
     @Inject
     private Logger logger;
