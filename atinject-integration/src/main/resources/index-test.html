@@ -20,11 +20,52 @@ function randomUUID() {
 };
 
 // cast
+
+var stringConstructor = "".constructor;
+var arrayConstructor = [].constructor;
+var objectConstructor = {}.constructor;
+
 function cast(rawObj, constructor)
 {
     var obj = new constructor();
     for(var i in rawObj){
-        obj[i] = rawObj[i];
+    	if (rawObj[i] === null){
+    		alert(i + " is null");
+    		obj[i] = rawObj[i];
+    	}
+    	else if (rawObj[i] === undefined){
+    		alert(i + " is undefined");
+    		obj[i] = rawObj[i];
+    	}
+    	else if (rawObj[i].constructor === stringConstructor){
+    		alert(i + " is string");
+    		obj[i] = rawObj[i];
+    	}
+    	else if (rawObj[i].constructor === arrayConstructor){
+    		alert(i + " is array");
+    		
+    		for (var j in rawObj[i]){
+    			if (rawObj[i][j] === null){
+    				obj[i][j] = rawObj[i][j];
+    			}
+    			else if (rawObj[i][j] === undefined){
+    				obj[i][j] = rawObj[i][j];
+    			}
+    			else if (rawObj[i][j] === stringConstructor){
+    				obj[i][j] = rawObj[i][j];
+    			}
+    			else if (rawObj[i][j] === arrayConstructor){
+    				// TODO extract cast array method to be recursive
+    			}
+    			else if (rawObj[i][j] === objectConstructor){
+    				obj[i][j] = cast(rawObj[i], classAlias[rawObj[i]._class]);
+    			}
+    		}
+    	}
+    	else if (rawObj[i].constructor === objectConstructor){
+    		alert(i + " is object");
+    		obj[i] = cast(rawObj[i], classAlias[rawObj[i]._class]);
+    	}
     }
     return obj;
 };
@@ -37,12 +78,21 @@ DTO.prototype.getClass = function() {
     return this._class;
 }
 function BaseWebSocketNotification() {
+    this._class = "org.atinject.core.websocket.dto.BaseWebSocketNotification"
 };
 
 BaseWebSocketNotification.prototype = new DTO();
 
 
+function WebSocketResponseException() {
+    this._class = "org.atinject.core.websocket.dto.WebSocketResponseException"
+};
+
+WebSocketResponseException.prototype = new DTO();
+
+
 function BaseWebSocketRequest() {
+    this._class = "org.atinject.core.websocket.dto.BaseWebSocketRequest"
 };
 
 BaseWebSocketRequest.prototype = new DTO();
@@ -58,6 +108,7 @@ BaseWebSocketRequest.prototype.setRequestId = function(requestId) {
 
 
 function SessionOpenedNotification() {
+    this._class = "org.atinject.api.session.dto.SessionOpenedNotification"
 };
 
 SessionOpenedNotification.prototype = new BaseWebSocketNotification();
@@ -73,6 +124,7 @@ SessionOpenedNotification.prototype.setSessionId = function(sessionId) {
 
 
 function User() {
+    this._class = "org.atinject.api.user.dto.User"
 };
 
 User.prototype = new DTO();
@@ -106,6 +158,7 @@ User.prototype.setPassword = function(password) {
 
 
 function UserAffinityNotification() {
+    this._class = "org.atinject.api.user.dto.UserAffinityNotification"
 };
 
 UserAffinityNotification.prototype = new BaseWebSocketNotification();
@@ -121,6 +174,7 @@ UserAffinityNotification.prototype.setUrl = function(url) {
 
 
 function BaseWebSocketResponse() {
+    this._class = "org.atinject.core.websocket.dto.BaseWebSocketResponse"
 };
 
 BaseWebSocketResponse.prototype = new DTO();
@@ -134,8 +188,18 @@ BaseWebSocketResponse.prototype.setRequestId = function(requestId) {
     return this;
 };
 
+BaseWebSocketResponse.prototype.getException = function() {
+    return this.exception;
+};
+
+BaseWebSocketResponse.prototype.setException = function(exception) {
+    this.exception = exception;
+    return this;
+};
+
 
 function GetUserRequest() {
+    this._class = "org.atinject.api.user.dto.GetUserRequest"
 };
 
 GetUserRequest.prototype = new BaseWebSocketRequest();
@@ -151,6 +215,7 @@ GetUserRequest.prototype.setUuid = function(uuid) {
 
 
 function GetUserResponse() {
+    this._class = "org.atinject.api.user.dto.GetUserResponse"
 };
 
 GetUserResponse.prototype = new BaseWebSocketResponse();
@@ -168,6 +233,7 @@ GetUserResponse.prototype.setUser = function(user) {
 var classAlias = new Array();
 classAlias["org.atinject.core.dto.DTO"] = DTO;
 classAlias["org.atinject.core.websocket.dto.BaseWebSocketNotification"] = BaseWebSocketNotification;
+classAlias["org.atinject.core.websocket.dto.WebSocketResponseException"] = WebSocketResponseException;
 classAlias["org.atinject.core.websocket.dto.BaseWebSocketRequest"] = BaseWebSocketRequest;
 classAlias["org.atinject.api.session.dto.SessionOpenedNotification"] = SessionOpenedNotification;
 classAlias["org.atinject.api.user.dto.User"] = User;
@@ -175,6 +241,7 @@ classAlias["org.atinject.api.user.dto.UserAffinityNotification"] = UserAffinityN
 classAlias["org.atinject.core.websocket.dto.BaseWebSocketResponse"] = BaseWebSocketResponse;
 classAlias["org.atinject.api.user.dto.GetUserRequest"] = GetUserRequest;
 classAlias["org.atinject.api.user.dto.GetUserResponse"] = GetUserResponse;
+
 
 // event test
 
@@ -190,28 +257,27 @@ var event = document.createEvent("GetUserResponseEvent");
   window.dispatchEvent(event);
  */
  
+ // window event listener is working -----------------------------
+ /*
 //add an appropriate event listener
  window.addEventListener("cat", function(e) { alert(e.detail) });
 
  // create and dispatch the event
  var event = new CustomEvent("cat", {"detail":{"hazcheeseburger":true}});
  window.dispatchEvent(event);
-
+*/
 // test
-/* GetUserRequest.prototype = new BaseWebSocketRequest();
+var getUserResponse = new GetUserResponse();
+getUserResponse.setRequestId("abc");
+getUserResponse.setException(new WebSocketResponseException());
+var getUserResponseString = JSON.stringify(getUserResponse);
+alert(getUserResponseString);
 
-var getUserRequest = new GetUserRequest();
-getUserRequest.setRequestId("abc");
-var getUserRequestString = JSON.stringify(getUserRequest);
-alert(getUserRequestString);
-function getClassAlias(fqn){
-	return classAlias[fqn];
-}
-
-var getUserRequestRawObject = JSON.parse(getUserRequestString);
-alert(getUserRequestRawObject.requestId);
-var getUserRequestObject = cast(getUserRequestRawObject, classAlias[getUserRequestRawObject._class]);
-alert(getUserRequestObject.getRequestId()); */
+var getUserResponseRawObject = JSON.parse(getUserResponseString);
+//alert(getUserResponseRawObject.requestId);
+var getUserResponseObject = cast(getUserResponseRawObject, classAlias[getUserResponseRawObject._class]);
+alert(getUserResponseObject.getRequestId());
+alert(getUserResponseObject.getException());
 
 function onWebSocketOpened(event){
 	var io = document.getElementById("io");

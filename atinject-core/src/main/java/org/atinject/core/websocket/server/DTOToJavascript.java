@@ -154,6 +154,7 @@ public class DTOToJavascript
 
     public static final String complexDtoTemplate =
 "function ${dtoClassSimpleName}() {" + NEWLINE +
+"    this._class = \"${dtoClassCanonicalName}\"" + NEWLINE +
 "};" + NEWLINE +
 "" + NEWLINE +
 "${dtoClassSimpleName}.prototype = new ${dtoSuperClassSimpleName}();" + NEWLINE +
@@ -165,6 +166,7 @@ public class DTOToJavascript
 "    return this.${property};" + NEWLINE +
 "};" + NEWLINE +
 "" +  NEWLINE;
+    
     public static final String setterTemplate =
 "${dtoClassSimpleName}.prototype.set${capitalizedProperty} = function(${property}) {" + NEWLINE +
 "    this.${property} = ${property};" + NEWLINE +
@@ -174,6 +176,7 @@ public class DTOToJavascript
     
     private static String generateComplexDTO(Class<? extends DTO> dtoClass){
         String dtoClassSimpleName = dtoClass.getSimpleName();
+        String dtoClassCanonicalName = dtoClass.getCanonicalName();
         String dtoSuperClassSimpleName = dtoClass.getSuperclass().getSimpleName();
         
         String getterSetters = "";
@@ -192,6 +195,7 @@ public class DTOToJavascript
         }
         String generated = complexDtoTemplate
                 .replace("${dtoClassSimpleName}", dtoClassSimpleName)
+                .replace("${dtoClassCanonicalName}", dtoClassCanonicalName)
                 .replace("${dtoSuperClassSimpleName}", dtoSuperClassSimpleName)
                 .replace("${dtoGetterSetters}", getterSetters);
         
