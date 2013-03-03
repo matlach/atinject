@@ -24,6 +24,8 @@ features :
 * distributed / replicated cache
 * storage abstraction
 * entity versioning
+* javascript dto prototype generation
+* polymorphic dto support
 
 atinject is built on 4 key components :
 * [weld](http://seamframework.org/Weld) provides the cdi backbone
@@ -34,7 +36,8 @@ atinject is built on 4 key components :
 ##contributors
 =======
 video game industry grown up, worked 4 years as lead r&d backend for [frimastudio](http://www.frimastudio.com)
-now working at [myca health inc.](http://www.myca.com) as a software engineer.
+along with a small intercourse at [funcom games](http://www.funcom.com) as java developper.
+since now a year i have been working at [myca health inc.](http://www.myca.com) as a software engineer.
 feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
