@@ -13,7 +13,7 @@ the atinject project feature an integrated pipeline which can deliver static con
 just scale when more cpu, ram or storage is needed.
 affinity is the key in distributed architecture ; it require smart server but more importantly smart client
 
-features (server) :
+features (backend) :
 * cdi extensible framework, observers and interceptors
 * http static content delivery server
 * stateless http client / server
