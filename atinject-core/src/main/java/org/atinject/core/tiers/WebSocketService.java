@@ -9,7 +9,7 @@ import org.atinject.core.transaction.Transactional;
 @Profile
 @ThreadTracker
 @Transactional
-public abstract class Controller {
+public abstract class WebSocketService {
 
 
 }

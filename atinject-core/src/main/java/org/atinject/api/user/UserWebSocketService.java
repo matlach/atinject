@@ -13,11 +13,11 @@ import org.atinject.api.user.event.UserLoggedIn;
 import org.atinject.core.distexec.UserKey;
 import org.atinject.core.distexec.UserTopologyService;
 import org.atinject.core.notification.NotificationService;
-import org.atinject.core.tiers.Controller;
+import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.websocket.WebSocketMessage;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
 
-public class UserWebSocketController extends Controller {
+public class UserWebSocketService extends WebSocketService {
 
 	@Inject
 	private UserService userService;
