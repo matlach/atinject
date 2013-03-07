@@ -10,26 +10,26 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import org.atinject.core.logging.LoggerFactory;
 import org.slf4j.Logger;
 
-public class EntityRegistryExtension implements Extension
-{
+public class EntityRegistryExtension implements Extension {
+    
     private Logger logger = LoggerFactory.getLogger(EntityRegistryExtension.class);
     
-    private List<Class<? extends Entity>> entityClasses;
+    private List<Class<? extends Entity>> classes;
     
     public EntityRegistryExtension(){
-        entityClasses = new ArrayList<>();
+        classes = new ArrayList<>();
     }
     
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
         if (Entity.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            entityClasses.add((Class<Entity>)event.getAnnotatedType().getJavaClass());
+            classes.add((Class<Entity>)event.getAnnotatedType().getJavaClass());
             logger.info("added '{}' to entity registry", event.getAnnotatedType().getJavaClass().getSimpleName());
         }
      }
     
-    public List<Class<? extends Entity>> getEntityClasses()
+    public List<Class<? extends Entity>> getClasses()
     {
-        return entityClasses;
+        return classes;
     }
 
 }

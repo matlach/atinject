@@ -33,7 +33,7 @@ public class DTOToJavascript
     
     @PostConstruct
     public void initialize(){
-        List<Class<? extends DTO>> dtoClasses = dtoRegistryExtension.getDTOClasses();
+        List<Class<? extends DTO>> dtoClasses = dtoRegistryExtension.getClasses();
         javascript = "";
         for (Class<? extends DTO> dtoClass : dtoClasses){
             javascript = javascript + generate(dtoClass);

@@ -10,26 +10,26 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import org.atinject.core.logging.LoggerFactory;
 import org.slf4j.Logger;
 
-public class DTORegistryExtension implements Extension
-{
+public class DTORegistryExtension implements Extension {
+    
     private Logger logger = LoggerFactory.getLogger(DTORegistryExtension.class);
     
-    private List<Class<? extends DTO>> dtoClasses;
+    private List<Class<? extends DTO>> classes;
     
     public DTORegistryExtension(){
-        dtoClasses = new ArrayList<>();
+        classes = new ArrayList<>();
     }
     
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
         if (DTO.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            dtoClasses.add((Class<DTO>)event.getAnnotatedType().getJavaClass());
+            classes.add((Class<DTO>)event.getAnnotatedType().getJavaClass());
             logger.info("added '{}' to dto registry", event.getAnnotatedType().getJavaClass().getSimpleName());
         }
      }
     
-    public List<Class<? extends DTO>> getDTOClasses()
+    public List<Class<? extends DTO>> getClasses()
     {
-        return dtoClasses;
+        return classes;
     }
 
 }

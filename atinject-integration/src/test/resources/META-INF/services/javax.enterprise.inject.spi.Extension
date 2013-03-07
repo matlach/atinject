@@ -1,4 +1,9 @@
 org.atinject.core.cdi.BeanManagerExtension
+org.atinject.core.dto.DTORegistryExtension
+org.atinject.core.entity.EntityRegistryExtension
+org.atinject.core.tiers.WebSocketServiceRegistryExtension
+org.atinject.core.tiers.ServiceRegistryExtension
+org.atinject.core.tiers.CacheStoreRegistryExtension
 org.atinject.core.concurrent.AsynchronousServiceExtension
 org.atinject.core.cache.ClusteredCacheExtension
 org.atinject.core.websocket.WebSocketExtension
