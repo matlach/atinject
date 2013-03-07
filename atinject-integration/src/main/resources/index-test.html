@@ -258,15 +258,24 @@ var event = document.createEvent("GetUserResponseEvent");
  */
  
  // window event listener is working -----------------------------
- /*
+
+ function UserService(){
+ };
+ 
+ UserService.prototype.onGetUserResponse = function(getUserResponse){
+	 alert(getUserResponse.getClass());
+ }
+var userService = new UserService();
+ 
 //add an appropriate event listener
- window.addEventListener("cat", function(e) { alert(e.detail) });
+ window.addEventListener("onGetUserResponse", function(e){userService.onGetUserResponse(e.detail);});
 
  // create and dispatch the event
- var event = new CustomEvent("cat", {"detail":{"hazcheeseburger":true}});
+ var event = new CustomEvent("onGetUserResponse", {detail:new GetUserResponse()});
  window.dispatchEvent(event);
-*/
+ 
 // test
+/*
 var getUserResponse = new GetUserResponse();
 getUserResponse.setRequestId("abc");
 getUserResponse.setException(new WebSocketResponseException());
@@ -278,7 +287,7 @@ var getUserResponseRawObject = JSON.parse(getUserResponseString);
 var getUserResponseObject = cast(getUserResponseRawObject, classAlias[getUserResponseRawObject._class]);
 alert(getUserResponseObject.getRequestId());
 alert(getUserResponseObject.getException());
-
+*/
 function onWebSocketOpened(event){
 	var io = document.getElementById("io");
     io.value = io.value + "Web Socket opened!";
