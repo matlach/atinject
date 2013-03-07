@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.atinject.core.concurrent.Retry;
 
 @ApplicationScoped
-public class FacebookServiceImpl {
+public class FacebookService {
 
     @Retry
     public Object callGraphAPI() {
