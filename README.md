@@ -13,7 +13,7 @@ the atinject project feature an integrated pipeline which can deliver static con
 just scale when more cpu, ram or storage is needed.
 affinity is the key in distributed architecture ; it require smart server but more importantly smart client
 
-features :
+features (server) :
 * cdi extensible framework, observers and interceptors
 * http static content delivery server
 * stateless http client / server
@@ -24,8 +24,11 @@ features :
 * distributed / replicated cache
 * storage abstraction
 * entity versioning
+
+features (frontend) :
 * javascript dto prototype generation
 * polymorphic dto support
+* javascript web socket service prototype generation
 
 atinject is built on 4 key components :
 * [weld](http://seamframework.org/Weld) provides the cdi backbone
