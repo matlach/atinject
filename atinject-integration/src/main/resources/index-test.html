@@ -259,20 +259,34 @@ var event = document.createEvent("GetUserResponseEvent");
  
  // window event listener is working -----------------------------
 
- function UserService(){
- };
- 
- UserService.prototype.onGetUserResponse = function(getUserResponse){
-	 alert(getUserResponse.getClass());
- }
-var userService = new UserService();
- 
-//add an appropriate event listener
- window.addEventListener("onGetUserResponse", function(e){userService.onGetUserResponse(e.detail);});
+function UserService(){
+	 this.requests = new Object();
+};
 
- // create and dispatch the event
- var event = new CustomEvent("onGetUserResponse", {detail:new GetUserResponse()});
- window.dispatchEvent(event);
+UserService.prototype.doGetUserRequest = function(request){
+	var requestId = randomUUID();
+	request.setRequestId(requestId);
+	this.requests[requestId] = request; 
+}
+ 
+UserService.prototype.onGetUserResponse = function(response){
+    var request = this.requests[response.getRequestId()];
+    delete this.requests[response.getRequestId()];
+}
+var userService = new UserService();
+
+window.addEventListener("onGetUserResponse", function(e){userService.onGetUserResponse(e.detail);});
+
+// event test
+// 1. create request
+var doGetUserRequest = new GetUserRequest();
+userService.doGetUserRequest(doGetUserRequest);
+// 2. simulate response
+var onGetUserResponse = new GetUserResponse();
+onGetUserResponse.setRequestId(doGetUserRequest.getRequestId());
+// 3. dispatch response
+var event = new CustomEvent("onGetUserResponse", {detail:onGetUserResponse});
+window.dispatchEvent(event);
  
 // test
 /*
