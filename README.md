@@ -69,4 +69,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## Authentication, Registration and User
-![alt text](http://yuml.me/f74d945c "Authentication, Registration and User")
+![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
