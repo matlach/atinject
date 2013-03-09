@@ -109,8 +109,10 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 
 ### DTO and [Polymorphic] Serialization
 ![alt text](http://yuml.me/51685dbc "DTO and [Polymorphic] Serialization")
+![alt text](http://yuml.me/92190f13 "DTO and [Polymorphic] Serialization")
 
 ### Entity, Versionable Entity and Serialization
+![alt text](http://yuml.me/dc91ade3 "DTO and [Polymorphic] Serialization")
 
 ### Tiers
 ![alt text](http://yuml.me/870ee2f1 "Tiers")
