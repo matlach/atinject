@@ -81,7 +81,7 @@ usage:
 @Asynchronous public Future<?> performAsynchronously(...){...}
 ```
 ### Scheduled Service
-![alt text](http://yuml.me/d8ac2fd9 "Scheduled Service")
+![alt text](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry
 TODO
@@ -105,14 +105,15 @@ myEvent.fire(new MyEvent());
 public void onMyEvent(@Observes MyEvent myEvent){...}
 ```
 
-### Tiers
-![alt text](http://yuml.me/870ee2f1 "Tiers")
+### @Transactional, Transaction Manager and Transaction Services
 
 ### DTO and [Polymorphic] Serialization
+![alt text](http://yuml.me/51685dbc "DTO and [Polymorphic] Serialization")
 
 ### Entity, Versionable Entity and Serialization
 
-### @Transactional, Transaction Manager and Transaction Services
+### Tiers
+![alt text](http://yuml.me/870ee2f1 "Tiers")
 
 ### Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
