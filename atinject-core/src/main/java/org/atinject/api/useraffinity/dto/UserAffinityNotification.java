@@ -1,8 +1,8 @@
-package org.atinject.api.user.dto;
+package org.atinject.api.useraffinity.dto;
 
-import org.atinject.core.websocket.dto.BaseWebSocketNotification;
+import org.atinject.core.websocket.dto.WebSocketNotification;
 
-public class UserAffinityNotification extends BaseWebSocketNotification
+public class UserAffinityNotification extends WebSocketNotification
 {
     private static final long serialVersionUID = 1L;
 

@@ -2,7 +2,7 @@ package org.atinject.core.websocket.dto;
 
 import org.atinject.core.dto.DTO;
 
-public abstract class BaseWebSocketResponse extends DTO
+public abstract class WebSocketResponse extends DTO
 {
     private static final long serialVersionUID = 1L;
 
@@ -10,7 +10,7 @@ public abstract class BaseWebSocketResponse extends DTO
     
     private WebSocketResponseException exception;
     
-    public BaseWebSocketResponse(){
+    public WebSocketResponse(){
         super();
     }
 
@@ -19,7 +19,7 @@ public abstract class BaseWebSocketResponse extends DTO
         return requestId;
     }
 
-    public BaseWebSocketResponse setRequestId(String requestId)
+    public WebSocketResponse setRequestId(String requestId)
     {
         this.requestId = requestId;
         return this;
@@ -30,7 +30,7 @@ public abstract class BaseWebSocketResponse extends DTO
         return exception;
     }
 
-    public BaseWebSocketResponse setException(WebSocketResponseException exception)
+    public WebSocketResponse setException(WebSocketResponseException exception)
     {
         this.exception = exception;
         return this;

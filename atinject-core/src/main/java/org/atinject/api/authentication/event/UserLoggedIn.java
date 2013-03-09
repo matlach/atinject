@@ -1,4 +1,4 @@
-package org.atinject.api.user.event;
+package org.atinject.api.authentication.event;
 
 import org.atinject.api.session.Session;
 import org.atinject.api.user.entity.UserEntity;
@@ -16,24 +16,22 @@ public class UserLoggedIn extends Event
         super();
     }
     
-    public Session getSession()
-    {
+    public Session getSession(){
         return session;
     }
 
-    public void setSession(Session session)
-    {
+    public UserLoggedIn setSession(Session session){
         this.session = session;
+        return this;
     }
 
-    public UserEntity getUser()
-    {
+    public UserEntity getUser(){
         return user;
     }
 
-    public void setUser(UserEntity user)
-    {
+    public UserLoggedIn setUser(UserEntity user){
         this.user = user;
+        return this;
     }
     
 }

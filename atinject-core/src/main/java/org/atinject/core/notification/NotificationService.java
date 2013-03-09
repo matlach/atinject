@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.atinject.api.session.Session;
 import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.distexec.TopologyDistributedExecutor;
-import org.atinject.core.websocket.dto.BaseWebSocketNotification;
+import org.atinject.core.websocket.dto.WebSocketNotification;
 
 @ApplicationScoped
 public class NotificationService
@@ -18,7 +18,7 @@ public class NotificationService
     @Inject
     private TopologyDistributedExecutor distributedExecutor;
     
-    public Future<Void> sendNotification(Session session, BaseWebSocketNotification notification){
+    public Future<Void> sendNotification(Session session, WebSocketNotification notification){
         
         NotificationEvent event = new NotificationEvent();
         event.setSession(session);

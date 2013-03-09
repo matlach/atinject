@@ -11,9 +11,9 @@ import javax.inject.Inject;
 
 import org.atinject.core.dto.DTO;
 import org.atinject.core.dto.DTORegistryExtension;
-import org.atinject.core.websocket.dto.BaseWebSocketNotification;
-import org.atinject.core.websocket.dto.BaseWebSocketRequest;
-import org.atinject.core.websocket.dto.BaseWebSocketResponse;
+import org.atinject.core.websocket.dto.WebSocketNotification;
+import org.atinject.core.websocket.dto.WebSocketRequest;
+import org.atinject.core.websocket.dto.WebSocketResponse;
 import org.slf4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -56,23 +56,23 @@ public class DTOToJavascript
         if (dtoClass.equals(DTO.class)){
             return generateDTO(DTO.class);
         }
-        else if (dtoClass.equals(BaseWebSocketRequest.class)){
-            return generateBaseWebSocketRequest(BaseWebSocketRequest.class);
+        else if (dtoClass.equals(WebSocketRequest.class)){
+            return generateBaseWebSocketRequest(WebSocketRequest.class);
         }
-        else if (dtoClass.equals(BaseWebSocketNotification.class)){
-            return generateBaseWebSocketNotification(BaseWebSocketNotification.class);
+        else if (dtoClass.equals(WebSocketNotification.class)){
+            return generateBaseWebSocketNotification(WebSocketNotification.class);
         }
-        else if (dtoClass.equals(BaseWebSocketResponse.class)){
-            return generateBaseWebSocketResponse(BaseWebSocketResponse.class);
+        else if (dtoClass.equals(WebSocketResponse.class)){
+            return generateBaseWebSocketResponse(WebSocketResponse.class);
         }
-        else if (BaseWebSocketRequest.class.isAssignableFrom(dtoClass)){
-            return generateRequest((Class<? extends BaseWebSocketRequest>) dtoClass);
+        else if (WebSocketRequest.class.isAssignableFrom(dtoClass)){
+            return generateRequest((Class<? extends WebSocketRequest>) dtoClass);
         }
-        else if (BaseWebSocketNotification.class.isAssignableFrom(dtoClass)){
-            return generateNotification((Class<? extends BaseWebSocketNotification>) dtoClass);
+        else if (WebSocketNotification.class.isAssignableFrom(dtoClass)){
+            return generateNotification((Class<? extends WebSocketNotification>) dtoClass);
         }
-        else if (BaseWebSocketResponse.class.isAssignableFrom(dtoClass)){
-            return generateResponse((Class<? extends BaseWebSocketResponse>) dtoClass);
+        else if (WebSocketResponse.class.isAssignableFrom(dtoClass)){
+            return generateResponse((Class<? extends WebSocketResponse>) dtoClass);
         }
         else if (DTO.class.isAssignableFrom(dtoClass)){
             return generateComplexDTO(dtoClass);
@@ -128,27 +128,27 @@ public class DTOToJavascript
      * };
      * </pre>
      */
-    public static String generateBaseWebSocketRequest(Class<BaseWebSocketRequest> baseWebSocketRequestClass){
+    public static String generateBaseWebSocketRequest(Class<WebSocketRequest> baseWebSocketRequestClass){
         return generateComplexDTO(baseWebSocketRequestClass);
     }
     
-    public static String generateBaseWebSocketNotification(Class<BaseWebSocketNotification> baseWebSocketNotificationClass){
+    public static String generateBaseWebSocketNotification(Class<WebSocketNotification> baseWebSocketNotificationClass){
         return generateComplexDTO(baseWebSocketNotificationClass);
     }
     
-    public static String generateBaseWebSocketResponse(Class<BaseWebSocketResponse> baseWebSocketResponseClass){
+    public static String generateBaseWebSocketResponse(Class<WebSocketResponse> baseWebSocketResponseClass){
         return generateComplexDTO(baseWebSocketResponseClass);
     }
     
-    public static String generateRequest(Class<? extends BaseWebSocketRequest> webSocketRequestClass){
+    public static String generateRequest(Class<? extends WebSocketRequest> webSocketRequestClass){
         return generateComplexDTO(webSocketRequestClass);
     }
     
-    public static String generateResponse(Class<? extends BaseWebSocketResponse> webSocketResponseClass){
+    public static String generateResponse(Class<? extends WebSocketResponse> webSocketResponseClass){
         return generateComplexDTO(webSocketResponseClass);
     }
     
-    public static String generateNotification(Class<? extends BaseWebSocketNotification> webSocketNotificationClass){
+    public static String generateNotification(Class<? extends WebSocketNotification> webSocketNotificationClass){
         return generateComplexDTO(webSocketNotificationClass);
     }
 

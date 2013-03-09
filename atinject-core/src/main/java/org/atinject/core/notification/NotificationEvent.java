@@ -1,12 +1,12 @@
 package org.atinject.core.notification;
 
 import org.atinject.api.session.Session;
-import org.atinject.core.websocket.dto.BaseWebSocketNotification;
+import org.atinject.core.websocket.dto.WebSocketNotification;
 
 public class NotificationEvent
 {
     private Session session;
-    private BaseWebSocketNotification notification;
+    private WebSocketNotification notification;
     
     public Session getSession()
     {
@@ -17,11 +17,11 @@ public class NotificationEvent
         this.session = session;
         return this;
     }
-    public BaseWebSocketNotification getNotification()
+    public WebSocketNotification getNotification()
     {
         return notification;
     }
-    public NotificationEvent setNotification(BaseWebSocketNotification notification)
+    public NotificationEvent setNotification(WebSocketNotification notification)
     {
         this.notification = notification;
         return this;

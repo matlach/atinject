@@ -18,8 +18,7 @@ public class UserAdapter
     @Inject
     private UserEntityFactory userEntityFactory;
     
-    public User userEntityToUser(UserEntity entity)
-    {
+    public User userEntityToUser(UserEntity entity) {
         if (entity == null){
             return null;
         }

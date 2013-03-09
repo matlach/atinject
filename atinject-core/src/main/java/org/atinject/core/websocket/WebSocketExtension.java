@@ -12,13 +12,13 @@ import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.atinject.api.session.Session;
-import org.atinject.core.websocket.dto.BaseWebSocketRequest;
-import org.atinject.core.websocket.dto.BaseWebSocketResponse;
+import org.atinject.core.websocket.dto.WebSocketRequest;
+import org.atinject.core.websocket.dto.WebSocketResponse;
 
 public class WebSocketExtension implements Extension
 {
  
-    private Map<Class<? extends BaseWebSocketRequest>, WebSocketMessageMethod> messages;
+    private Map<Class<? extends WebSocketRequest>, WebSocketMessageMethod> messages;
     private WebSocketOpenMethod open; // TODO list<WebSocket...>
     private WebSocketCloseMethod close; // TODO list<WebSocket...>
     
@@ -160,7 +160,7 @@ public class WebSocketExtension implements Extension
     
     private void processWebSocketMessageMethod(Method method)
     {
-        if (! BaseWebSocketResponse.class.isAssignableFrom(method.getReturnType()))
+        if (! WebSocketResponse.class.isAssignableFrom(method.getReturnType()))
         {
             throw new RuntimeException();
         }
@@ -180,14 +180,14 @@ public class WebSocketExtension implements Extension
         int parameterIndex = 0;
         for (Class<?> parameterType : parameterTypes)
         {
-            if (BaseWebSocketRequest.class.isAssignableFrom(parameterType))
+            if (WebSocketRequest.class.isAssignableFrom(parameterType))
             {
                 if (messages.containsKey(parameterType))
                 {
                     throw new RuntimeException();
                 }
                 webSocketMessageMethod.setWebSocketRequestFirstParameter(parameterIndex == 0);
-                messages.put((Class<? extends BaseWebSocketRequest>) parameterType, webSocketMessageMethod);
+                messages.put((Class<? extends WebSocketRequest>) parameterType, webSocketMessageMethod);
             }
             else if (Session.class.isAssignableFrom(parameterType))
             {
@@ -263,7 +263,7 @@ public class WebSocketExtension implements Extension
         close = webSocketCloseMethod;
     }
     
-    public WebSocketMessageMethod getWebSocketMessageMethod(Class<? extends BaseWebSocketRequest> request)
+    public WebSocketMessageMethod getWebSocketMessageMethod(Class<? extends WebSocketRequest> request)
     {
         return messages.get(request);
     }

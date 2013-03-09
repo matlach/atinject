@@ -60,7 +60,6 @@ import org.atinject.api.session.event.SessionOpened;
 import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.distexec.TopologyService;
-import org.atinject.core.distexec.UserKey;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
@@ -68,9 +67,9 @@ import org.atinject.core.notification.NotificationEvent;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
-import org.atinject.core.websocket.dto.BaseWebSocketNotification;
-import org.atinject.core.websocket.dto.BaseWebSocketRequest;
-import org.atinject.core.websocket.dto.BaseWebSocketResponse;
+import org.atinject.core.websocket.dto.WebSocketNotification;
+import org.atinject.core.websocket.dto.WebSocketRequest;
+import org.atinject.core.websocket.dto.WebSocketResponse;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
 import org.slf4j.Logger;
 
@@ -491,10 +490,10 @@ public class WebSocketServerHandler {
             }
             
             // decode binary web socket frame
-            BaseWebSocketRequest request = decodeBinaryWebSocketFrame(frame);
+            WebSocketRequest request = decodeBinaryWebSocketFrame(frame);
             
             // perform request
-            BaseWebSocketResponse response = performRequest(session, request);
+            WebSocketResponse response = performRequest(session, request);
             
             // send response
             sendResponseAsBinary(ctx.channel(), response);
@@ -509,36 +508,36 @@ public class WebSocketServerHandler {
             }
             
             // decode text web socket frame
-            BaseWebSocketRequest request = decodeTextWebSocketFrame(frame);
+            WebSocketRequest request = decodeTextWebSocketFrame(frame);
             
             // perform request
-            BaseWebSocketResponse response = performRequest(session, request);
+            WebSocketResponse response = performRequest(session, request);
             
             // send response
             sendResponseAsText(ctx.channel(), response);
         }
         
-        private BaseWebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
+        private WebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
             // read json
             final String json = ByteBufUtil.readUTF8(frame.data());
             
             // unserialize json
-            final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
+            final WebSocketRequest request = dtoObjectMapper.readValue(json);
             
             return request;
         }
         
-        private BaseWebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
+        private WebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
             // read json
             final String json = frame.text();
             
             // unserialize json
-            final BaseWebSocketRequest request = dtoObjectMapper.readValue(json);
+            final WebSocketRequest request = dtoObjectMapper.readValue(json);
             
             return request;
         }
         
-        private BaseWebSocketResponse performRequest(Session session, BaseWebSocketRequest request){
+        private WebSocketResponse performRequest(Session session, WebSocketRequest request){
             // build task
             WebSocketMessageTask task = new WebSocketMessageTask()
                 .setSession(session)
@@ -547,21 +546,18 @@ public class WebSocketServerHandler {
             // should we use a future here to wait for response ?
             // response could be sent asynchronously instead ?
             // should we use completion service ?
-            Future<BaseWebSocketResponse> future;
+            Future<WebSocketResponse> future;
             if (session.getUserId() == null){
                 // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
                 future = asynchronousService.submit(task);
             }
             else{
-                // build user affinity based key
-                UserKey key = new UserKey()
-                    .setId(session.getUserId());
                 // submit task to distributed executor with given key
-                future = distributedExecutor.submit(task, key);
+                future = distributedExecutor.submit(task, session.getUserId());
             }
             
             // wait for response to come back
-            BaseWebSocketResponse response = getWebSocketResponseFromFuture(future);
+            WebSocketResponse response = getWebSocketResponseFromFuture(future);
             
             // bind the original request id back in the response
             response.setRequestId(request.getRequestId());
@@ -569,10 +565,10 @@ public class WebSocketServerHandler {
             return response;
         }
         
-        public class WebSocketMessageTask implements Callable<BaseWebSocketResponse>{
+        public class WebSocketMessageTask implements Callable<WebSocketResponse>{
             
             private Session session;
-            private BaseWebSocketRequest request;
+            private WebSocketRequest request;
             
             public Session getSession()
             {
@@ -585,19 +581,19 @@ public class WebSocketServerHandler {
                 return this;
             }
             
-            public BaseWebSocketRequest getRequest()
+            public WebSocketRequest getRequest()
             {
                 return request;
             }
 
-            public WebSocketMessageTask setRequest(BaseWebSocketRequest request)
+            public WebSocketMessageTask setRequest(WebSocketRequest request)
             {
                 this.request = request;
                 return this;
             }
 
             @Override
-            public BaseWebSocketResponse call() throws Exception
+            public WebSocketResponse call() throws Exception
             {
                 // manually inject web socket extension, as callable should have been serialized
                 WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
@@ -620,11 +616,11 @@ public class WebSocketServerHandler {
                 {
                     returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request);
                 }
-                return (BaseWebSocketResponse) returnValue;
+                return (WebSocketResponse) returnValue;
             }
         }
         
-        private BaseWebSocketResponse getWebSocketResponseFromFuture(Future<BaseWebSocketResponse> future){
+        private WebSocketResponse getWebSocketResponseFromFuture(Future<WebSocketResponse> future){
             try
             {
                 return future.get();
@@ -640,24 +636,24 @@ public class WebSocketServerHandler {
             }
         }
         
-        private ChannelFuture sendNotificationAsBinary(Channel channel, BaseWebSocketNotification notification){
+        private ChannelFuture sendNotificationAsBinary(Channel channel, WebSocketNotification notification){
             ByteBuf byteBuf = Unpooled.buffer();
             ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
             return channel.write(new BinaryWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendResponseAsBinary(Channel channel, BaseWebSocketResponse response){
+        private ChannelFuture sendResponseAsBinary(Channel channel, WebSocketResponse response){
             ByteBuf byteBuf = Unpooled.buffer();
             ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
             return channel.write(new BinaryWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendNotificationAsText(Channel channel, BaseWebSocketNotification notification){
+        private ChannelFuture sendNotificationAsText(Channel channel, WebSocketNotification notification){
             ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(notification));
             return channel.write(new TextWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendResponseAsText(Channel channel, BaseWebSocketResponse response){
+        private ChannelFuture sendResponseAsText(Channel channel, WebSocketResponse response){
             ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(response));
             return channel.write(new TextWebSocketFrame(byteBuf));
         }

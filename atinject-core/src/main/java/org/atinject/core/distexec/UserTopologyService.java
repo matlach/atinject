@@ -28,8 +28,8 @@ public class UserTopologyService
         }
     }
     
-    public TopologyAwareAddress getUserKeyPrimaryLocation(UserKey userKey){
-        return (TopologyAwareAddress) userCache.getAdvancedCache().getDistributionManager().getPrimaryLocation(userKey);
+    public TopologyAwareAddress getUserKeyPrimaryLocation(String userId){
+        return (TopologyAwareAddress) userCache.getAdvancedCache().getDistributionManager().getPrimaryLocation(userId);
     }
     
 }

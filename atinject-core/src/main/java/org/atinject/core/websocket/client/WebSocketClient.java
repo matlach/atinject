@@ -41,7 +41,7 @@ import org.atinject.core.dto.DTO;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.websocket.WebSocketEndpoint;
-import org.atinject.core.websocket.dto.BaseWebSocketRequest;
+import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.core.websocket.server.event.WebSocketServerStarted;
 import org.atinject.core.websocket.server.event.WebSocketServerStopped;
@@ -141,7 +141,7 @@ public class WebSocketClient {
         handler.handshakeFuture().sync();
     }
     
-    public ChannelFuture send(BaseWebSocketRequest request) throws Exception
+    public ChannelFuture send(WebSocketRequest request) throws Exception
     {
         
         while (sessionId == null){

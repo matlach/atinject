@@ -30,7 +30,7 @@ public class UserRequestDistributedExecutor {
 		distributedExecutorService = new DefaultExecutorService(masterCacheNode, localExecutorService);
 	}
 	
-	public <T> Future<T> submit(Callable<T> task, UserKey input){
+	public <T> Future<T> submit(Callable<T> task, String input){
 		return distributedExecutorService.submit(task, input);
 	}
 	

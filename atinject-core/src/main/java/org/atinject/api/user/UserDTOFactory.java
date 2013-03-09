@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.atinject.api.user.dto.GetUserRequest;
 import org.atinject.api.user.dto.GetUserResponse;
 import org.atinject.api.user.dto.User;
-import org.atinject.api.user.dto.UserAffinityNotification;
+import org.atinject.api.useraffinity.dto.UserAffinityNotification;
 import org.atinject.core.cdi.BeanManagerExtension;
 import org.atinject.core.dto.DTOFactory;
 

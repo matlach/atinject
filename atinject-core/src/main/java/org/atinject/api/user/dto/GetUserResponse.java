@@ -1,8 +1,8 @@
 package org.atinject.api.user.dto;
 
-import org.atinject.core.websocket.dto.BaseWebSocketResponse;
+import org.atinject.core.websocket.dto.WebSocketResponse;
 
-public class GetUserResponse extends BaseWebSocketResponse
+public class GetUserResponse extends WebSocketResponse
 {
     private static final long serialVersionUID = 1L;
 
