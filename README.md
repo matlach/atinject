@@ -68,14 +68,45 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-## Asynchronous Service
+## Documentation
+
+### Asynchronous Service
 ![alt text](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
-## Distributed Event Service 
+### @Asynchronous
+TODO
+usage:
+```java
+@Asynchronous public void performAsynchronously(...){...}
+@Asynchronous public Future<?> performAsynchronously(...){...}
+```
+### Scheduled Service
+![alt text](http://yuml.me/d8ac2fd9 "Scheduled Service")
+
+### @Retry
+TODO
+usage:
+```java
+@Retry public Object performWithRetry(...){...}
+```
+
+### @Profile and Profiling Service
+TODO
+
+### Distributed Event and Distributed Event Service 
 ![alt text](http://yuml.me/ad529290 "Distributed Event Service")
 
-## Tiers
+usage:
+```java
+@Inject @Distributed Event<MyEvent> myEvent;
+
+myEvent.fire(new MyEvent());
+
+public void onMyEvent(@Observes MyEvent myEvent){...}
+```
+
+### Tiers
 ![alt text](http://yuml.me/870ee2f1 "Tiers")
 
-## Authentication, Registration and User
+### Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
