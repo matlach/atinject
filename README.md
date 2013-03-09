@@ -74,5 +74,8 @@ limitations under the License.
 ## Distributed Event Service 
 ![alt text](http://yuml.me/ad529290 "Distributed Event Service")
 
+## Tiers
+![alt text](http://yuml.me/870ee2f1 "Tiers")
+
 ## Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
