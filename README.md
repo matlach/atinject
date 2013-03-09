@@ -108,5 +108,11 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 ### Tiers
 ![alt text](http://yuml.me/870ee2f1 "Tiers")
 
+### DTO and [Polymorphic] Serialization
+
+### Entity, Versionable Entity and Serialization
+
+### @Transactional, Transaction Manager and Transaction Services
+
 ### Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
