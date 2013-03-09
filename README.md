@@ -113,6 +113,7 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 
 ### Entity, Versionable Entity and Serialization
 ![alt text](http://yuml.me/dc91ade3 "DTO and [Polymorphic] Serialization")
+![alt text](http://yuml.me/31dfb262 "DTO and [Polymorphic] Serialization")
 ![alt text](http://yuml.me/d117e4ce "DTO and [Polymorphic] Serialization")
 
 ### Tiers
