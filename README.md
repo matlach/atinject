@@ -119,5 +119,11 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 ### Tiers
 ![alt text](http://yuml.me/870ee2f1 "Tiers")
 
+### Frontend >>> Backend
+TODO
+
+### Backend >>> Frontend
+TODO
+
 ### Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
