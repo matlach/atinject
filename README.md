@@ -68,5 +68,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+## Asynchronous Service
+![alt text](http://yuml.me/d8ac2fd9 "Asynchronous Service")
+
+## Distributed Event Service 
+![alt text](http://yuml.me/ad529290 "Distributed Event Service")
+
 ## Authentication, Registration and User
 ![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
