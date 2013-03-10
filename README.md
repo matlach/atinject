@@ -72,7 +72,7 @@ limitations under the License.
 
 ### Weld SE enhancements
 
-* Transaction
+* Transaction : see [@Transactional, Transaction Manager and Transaction Services](#transactional-transaction-manager-and-transaction-services)
 * Security
 * Validation
 
