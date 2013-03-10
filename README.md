@@ -71,10 +71,14 @@ limitations under the License.
 ## Documentation
 
 ### Logger
+
+inject an [slf4j](http://www.slf4j.org) logger interface based on the injection point bean class backed by the [logback](http://logback.qos.ch) implementation.
+
 usage:
 ```java
 @Inject Logger logger;
 ```
+note : logback can be replaced by any slf4j compatible implementation. 
 
 ### Asynchronous Service
 ![alt text](http://yuml.me/d8ac2fd9 "Asynchronous Service")
@@ -85,6 +89,9 @@ usage:
 ```java
 @Asynchronous public void performAsynchronously(...){...}
 @Asynchronous public Future<?> performAsynchronously(...){...}
+
+@Asynchronous
+public class PerformAllAsynchronously{...}
 ```
 ### Scheduled Service
 ![alt text](http://yuml.me/d61b82f1 "Scheduled Service")
@@ -94,6 +101,9 @@ TODO
 usage:
 ```java
 @Retry public Object performWithRetry(...){...}
+
+@Retry
+public class PerformAllWithRetry{...}
 ```
 
 ### @Profile and Profiling Service
