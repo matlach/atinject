@@ -70,6 +70,12 @@ limitations under the License.
 
 ## Documentation
 
+### Logger
+usage:
+```java
+@Inject Logger logger;
+```
+
 ### Asynchronous Service
 ![alt text](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
