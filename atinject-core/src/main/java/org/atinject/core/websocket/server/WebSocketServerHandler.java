@@ -548,12 +548,24 @@ public class WebSocketServerHandler {
             // should we use completion service ?
             Future<WebSocketResponse> future;
             if (session.getUserId() == null){
-                // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
-                future = asynchronousService.submit(task);
+                if (request.getRendezvous() == null){
+                    // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
+                    future = asynchronousService.submit(task);
+                }
+                else {
+                    // submit task to distributed executor with given rendezvous
+                    future = distributedExecutor.submit(task, session.getUserId());
+                }
             }
             else{
-                // submit task to distributed executor with given key
-                future = distributedExecutor.submit(task, session.getUserId());
+                if (request.getRendezvous() == null){
+                    // submit task to distributed executor using user id as rendezvous
+                    future = distributedExecutor.submit(task, session.getUserId());
+                }
+                else {
+                    // submit task to distributed executor with given rendezvous
+                    future = distributedExecutor.submit(task, session.getUserId());
+                }
             }
             
             // wait for response to come back
@@ -570,31 +582,26 @@ public class WebSocketServerHandler {
             private Session session;
             private WebSocketRequest request;
             
-            public Session getSession()
-            {
+            public Session getSession() {
                 return session;
             }
 
-            public WebSocketMessageTask setSession(Session session)
-            {
+            public WebSocketMessageTask setSession(Session session) {
                 this.session = session;
                 return this;
             }
             
-            public WebSocketRequest getRequest()
-            {
+            public WebSocketRequest getRequest() {
                 return request;
             }
 
-            public WebSocketMessageTask setRequest(WebSocketRequest request)
-            {
+            public WebSocketMessageTask setRequest(WebSocketRequest request) {
                 this.request = request;
                 return this;
             }
 
             @Override
-            public WebSocketResponse call() throws Exception
-            {
+            public WebSocketResponse call() throws Exception {
                 // manually inject web socket extension, as callable should have been serialized
                 WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
                 
@@ -603,17 +610,14 @@ public class WebSocketServerHandler {
                 Object returnValue = null;
                 if (webSocketMessageMethod.isInjectSessionParameter())
                 {
-                    if (webSocketMessageMethod.isWebSocketRequestFirstParameter())
-                    {
+                    if (webSocketMessageMethod.isWebSocketRequestFirstParameter()) {
                         returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request, session);
                     }
-                    else
-                    {
+                    else {
                         returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), session, request);
                     }
                 }
-                else
-                {
+                else {
                     returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request);
                 }
                 return (WebSocketResponse) returnValue;
@@ -621,17 +625,14 @@ public class WebSocketServerHandler {
         }
         
         private WebSocketResponse getWebSocketResponseFromFuture(Future<WebSocketResponse> future){
-            try
-            {
+            try {
                 return future.get();
             }
-            catch (InterruptedException e)
-            {
+            catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return null;
             }
-            catch (ExecutionException e)
-            {
+            catch (ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -665,8 +666,7 @@ public class WebSocketServerHandler {
         }
         
         @Override
-        public void userEventTriggered(ChannelHandlerContext ctx, Object evt)
-                throws Exception {
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             logger.info("user event triggered '" + evt + "'");
         }
 
