@@ -132,6 +132,16 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 ```
 
 ### @Transactional, Transaction Manager and Transaction Services
+![@Transactional, Transaction Manager and Transaction Services](http://yuml.me/ac71653f "@Transactional, Transaction Manager and Transaction Services")
+
+usage:
+```java
+@Transactional
+public class PerformAllWithinTransaction{...}
+
+@Transactional public performWithinTransaction(...){...}
+```
+note : WebSocketService and Services are @Transactional
 
 ### DTO and [Polymorphic] Serialization
 ![DTO and Polymorphic Serialization](http://yuml.me/51685dbc "DTO and Polymorphic Serialization")
