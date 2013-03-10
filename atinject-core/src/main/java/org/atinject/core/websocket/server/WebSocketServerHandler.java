@@ -549,12 +549,13 @@ public class WebSocketServerHandler {
             Future<WebSocketResponse> future;
             if (session.getUserId() == null){
                 if (request.getRendezvous() == null){
-                    // perform locally through asynchronous service (no gain of submitting request on any member of the cluster ?)
+                    // perform locally through asynchronous service
+                    // no gain of submitting request on any member of the cluster ?
                     future = asynchronousService.submit(task);
                 }
                 else {
                     // submit task to distributed executor with given rendezvous
-                    future = distributedExecutor.submit(task, session.getUserId());
+                    future = distributedExecutor.submit(task, request.getRendezvous());
                 }
             }
             else{
@@ -564,7 +565,7 @@ public class WebSocketServerHandler {
                 }
                 else {
                     // submit task to distributed executor with given rendezvous
-                    future = distributedExecutor.submit(task, session.getUserId());
+                    future = distributedExecutor.submit(task, request.getRendezvous());
                 }
             }
             
