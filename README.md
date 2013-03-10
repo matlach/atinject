@@ -32,7 +32,7 @@ features (frontend) :
 
 atinject is built on 4 key components :
 * [weld](http://seamframework.org/Weld) provides the cdi backbone
-* [netty](https://netty.io) provides the http and websockets transport between client and server
+* [netty](https://www.netty.io) provides the http and websockets transport between client and server
 * [infinispan](http://www.jboss.org/infinispan) provides the distributed executor and map reduce framework, distributed and replicated cache and finally data storage abstraction
 * [jackson](https://github.com/FasterXML/jackson-core) provides the serialization framework used between client and server and the support for data versioning
 
@@ -142,6 +142,9 @@ public class PerformAllWithinTransaction{...}
 @Transactional public performWithinTransaction(...){...}
 ```
 note : WebSocketService and Services are @Transactional
+
+### @ValidateMethod and Validation Service
+TODO
 
 ### DTO and [Polymorphic] Serialization
 ![DTO and Polymorphic Serialization](http://yuml.me/51685dbc "DTO and Polymorphic Serialization")
