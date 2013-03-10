@@ -70,9 +70,19 @@ limitations under the License.
 
 ## Documentation
 
+### Weld SE enhancements
+
+* Transaction
+* Security
+* Validation
+
+![Weld SE enhancements](http://yuml.me/3e673ac4 "Weld SE enhancements")
+
 ### Logger
 
 inject an [slf4j](http://www.slf4j.org) logger interface based on the injection point bean class backed by the [logback](http://logback.qos.ch) implementation.
+
+![Logger](http://yuml.me/36c406d7 "Logger")
 
 usage:
 ```java
@@ -81,7 +91,7 @@ usage:
 note : logback can be replaced by any slf4j compatible implementation. 
 
 ### Asynchronous Service
-![alt text](http://yuml.me/d8ac2fd9 "Asynchronous Service")
+![Asynchronous Service](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
 ### @Asynchronous
 TODO
@@ -94,7 +104,7 @@ usage:
 public class PerformAllAsynchronously{...}
 ```
 ### Scheduled Service
-![alt text](http://yuml.me/d61b82f1 "Scheduled Service")
+![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry
 TODO
@@ -110,7 +120,7 @@ public class PerformAllWithRetry{...}
 TODO
 
 ### Distributed Event and Distributed Event Service 
-![alt text](http://yuml.me/ad529290 "Distributed Event Service")
+![Distributed Event Service](http://yuml.me/ad529290 "Distributed Event Service")
 
 usage:
 ```java
@@ -124,16 +134,16 @@ public void onMyEvent(@Observes MyEvent myEvent){...}
 ### @Transactional, Transaction Manager and Transaction Services
 
 ### DTO and [Polymorphic] Serialization
-![alt text](http://yuml.me/51685dbc "DTO and [Polymorphic] Serialization")
-![alt text](http://yuml.me/92190f13 "DTO and [Polymorphic] Serialization")
+![DTO and Polymorphic Serialization](http://yuml.me/51685dbc "DTO and Polymorphic Serialization")
+![DTO and Polymorphic Serialization](http://yuml.me/92190f13 "DTO and Polymorphic Serialization")
 
 ### Entity, Versionable Entity and Serialization
-![alt text](http://yuml.me/dc91ade3 "DTO and [Polymorphic] Serialization")
-![alt text](http://yuml.me/31dfb262 "DTO and [Polymorphic] Serialization")
-![alt text](http://yuml.me/cac95d6b "DTO and [Polymorphic] Serialization")
+![Entity, Versionable Entity and Serialization](http://yuml.me/dc91ade3 "Entity, Versionable Entity and Serialization")
+![Entity, Versionable Entity and Serialization](http://yuml.me/31dfb262 "Entity, Versionable Entity and Serialization")
+![Entity, Versionable Entity and Serialization](http://yuml.me/cac95d6b "Entity, Versionable Entity and Serialization")
 
 ### Tiers
-![alt text](http://yuml.me/870ee2f1 "Tiers")
+![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
 ### Frontend >>> Backend
 TODO
@@ -142,4 +152,4 @@ TODO
 TODO
 
 ### Authentication, Registration and User
-![alt text](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
+![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
