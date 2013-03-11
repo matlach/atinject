@@ -64,6 +64,7 @@ import org.atinject.core.distexec.UserRequestDistributedExecutor;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
+import org.atinject.core.security.SecurityService;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
@@ -603,25 +604,32 @@ public class WebSocketServerHandler {
 
             @Override
             public WebSocketResponse call() throws Exception {
-                // manually inject web socket extension, as callable should have been serialized
-                WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
-                
-                WebSocketMessageMethod webSocketMessageMethod = webSocketExtension.getWebSocketMessageMethod(request.getClass());
-                
-                Object returnValue = null;
-                if (webSocketMessageMethod.isInjectSessionParameter())
-                {
-                    if (webSocketMessageMethod.isWebSocketRequestFirstParameter()) {
-                        returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request, session);
+                // set current session
+                SecurityService.setCurrentSession(session);
+                try{
+                    // manually inject web socket extension, as callable should have been serialized
+                    WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
+                    
+                    WebSocketMessageMethod webSocketMessageMethod = webSocketExtension.getWebSocketMessageMethod(request.getClass());
+                    
+                    Object returnValue = null;
+                    if (webSocketMessageMethod.isInjectSessionParameter())
+                    {
+                        if (webSocketMessageMethod.isWebSocketRequestFirstParameter()) {
+                            returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request, session);
+                        }
+                        else {
+                            returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), session, request);
+                        }
                     }
                     else {
-                        returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), session, request);
+                        returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request);
                     }
+                    return (WebSocketResponse) returnValue;
                 }
-                else {
-                    returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request);
+                finally {
+                    SecurityService.removeCurrentSession();
                 }
-                return (WebSocketResponse) returnValue;
             }
         }
         

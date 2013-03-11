@@ -13,52 +13,44 @@ import org.infinispan.marshall.Externalizer;
 import org.infinispan.marshall.SerializeWith;
 
 @SerializeWith(UserExternalizer.class)
-public class UserEntity extends VersionableEntity
-{
+public class UserEntity extends VersionableEntity {
     private static final long serialVersionUID = 1L;
 
     private String id;
     private String name;
     private String password;
 
-    public UserEntity()
-    {
+    public UserEntity() {
         super();
     }
 
-    public String getId()
-    {
+    public String getId() {
         return id;
     }
 
-    public UserEntity setId(String id)
-    {
+    public UserEntity setId(String id) {
         this.id = id;
         return this;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public UserEntity setName(String name)
-    {
+    public UserEntity setName(String name) {
         this.name = name;
         return this;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 
-    public UserEntity setPassword(String password)
-    {
+    public UserEntity setPassword(String password) {
         this.password = password;
         return this;
     }
-
+    
     public static class UserExternalizer extends InjectionAwareExternalizer implements Externalizer<UserEntity>
     {
         private static final long serialVersionUID = 1L;
