@@ -53,6 +53,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.session.Session;
+import org.atinject.api.session.SessionContext;
 import org.atinject.api.session.SessionService;
 import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.api.session.event.SessionClosed;
@@ -64,7 +65,6 @@ import org.atinject.core.distexec.UserRequestDistributedExecutor;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
-import org.atinject.core.security.SecurityService;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
@@ -605,7 +605,7 @@ public class WebSocketServerHandler {
             @Override
             public WebSocketResponse call() throws Exception {
                 // set current session
-                SecurityService.setCurrentSession(session);
+                SessionContext.setCurrentSession(session);
                 try{
                     // manually inject web socket extension, as callable should have been serialized
                     WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
@@ -628,7 +628,7 @@ public class WebSocketServerHandler {
                     return (WebSocketResponse) returnValue;
                 }
                 finally {
-                    SecurityService.removeCurrentSession();
+                    SessionContext.removeCurrentSession();
                 }
             }
         }

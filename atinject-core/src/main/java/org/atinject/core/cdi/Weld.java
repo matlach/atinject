@@ -1,12 +1,10 @@
 package org.atinject.core.cdi;
 
-import org.atinject.core.security.SecurityService;
 import org.atinject.core.transaction.TransactionServices;
 import org.atinject.core.validation.HibernateValidatorValidationServices;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.resources.spi.ResourceLoader;
-import org.jboss.weld.security.spi.SecurityServices;
 import org.jboss.weld.validation.spi.ValidationServices;
 
 public class Weld extends org.jboss.weld.environment.se.Weld
@@ -16,7 +14,6 @@ public class Weld extends org.jboss.weld.environment.se.Weld
     {
         Deployment deployment = super.createDeployment(resourceLoader, bootstrap);
         deployment.getServices().add(TransactionServices.class, new TransactionServices());
-        deployment.getServices().add(SecurityServices.class, new SecurityService());
         deployment.getServices().add(ValidationServices.class, new HibernateValidatorValidationServices());
         return deployment;
     }
