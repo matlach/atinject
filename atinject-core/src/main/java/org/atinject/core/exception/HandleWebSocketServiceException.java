@@ -14,7 +14,7 @@ import javax.interceptor.InterceptorBinding;
 @Documented
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HandleControllerException
+public @interface HandleWebSocketServiceException
 {
 
 }

@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 
 @HandleServiceException
 @Interceptor
-public class HandleControllerExceptionInterceptor {
+public class HandleWebSocketServiceExceptionInterceptor {
     
     @Inject
     private Logger logger;
