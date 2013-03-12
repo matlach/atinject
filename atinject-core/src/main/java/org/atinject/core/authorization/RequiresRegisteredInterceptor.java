@@ -7,9 +7,9 @@ import javax.interceptor.InvocationContext;
 import org.atinject.api.session.Session;
 import org.atinject.api.session.SessionContext;
 
-@RequiresRoles
+@RequiresGuest
 @Interceptor
-public class RequiresRolesInterceptor {
+public class RequiresRegisteredInterceptor {
     
     @AroundInvoke
     public Object authorize(InvocationContext invocationContext) throws Exception{
