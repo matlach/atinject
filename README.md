@@ -94,7 +94,7 @@ note : logback can be replaced by any slf4j compatible implementation.
 ### Asynchronous Service
 ![Asynchronous Service](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
-### @Asynchronous
+### @Asynchronous and Asynchronous Service
 TODO
 usage:
 ```java
@@ -107,7 +107,7 @@ public class PerformAllAsynchronously{...}
 ### Scheduled Service
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
-### @Retry
+### @Retry and Scheduled Service
 TODO
 usage:
 ```java
@@ -159,11 +159,10 @@ TODO
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
-### Frontend >>> Backend
-TODO
-
-### Backend >>> Frontend
-TODO
-
-### Authentication, Registration and User
+### Authentication, Registration and User Services
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
+
+### Authorization, User, Role and Permission Services
+
+
+### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
