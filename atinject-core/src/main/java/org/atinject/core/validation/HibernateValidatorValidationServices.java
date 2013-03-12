@@ -12,7 +12,7 @@ public class HibernateValidatorValidationServices implements ValidationServices
     @Override
     public ValidatorFactory getDefaultValidatorFactory()
     {
-        return Validation.byProvider(HibernateValidator.class).configure().buildValidatorFactory();
+        return Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory();
     }
     
     @Override
