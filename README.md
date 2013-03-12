@@ -37,7 +37,8 @@ atinject is built on 4 key components :
 * [jackson](https://github.com/FasterXML/jackson-core) provides the serialization framework used between client and server and the support for data versioning
 
 ##contributors
-=======
+
+### mathieu lachance
 video game industry grown up, worked 4 years as lead r&d backend for [frimastudio](http://www.frimastudio.com)
 along with a small intercourse at [funcom](http://www.funcom.com) as java developper.
 since now a year i have been working at [myca health inc.](http://www.myca.com) as a software engineer.
