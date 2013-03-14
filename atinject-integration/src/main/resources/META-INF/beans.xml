@@ -8,7 +8,15 @@
 		<class>org.atinject.core.concurrent.RetryInterceptor</class>
 		<class>org.atinject.core.profiling.ProfileInterceptor</class>
 		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
+		<class>org.atinject.core.exception.HandleControllerExceptionInterceptor</class>
+		<class>org.atinject.core.exception.HandleServiceExceptionInterceptor</class>
+		<class>org.atinject.core.exception.HandleCacheStoreExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
+		<class>org.atinject.core.authorization.RequiresUserInterceptor</class>
+		<class>org.atinject.core.authorization.RequiresGuestInterceptor</class>
+		<class>org.atinject.core.authorization.RequiresRolesInterceptor</class>
+		<class>org.atinject.core.authorization.RequiresPermissionsInterceptor</class>
+		<class>org.atinject.core.validation.ValidateRequestInterceptor</class>
 	</interceptors>
 
 <!-- 	<alternatives>
