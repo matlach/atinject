@@ -30,13 +30,6 @@ public class ValidateRequestInterceptor
 
         Object result = ctx.proceed();
 
-        violations = validator.validateReturnValue(ctx.getTarget(), ctx.getMethod(), result);
-
-        if (! violations.isEmpty())
-        {
-            throw new ConstraintViolationException(violations);
-        }
-
         return result;
     }
 
