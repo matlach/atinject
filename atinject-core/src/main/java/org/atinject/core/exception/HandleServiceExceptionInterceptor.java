@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 @Interceptor
 public class HandleServiceExceptionInterceptor {
     
-    @Inject
-    private Logger logger;
+    @Inject private Logger logger;
+    @Inject private ServiceExceptionSanitizer serviceExceptionSanitizer;
     
     @AroundInvoke
     public Object handleException(InvocationContext invocationContext) throws Exception{
@@ -20,6 +20,7 @@ public class HandleServiceExceptionInterceptor {
             return invocationContext.proceed();
         }
         catch (Exception e){
+            serviceExceptionSanitizer.sanitize(e);
             logger.error("", e);
             throw e;
         }

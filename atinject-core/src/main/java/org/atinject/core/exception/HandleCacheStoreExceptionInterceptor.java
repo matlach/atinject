@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 @Interceptor
 public class HandleCacheStoreExceptionInterceptor {
     
-    @Inject
-    private Logger logger;
+    @Inject private Logger logger;
+    @Inject private CacheStoreExceptionSanitizer cacheStoreExceptionSanitizer;
     
     @AroundInvoke
     public Object handleException(InvocationContext invocationContext) throws Exception{
@@ -20,6 +20,7 @@ public class HandleCacheStoreExceptionInterceptor {
             return invocationContext.proceed();
         }
         catch (Exception e){
+            cacheStoreExceptionSanitizer.sanitize(e);
             logger.error("", e);
             throw e;
         }

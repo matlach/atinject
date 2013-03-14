@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 @Interceptor
 public class HandleWebSocketServiceExceptionInterceptor {
     
-    @Inject
-    private Logger logger;
+    @Inject private Logger logger;
+    @Inject private WebSocketServiceExceptionSanitizer webSocketServiceExceptionSanitizer;
     
     @AroundInvoke
     public Object handleException(InvocationContext invocationContext) throws Exception{
@@ -20,6 +20,7 @@ public class HandleWebSocketServiceExceptionInterceptor {
             return invocationContext.proceed();
         }
         catch (Exception e){
+            webSocketServiceExceptionSanitizer.sanitize(e);
             logger.error("", e);
             throw e;
         }
