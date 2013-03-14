@@ -144,8 +144,21 @@ public class PerformAllWithinTransaction{...}
 ```
 note : WebSocketService and Services are @Transactional
 
-### @ValidateMethod and Validation Service
-TODO
+### @ValidateRequest, @ValidateMethod and Validation Service
+
+running :
+```xml
+<beans>
+    <class>org.atinject.validation.ValidateRequestInterceptor</class>
+</beans>
+```
+
+junit :
+```xml
+<beans>
+    <class>org.atinject.validation.ValidateMethodInterceptor</class>
+</beans>
+```
 
 ### DTO and [Polymorphic] Serialization
 ![DTO and Polymorphic Serialization](http://yuml.me/51685dbc "DTO and Polymorphic Serialization")
