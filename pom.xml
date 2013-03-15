@@ -9,8 +9,7 @@
   <name>atinject</name>
   <url>https://github.com/matlach/atinject</url>
   <description>
-    atinject is a framework for 
-    rapid development of highly scalable websocket application.
+    atinject, realtime, scalable, cdi enhanced, 3-tiers architecture
   </description>
 
   <organization>
@@ -68,7 +67,7 @@
 		<netty.version>4.0.0.Beta2</netty.version>
 		<infinispan.version>5.2.5.Final</infinispan.version>
 		<jackson.version>2.1.4</jackson.version>
-		<hibernate.validator.version>5.0.0.CR1</hibernate.validator.version>
+		<hibernate.validator.version>5.0.0.CR2</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
 		<junit.version>4.11</junit.version>
 	</properties>
