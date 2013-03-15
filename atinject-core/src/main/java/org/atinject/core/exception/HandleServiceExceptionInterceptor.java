@@ -14,14 +14,21 @@ public class HandleServiceExceptionInterceptor {
     @Inject private Logger logger;
     @Inject private ServiceExceptionSanitizer serviceExceptionSanitizer;
     
+    private boolean sanitize = true;
+    private boolean log = true;
+    
     @AroundInvoke
     public Object handleException(InvocationContext invocationContext) throws Exception{
         try{
             return invocationContext.proceed();
         }
         catch (Exception e){
-            serviceExceptionSanitizer.sanitize(e);
-            logger.error("", e);
+            if (sanitize){
+                serviceExceptionSanitizer.sanitize(e);
+            }
+            if (log){
+                logger.error("", e);
+            }
             throw e;
         }
     }

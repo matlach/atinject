@@ -14,14 +14,21 @@ public class HandleCacheStoreExceptionInterceptor {
     @Inject private Logger logger;
     @Inject private CacheStoreExceptionSanitizer cacheStoreExceptionSanitizer;
     
+    private boolean sanitize = true;
+    private boolean log = true;
+    
     @AroundInvoke
     public Object handleException(InvocationContext invocationContext) throws Exception{
         try{
             return invocationContext.proceed();
         }
         catch (Exception e){
-            cacheStoreExceptionSanitizer.sanitize(e);
-            logger.error("", e);
+            if (sanitize) {
+                cacheStoreExceptionSanitizer.sanitize(e);
+            }
+            if (log) {
+                logger.error("", e);
+            }
             throw e;
         }
     }
