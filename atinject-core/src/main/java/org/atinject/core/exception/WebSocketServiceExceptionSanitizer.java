@@ -1,6 +1,7 @@
 package org.atinject.core.exception;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +16,7 @@ public class WebSocketServiceExceptionSanitizer {
     public void initialize()
     {
         keywords.add("$_$$_weld");
-        keywords.add("org.jboss.weld.interceptor");
+        keywords.add("org.jboss.weld.interceptor.proxy");
     }
     
     public Exception sanitize(Exception e){
@@ -35,7 +36,7 @@ public class WebSocketServiceExceptionSanitizer {
                 i++;
             }
         }
-        e.setStackTrace(stackTrace);
+        e.setStackTrace(Arrays.copyOfRange(stackTrace, 0, i));
         return e;
     }
 }
