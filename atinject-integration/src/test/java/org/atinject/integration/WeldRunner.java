@@ -1,15 +1,17 @@
 package org.atinject.integration;
 
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
+import javax.enterprise.inject.spi.CDI;
+
+import org.atinject.core.cdi.CDIProvider;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
 public class WeldRunner extends BlockJUnit4ClassRunner {
     
-    private Weld weld;
-    private WeldContainer container;
+    static{
+        CDI.setCDIProvider(new CDIProvider());
+    }
  
     public WeldRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -17,25 +19,12 @@ public class WeldRunner extends BlockJUnit4ClassRunner {
  
     @Override
     public void run(RunNotifier notifier) {
-        initializeWeld();
         super.run(notifier);
-        shutdownWeld();
     }
      
     @Override
     protected Object createTest() throws Exception {
-        return container
-                   .instance()
-                   .select(getTestClass().getJavaClass())
-                   .get();
+        return CDI.current().select(getTestClass().getJavaClass()).get();
     }
  
-    private void initializeWeld() {
-        weld = new Weld();
-        container = weld.initialize();
-    }
- 
-    private void shutdownWeld() {
-        weld.shutdown();
-    }
 }

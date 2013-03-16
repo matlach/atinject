@@ -9,6 +9,8 @@ import javax.interceptor.InvocationContext;
 public class TransactionalInterceptor
 {
 
+    // ?? @Inject UserTransaction userTransaction;
+    
     @AroundInvoke 
     public Object manageTransaction(InvocationContext ctx) throws Exception
     {

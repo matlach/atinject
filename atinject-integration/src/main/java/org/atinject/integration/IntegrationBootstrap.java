@@ -1,6 +1,9 @@
 package org.atinject.integration;
 
-import org.atinject.core.cdi.Weld;
+import javax.enterprise.inject.spi.CDI;
+
+import org.atinject.core.cdi.CDIProvider;
+
 
 
 public class IntegrationBootstrap {
@@ -28,17 +31,8 @@ public class IntegrationBootstrap {
         });
         shutdownThread.setDaemon(true);
         shutdownThread.start();
-
-        final Weld weld = new Weld();
-        weld.initialize();
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                weld.shutdown();
-            }
-        }));
+        
+        CDI.setCDIProvider(new CDIProvider());
     }
 	
 }

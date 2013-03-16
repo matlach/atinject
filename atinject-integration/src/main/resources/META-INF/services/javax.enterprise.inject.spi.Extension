@@ -1,4 +1,3 @@
-org.atinject.core.cdi.BeanManagerExtension
 org.atinject.core.dto.DTORegistryExtension
 org.atinject.core.entity.EntityRegistryExtension
 org.atinject.core.tiers.WebSocketServiceRegistryExtension
