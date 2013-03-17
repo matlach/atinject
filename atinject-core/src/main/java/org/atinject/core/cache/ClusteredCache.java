@@ -7,11 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-import org.atinject.core.tiers.CacheStore;
 import org.infinispan.AdvancedCache;
+import org.infinispan.Cache;
 import org.infinispan.context.Flag;
 import org.infinispan.distexec.mapreduce.Collator;
 import org.infinispan.distexec.mapreduce.MapReduceTask;
@@ -19,33 +16,27 @@ import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.util.concurrent.NotifyingFuture;
 
-public abstract class ClusteredCache<K, V> extends CacheStore
+public class ClusteredCache<K, V>
 {
-
-    @Inject
-    private ClusteredCacheManager cacheManager;
     
     private AdvancedCache<K, V> cache;
     
-    @PostConstruct
-    public void initialize()
-    {
-        String cacheName = this.getClass().getAnnotation(CacheName.class).value();
-        this.cache = (AdvancedCache<K, V>) cacheManager.getCache(cacheName).getAdvancedCache();
-        this.cache = cache.withFlags(Flag.IGNORE_RETURN_VALUES);
+    public ClusteredCache(Cache<K, V> cache){
+        this.cache = cache.getAdvancedCache()
+                .withFlags(Flag.IGNORE_RETURN_VALUES);
     }
 
-    protected V get(K key)
+    public V get(K key)
     {
         return cache.get(key);
     }
     
-    protected Map<K, V> getAll(K... keys)
+    public Map<K, V> getAll(K... keys)
     {
         return getAll(Arrays.asList(keys));
     }
     
-    protected Map<K, V> getAll(Collection<K> keys){
+    public Map<K, V> getAll(Collection<K> keys){
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
@@ -74,25 +65,25 @@ public abstract class ClusteredCache<K, V> extends CacheStore
         return values;
     }
     
-    protected void lock(K key){
+    public void lock(K key){
         cache.lock(key);
     }
     
-    protected void lock(K... keys)
+    public void lock(K... keys)
     {
         cache.lock(keys);
     }
     
-    protected void lock(Collection<K> keys){
+    public void lock(Collection<K> keys){
         cache.lock(keys);
     }
     
-    protected void put(K key, V value)
+    public void put(K key, V value)
     {
         cache.put(key, value);
     }
     
-    protected void putAll(Map<K, V> m)
+    public void putAll(Map<K, V> m)
     {
         cache.putAll(m);
     }
@@ -100,17 +91,17 @@ public abstract class ClusteredCache<K, V> extends CacheStore
     /**
      * Note : if pessimistic transaction are used, ensure {@link #lock(key)} has been called before
      */
-    protected void remove(K key)
+    public void remove(K key)
     {
         cache.remove(key);
     }
     
-    protected void removeAll(K... keys)
+    public void removeAll(K... keys)
     {
         removeAll(Arrays.asList(keys));
     }
     
-    protected void removeAll(Collection<K> keys){
+    public void removeAll(Collection<K> keys){
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys)
         {
@@ -136,22 +127,22 @@ public abstract class ClusteredCache<K, V> extends CacheStore
         }
     }
     
-    protected int size()
+    public int size()
     {
         return cache.size();
     }
 
-    protected Collection<V> values()
+    public Collection<V> values()
     {
         return cache.values();
     }
 
-    protected void clear()
+    public void clear()
     {
         cache.clear();
     }
 
-    protected <KOut, VOut> Map<KOut, VOut> performMapReduce(
+    public <KOut, VOut> Map<KOut, VOut> performMapReduce(
             Mapper<K,V,KOut,VOut> mapper,
             Reducer<KOut, VOut> reducer){
         return new MapReduceTask<K, V, KOut, VOut>(cache)
@@ -160,7 +151,7 @@ public abstract class ClusteredCache<K, V> extends CacheStore
                 .execute();
     }
     
-    protected <KOut, VOut, R> R performMapReduce(
+    public <KOut, VOut, R> R performMapReduce(
             Mapper<K,V,KOut,VOut> mapper,
             Reducer<KOut, VOut> reducer,
             Collator<KOut, VOut, R> collator){

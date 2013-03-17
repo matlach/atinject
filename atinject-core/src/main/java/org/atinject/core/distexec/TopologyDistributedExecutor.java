@@ -17,9 +17,7 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class TopologyDistributedExecutor
 {
-    @Inject
-    @CacheName("distributed-executor-master-cache-node")
-    private Cache<?, ?> masterCacheNode;
+    @Inject @CacheName("distributed-executor-master-cache-node") private Cache<Object, Object> masterCacheNode;
     
     @Inject
     private AsynchronousService localExecutorService;

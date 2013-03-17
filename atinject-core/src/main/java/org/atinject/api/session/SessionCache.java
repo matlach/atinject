@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.tiers.CacheStore;
 import org.infinispan.distexec.mapreduce.Collator;
 import org.infinispan.distexec.mapreduce.Collector;
 import org.infinispan.distexec.mapreduce.Mapper;
@@ -16,19 +18,20 @@ import org.infinispan.distexec.mapreduce.Reducer;
 /**
  * Note : session cache be replicated, optimistic and should not be persisted by any mean
  */
-@CacheName("session")
 @ApplicationScoped
-public class SessionCache extends ClusteredCache<String, Session>
-{
+public class SessionCache extends CacheStore {
+    
+    @Inject @CacheName("session") private ClusteredCache<String, Session> cache;
+    
     public Session getSession(String sessionId){
-        return get(sessionId);
+        return cache.get(sessionId);
     }
 
     /**
      * Note : this method use map reduce operation to search
      */
     public Session getSessionByUserId(String userId){
-        return performMapReduce(
+        return cache.performMapReduce(
                 new GetSessionByUserIdMapper(userId),
                 new GetSessionByUserIdReducer(),
                 new GetSessionByUserIdCollator());
@@ -76,11 +79,11 @@ public class SessionCache extends ClusteredCache<String, Session>
     }
     
     public Map<String, Session> getAllSessions(String... sessionIds){
-        return getAll(sessionIds);
+        return cache.getAll(sessionIds);
     }
     
     public Map<String, Session> getAllSessions(List<String> sessionIds){
-        return getAll(sessionIds);
+        return cache.getAll(sessionIds);
     }
     
     public List<Session> getAllSessionsByMachineId(){
@@ -96,10 +99,10 @@ public class SessionCache extends ClusteredCache<String, Session>
     }
     
     public void put(Session session){
-        put(session.getSessionId(), session);
+        cache.put(session.getSessionId(), session);
     }
     
     public void remove(Session session){
-        remove(session.getSessionId());
+        cache.remove(session.getSessionId());
     }
 }

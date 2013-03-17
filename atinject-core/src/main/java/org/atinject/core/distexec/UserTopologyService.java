@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.atinject.api.user.entity.UserEntity;
 import org.atinject.core.cache.CacheName;
 import org.infinispan.Cache;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
@@ -12,9 +13,7 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 public class UserTopologyService
 {
 
-    @Inject
-    @CacheName("user")
-    private Cache<?, ?> userCache;
+    @Inject @CacheName("user") private Cache<String, UserEntity> userCache;
     
     @PostConstruct
     public void initialize(){

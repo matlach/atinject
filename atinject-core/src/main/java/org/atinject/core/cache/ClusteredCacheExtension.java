@@ -10,6 +10,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessProducer;
 import javax.enterprise.inject.spi.Producer;
+import javax.inject.Named;
 
 import org.atinject.core.cdi.CDI;
 import org.infinispan.configuration.cache.Configuration;
@@ -26,7 +27,7 @@ public class ClusteredCacheExtension implements Extension
     
     public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event, BeanManager beanManager)
     {
-        CacheName cacheName = event.getAnnotatedMember().getAnnotation(CacheName.class);
+    	CacheName cacheName = event.getAnnotatedMember().getAnnotation(CacheName.class);
         if (cacheName == null)
         {
             throw new NullPointerException("@CacheName must be defined");

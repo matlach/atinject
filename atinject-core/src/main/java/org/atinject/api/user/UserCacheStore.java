@@ -1,18 +1,21 @@
 package org.atinject.api.user;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.tiers.CacheStore;
 
-@CacheName("user")
 @ApplicationScoped
-public class UserCacheStore extends ClusteredCache<String, UserEntity>
+public class UserCacheStore extends CacheStore
 {
+
+    @Inject @CacheName("user") private ClusteredCache<String, UserEntity> cache;
     
     public UserEntity getUser(String userId){
-        return get(userId);
+        return cache.get(userId);
     }
     
     /**
@@ -24,16 +27,16 @@ public class UserCacheStore extends ClusteredCache<String, UserEntity>
 
     public void lockUser(String userId)
     {
-        lock(userId);
+        cache.lock(userId);
     }
     
     public void putUser(UserEntity user)
     {
-        put(user.getId(), user);
+        cache.put(user.getId(), user);
     }
     
     public void removeUser(UserEntity user){
-        remove(user.getId());
+        cache.remove(user.getId());
     }
 
 }
