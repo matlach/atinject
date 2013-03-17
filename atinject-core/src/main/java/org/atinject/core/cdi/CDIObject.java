@@ -63,7 +63,7 @@ public class CDIObject extends CDI<Object> {
         return beanManager;
     }
     
-    protected Instance<Object> getInstance() {
+    private Instance<Object> getInstance() {
         return beanManager.delegate().instance();
     }
 

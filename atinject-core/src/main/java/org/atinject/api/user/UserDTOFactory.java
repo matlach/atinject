@@ -6,7 +6,7 @@ import org.atinject.api.user.dto.GetUserRequest;
 import org.atinject.api.user.dto.GetUserResponse;
 import org.atinject.api.user.dto.User;
 import org.atinject.api.useraffinity.dto.UserAffinityNotification;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.dto.DTOFactory;
 
 @ApplicationScoped
@@ -14,18 +14,18 @@ public class UserDTOFactory extends DTOFactory
 {
 
     public GetUserRequest newGetUserRequest(){
-        return BeanManagerExtension.getReference(GetUserRequest.class);
+        return CDI.select(GetUserRequest.class).get();
     }
     
     public GetUserResponse newGetUserResponse(){
-        return BeanManagerExtension.getReference(GetUserResponse.class);
+        return CDI.select(GetUserResponse.class).get();
     }
     
     public User newUser(){
-        return BeanManagerExtension.getReference(User.class);
+        return CDI.select(User.class).get();
     }
     
     public UserAffinityNotification newUserAffinityNotification(){
-        return BeanManagerExtension.getReference(UserAffinityNotification.class);
+        return CDI.select(UserAffinityNotification.class).get();
     }
 }

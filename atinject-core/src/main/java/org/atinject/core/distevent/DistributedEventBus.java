@@ -12,7 +12,7 @@ import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
 
 import org.atinject.core.cache.CacheName;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.event.Event;
 import org.atinject.core.startup.Startup;
@@ -63,7 +63,7 @@ public class DistributedEventBus
         @Override
         public Void call() throws Exception
         {
-            BeanManagerExtension.fireEvent(event);
+            CDI.getBeanManager().fireEvent(event);
             return null;
         }
         

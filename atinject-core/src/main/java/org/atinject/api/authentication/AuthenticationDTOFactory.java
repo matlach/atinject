@@ -6,25 +6,25 @@ import org.atinject.api.authentication.dto.LoginRequest;
 import org.atinject.api.authentication.dto.LoginResponse;
 import org.atinject.api.authentication.dto.LogoutRequest;
 import org.atinject.api.authentication.dto.LogoutResponse;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.dto.DTOFactory;
 
 @ApplicationScoped
 public class AuthenticationDTOFactory extends DTOFactory {
 
     public LoginRequest newLoginRequest(){
-        return BeanManagerExtension.getReference(LoginRequest.class);
+        return CDI.select(LoginRequest.class).get();
     }
     
     public LoginResponse newLoginResponse(){
-        return BeanManagerExtension.getReference(LoginResponse.class);
+        return CDI.select(LoginResponse.class).get();
     }
     
     public LogoutRequest newLogoutRequest(){
-        return BeanManagerExtension.getReference(LogoutRequest.class);
+        return CDI.select(LogoutRequest.class).get();
     }
     
     public LogoutResponse newLogoutResponse(){
-        return BeanManagerExtension.getReference(LogoutResponse.class);
+        return CDI.select(LogoutResponse.class).get();
     }
 }

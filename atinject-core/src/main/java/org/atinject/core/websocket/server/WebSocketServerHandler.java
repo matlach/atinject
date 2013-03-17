@@ -58,7 +58,7 @@ import org.atinject.api.session.SessionService;
 import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.api.session.event.SessionClosed;
 import org.atinject.api.session.event.SessionOpened;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.distexec.TopologyService;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
@@ -608,7 +608,7 @@ public class WebSocketServerHandler {
                 SessionContext.setCurrentSession(session);
                 try{
                     // manually inject web socket extension, as callable should have been serialized
-                    WebSocketExtension webSocketExtension = BeanManagerExtension.getReference(WebSocketExtension.class);
+                    WebSocketExtension webSocketExtension = CDI.select(WebSocketExtension.class).get();
                     
                     WebSocketMessageMethod webSocketMessageMethod = webSocketExtension.getWebSocketMessageMethod(request.getClass());
                     

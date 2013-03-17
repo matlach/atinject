@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.session.Session;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.distexec.TopologyDistributedExecutor;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 
@@ -47,7 +47,7 @@ public class NotificationService
         @Override
         public Void call() throws Exception
         {
-            BeanManagerExtension.fireEvent(event);
+            CDI.getBeanManager().fireEvent(event);
             return null;
         }
         

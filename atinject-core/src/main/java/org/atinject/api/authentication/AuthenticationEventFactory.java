@@ -4,17 +4,17 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.atinject.api.authentication.event.UserLoggedIn;
 import org.atinject.api.authentication.event.UserLoggedOut;
-import org.atinject.core.cdi.BeanManagerExtension;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.event.EventFactory;
 
 @ApplicationScoped
 public class AuthenticationEventFactory extends EventFactory {
 
     public UserLoggedIn newUserLoggedIn(){
-        return BeanManagerExtension.getReference(UserLoggedIn.class);
+        return CDI.select(UserLoggedIn.class).get();
     }
     
     public UserLoggedOut newUserLoggedOut(){
-        return BeanManagerExtension.getReference(UserLoggedOut.class);
+        return CDI.select(UserLoggedOut.class).get();
     }
 }

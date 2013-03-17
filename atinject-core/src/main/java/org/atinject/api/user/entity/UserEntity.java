@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import javax.enterprise.inject.spi.CDI;
-
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.entity.VersionableEntity;
 import org.infinispan.marshall.Externalizer;
 import org.infinispan.marshall.SerializeWith;
@@ -54,7 +53,7 @@ public class UserEntity extends VersionableEntity {
         private static final long serialVersionUID = 1L;
 
         private static VersionableUserExternalizer externalizer =
-                CDI.current().select(VersionableUserExternalizer.class).get();
+                CDI.select(VersionableUserExternalizer.class).get();
         
         @Override
         public void writeObject(ObjectOutput output, UserEntity user) throws IOException {
