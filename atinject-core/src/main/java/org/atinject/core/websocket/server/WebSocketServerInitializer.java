@@ -2,11 +2,11 @@ package org.atinject.core.websocket.server;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.DefaultEventExecutorGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
