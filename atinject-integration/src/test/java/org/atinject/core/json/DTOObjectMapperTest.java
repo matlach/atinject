@@ -2,11 +2,10 @@ package org.atinject.core.json;
 
 import javax.inject.Inject;
 
-import junit.framework.Assert;
-
 import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.integration.WeldRunner;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

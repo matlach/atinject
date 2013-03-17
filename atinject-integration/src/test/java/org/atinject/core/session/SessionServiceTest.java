@@ -2,13 +2,12 @@ package org.atinject.core.session;
 
 import javax.inject.Inject;
 
-import junit.framework.Assert;
-
 import org.atinject.api.session.Session;
 import org.atinject.api.session.SessionService;
 import org.atinject.api.session.event.SessionClosed;
 import org.atinject.api.session.event.SessionOpened;
 import org.atinject.integration.WeldRunner;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
