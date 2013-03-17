@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import javax.inject.Inject;
+import javax.enterprise.inject.spi.CDI;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
-import org.atinject.core.entity.InjectionAwareExternalizer;
 import org.atinject.core.entity.VersionableEntity;
 import org.infinispan.marshall.Externalizer;
 import org.infinispan.marshall.SerializeWith;
@@ -51,22 +50,19 @@ public class UserEntity extends VersionableEntity {
         return this;
     }
     
-    public static class UserExternalizer extends InjectionAwareExternalizer implements Externalizer<UserEntity>
-    {
+    public static class UserExternalizer implements Externalizer<UserEntity> {
         private static final long serialVersionUID = 1L;
 
-        @Inject
-        private VersionableUserExternalizer externalizer;
+        private static VersionableUserExternalizer externalizer =
+                CDI.current().select(VersionableUserExternalizer.class).get();
         
         @Override
-        public void writeObject(ObjectOutput output, UserEntity user) throws IOException
-        {
+        public void writeObject(ObjectOutput output, UserEntity user) throws IOException {
             externalizer.writeObject(output, user);
         }
 
         @Override
-        public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException
-        {
+        public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException {
             return externalizer.readObject(input);
         }
     }

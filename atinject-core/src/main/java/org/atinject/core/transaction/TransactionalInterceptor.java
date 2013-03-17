@@ -1,46 +1,41 @@
 package org.atinject.core.transaction;
 
+import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 @Transactional
 @Interceptor
 public class TransactionalInterceptor
 {
 
-    // ?? @Inject UserTransaction userTransaction;
+    @Inject private UserTransaction userTransaction;
     
     @AroundInvoke 
-    public Object manageTransaction(InvocationContext ctx) throws Exception
-    {
+    public Object manageTransaction(InvocationContext ctx) throws Exception {
         boolean firstInChain = false;
-        if (TransactionManager.isStatusNoTransaction())
-        {
-            TransactionManager.begin();
+        if (userTransaction.getStatus() == Status.STATUS_NO_TRANSACTION) {
+            userTransaction.begin();
             firstInChain = true;
         }
         
-        try
-        {
+        try {
             return ctx.proceed();
         }
-        catch (Exception e)
-        {
-            TransactionManager.setRollbackOnly();
+        catch (Exception e) {
+            userTransaction.setRollbackOnly();
             throw e;
         }
-        finally
-        {
-            if (firstInChain)
-            {
-                if (TransactionManager.isStatusActive())
-                {
-                    TransactionManager.commit();
+        finally {
+            if (firstInChain) {
+                if (userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+                    userTransaction.commit();
                 }
-                else
-                {
-                    TransactionManager.rollback();
+                else {
+                    userTransaction.rollback();
                 }
             }
         }
