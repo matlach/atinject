@@ -11,7 +11,7 @@ public class IntegrationBootstrap {
     public static void main(String[] args) throws Exception
     {
         System.setProperty("user.timezone", "GMT");
-        System.setProperty("Dinfinispan.unsafe.allow_jdk8_chm", "true");
+        System.setProperty("infinispan.unsafe.allow_jdk8_chm", "true");
 
         Thread shutdownThread = new Thread(new Runnable()
         {
