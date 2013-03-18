@@ -12,19 +12,16 @@ import javax.validation.ConstraintViolationException;
 
 @ValidateMethod
 @Interceptor
-public class ValidateMethodInterceptor
-{
+public class ValidateMethodInterceptor {
 
     @Inject
     private Validator validator;
 
     @AroundInvoke
-    public Object validateMethod(InvocationContext ctx) throws Exception
-    {
+    public Object validateMethod(InvocationContext ctx) throws Exception {
         Set<ConstraintViolation<Object>> violations = validator.validateParameters(ctx.getTarget(), ctx.getMethod(), ctx.getParameters());
 
-        if (! violations.isEmpty())
-        {
+        if (! violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
@@ -32,8 +29,7 @@ public class ValidateMethodInterceptor
 
         violations = validator.validateReturnValue(ctx.getTarget(), ctx.getMethod(), result);
 
-        if (! violations.isEmpty())
-        {
+        if (! violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
 
