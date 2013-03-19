@@ -5,13 +5,11 @@ import javax.inject.Inject;
 import org.atinject.api.user.dto.GetUserRequest;
 import org.atinject.core.websocket.client.WebSocketClient;
 import org.atinject.core.websocket.server.WebSocketServer;
-import org.atinject.integration.WeldRunner;
+import org.atinject.integration.IntegrationTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-@RunWith(WeldRunner.class)
-public class WebSocketTest 
+public class WebSocketTest extends IntegrationTest
 {
 
     @Inject

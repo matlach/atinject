@@ -2,12 +2,10 @@ package org.atinject.core.validation;
 
 import javax.inject.Inject;
 
-import org.atinject.integration.WeldRunner;
+import org.atinject.integration.IntegrationTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(WeldRunner.class)
-public class ValidationTest
+public class ValidationTest extends IntegrationTest
 {
 
     @Inject Validator validator;

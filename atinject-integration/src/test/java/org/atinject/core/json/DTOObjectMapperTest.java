@@ -4,14 +4,12 @@ import javax.inject.Inject;
 
 import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.core.dto.DTOObjectMapper;
-import org.atinject.integration.WeldRunner;
+import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-@RunWith(WeldRunner.class)
-public class DTOObjectMapperTest 
+public class DTOObjectMapperTest extends IntegrationTest
 {
 
     @Inject
