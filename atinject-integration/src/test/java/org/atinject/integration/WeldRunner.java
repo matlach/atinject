@@ -12,7 +12,7 @@ public class WeldRunner extends BlockJUnit4ClassRunner {
     static{
         CDI.setCDIProvider(new CDIProvider());
     }
- 
+    
     public WeldRunner(Class<?> klass) throws InitializationError {
         super(klass);
     }
