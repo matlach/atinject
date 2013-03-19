@@ -15,8 +15,18 @@ public class CacheStoreExceptionSanitizer {
     @PostConstruct
     public void initialize()
     {
-        keywords.add("$_$$_weld");
+        keywords.add("sun.reflect.NativeMethodAccessorImpl.invoke");
+        keywords.add("sun.reflect.DelegatingMethodAccessorImpl.invoke");
+        
+        keywords.add("java.lang.reflect.Method.invoke");
+        
+        keywords.add("$Proxy$_$$_");
+        keywords.add("org.jboss.weld.bean.proxy");
         keywords.add("org.jboss.weld.interceptor.proxy");
+        keywords.add("org.jboss.weld.interceptor.chain.AbstractInterceptionChain.invokeNext");
+        
+        keywords.add("org.junit");
+        keywords.add("org.eclipse.jdt.internal.junit");
     }
     
     public Exception sanitize(Exception e){

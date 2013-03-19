@@ -7,7 +7,7 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
-@HandleServiceException
+@HandleWebSocketServiceException
 @Interceptor
 public class HandleWebSocketServiceExceptionInterceptor {
     

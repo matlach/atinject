@@ -7,7 +7,7 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
-@HandleServiceException
+@HandleCacheStoreException
 @Interceptor
 public class HandleCacheStoreExceptionInterceptor {
     
