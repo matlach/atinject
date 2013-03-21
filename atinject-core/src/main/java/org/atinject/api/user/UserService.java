@@ -47,8 +47,7 @@ public class UserService extends Service{
         String userId = UUID.randomUUID().toString();
         UserEntity user = userEntityFactory.newUserEntity()
                 .setId(userId)
-                .setName(name)
-                .setPassword(password);
+                .setName(name);
         lockUser(userId);
         addUser(user);
         return user;

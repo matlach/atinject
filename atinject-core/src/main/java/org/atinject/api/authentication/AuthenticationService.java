@@ -12,12 +12,16 @@ import org.atinject.api.session.Session;
 import org.atinject.api.session.SessionService;
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.api.usercredential.UserCredentialService;
+import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.core.distevent.Distributed;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class AuthenticationService extends Service {
 
+    @Inject private UserCredentialService userCredentialService;
+    
     @Inject private UserService userService;
     
     @Inject private SessionService sessionService;
@@ -28,21 +32,23 @@ public class AuthenticationService extends Service {
     
     @Inject @Distributed private Event<UserLoggedOut> userLoggerOutEvent;
     
-    public UserEntity login(Session session, String name, String password){
+    public UserEntity login(Session session, String username, String password){
         if (session.getUserId() != null){
             throw new IllegalStateException("session user id is not null");
         }
-        UserEntity user = userService.getUserByName(name);
-        if (user == null){
+        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
+        if (userCredential == null) {
             throw new WrongUsernameException();
         }
-        if (! user.getPassword().equals(password)){
+        if (! userCredential.getPassword().equals(password)){
             throw new WrongPasswordException();
         }
         
         // update session
-        session.setUserId(user.getId());
+        session.setUserId(userCredential.getUserId());
         sessionService.updateSession(session);
+        
+        UserEntity user = userService.getUser(userCredential.getUserId());
         
         UserLoggedIn userLoggedIn = authenticationEventFactory
                 .newUserLoggedIn()

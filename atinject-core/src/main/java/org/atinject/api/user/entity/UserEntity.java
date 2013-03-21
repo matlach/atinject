@@ -16,7 +16,6 @@ public class UserEntity extends VersionableEntity {
 
     private String id;
     private String name;
-    private String password;
 
     public UserEntity() {
         super();
@@ -37,15 +36,6 @@ public class UserEntity extends VersionableEntity {
 
     public UserEntity setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public UserEntity setPassword(String password) {
-        this.password = password;
         return this;
     }
     

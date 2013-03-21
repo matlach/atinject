@@ -24,7 +24,6 @@ public class UserAdapter
         }
         return userDTOFactory.newUser()
             .setId(entity.getId())
-            .setName(entity.getName())
-            .setPassword(entity.getPassword());
+            .setName(entity.getName());
     }
 }
