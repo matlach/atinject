@@ -172,6 +172,9 @@ junit :
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
+### User and User Credential Services
+![User and User Credential Services](http://yuml.me/8e5dcc0f "User and User Credential Services")
+
 ### Authentication, Registration and User Services
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
 
