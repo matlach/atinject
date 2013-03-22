@@ -182,3 +182,14 @@ junit :
 ![Authorization, User, Role and Permission Services](http://yuml.me/14648e63 "Authorization, User, Role and Permission Services")
 
 ### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
+
+## Sonar analysis
+
+### installation
+
+### run analysis
+mvn clean install
+mvn sonar:sonar
+
+### result
+...
