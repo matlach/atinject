@@ -7,20 +7,20 @@ public class CacheStarted extends Event
 {
     private static final long serialVersionUID = 1L;
 
-    private CacheStartedEvent event;
+    private String cacheName;
     
     public CacheStarted(){
         
     }
 
-    public CacheStartedEvent getEvent()
+    public String getCacheName()
     {
-        return event;
+        return cacheName;
     }
 
     public CacheStarted setEvent(CacheStartedEvent event)
     {
-        this.event = event;
+        this.cacheName = event.getCacheName();
         return this;
     }
     

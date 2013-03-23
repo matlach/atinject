@@ -7,20 +7,20 @@ public class CacheStopped extends Event
 {
     private static final long serialVersionUID = 1L;
 
-    private CacheStoppedEvent event;
+    private String cacheName;
     
     public CacheStopped(){
         
     }
 
-    public CacheStoppedEvent getEvent()
+    public String getCacheName()
     {
-        return event;
+        return cacheName;
     }
 
     public CacheStopped setEvent(CacheStoppedEvent event)
     {
-        this.event = event;
+        this.cacheName = event.getCacheName();
         return this;
     }
     

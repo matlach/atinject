@@ -30,7 +30,7 @@ public class NotificationService
         return distributedExecutor.submit(session.getMachineId(), session.getRackId(), session.getSiteId(), task);
     }
     
-    public class SendNotificationTask implements Callable<Void>{
+    public static class SendNotificationTask implements Callable<Void>{
 
         private NotificationEvent event;
         
