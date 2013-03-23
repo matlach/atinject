@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-public class UserServiceTest extends IntegrationTest
+public class UserServiceIT extends IntegrationTest
 {
 
     @Inject

@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Test;
 
-public class ValidationTest extends IntegrationTest
+public class ValidationIT extends IntegrationTest
 {
 
     @Inject Validator validator;

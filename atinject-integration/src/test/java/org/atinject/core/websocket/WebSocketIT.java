@@ -10,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-public class WebSocketTest extends IntegrationTest
+public class WebSocketIT extends IntegrationTest
 {
 
     @Inject

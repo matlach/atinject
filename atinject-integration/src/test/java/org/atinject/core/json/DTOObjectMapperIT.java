@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-public class DTOObjectMapperTest extends IntegrationTest
+public class DTOObjectMapperIT extends IntegrationTest
 {
 
     @Inject

@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-public class SessionServiceTest extends IntegrationTest
+public class SessionServiceIT extends IntegrationTest
 {
 
     @Inject
