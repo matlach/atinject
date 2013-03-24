@@ -8,7 +8,8 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>atinject-core</artifactId>
+	<packaging>jar</packaging>
 
-    <name>atinject/core</name>
+    <name>atinject-core</name>
 
 </project>

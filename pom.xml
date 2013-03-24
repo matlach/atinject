@@ -6,41 +6,39 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-  <name>atinject</name>
-  <url>https://github.com/matlach/atinject</url>
-  <description>
-    atinject, realtime, scalable, cdi enhanced, 3-tiers architecture
-  </description>
+	<name>atinject</name>
+	<url>https://github.com/matlach/atinject</url>
+	<description>atinject, realtime, scalable, cdi enhanced, 3-tiers architecture</description>
 
-  <organization>
-    <name>the atinject project</name>
-    <url>https://github.com/matlach/atinject</url>
-  </organization>
+	<organization>
+		<name>the atinject project</name>
+		<url>https://github.com/matlach/atinject</url>
+	</organization>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-    </license>
-  </licenses>
-  <inceptionYear>2013</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+	<inceptionYear>2013</inceptionYear>
 
-<scm>
-    <url>https://github.com/matlach/atinject</url>
-    <connection>scm:git:git://github.com/matlach/atinject.git</connection>
-    <developerConnection>scm:git:https://github.com/matlach/atinject.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+	<scm>
+		<url>https://github.com/matlach/atinject</url>
+		<connection>scm:git:git://github.com/matlach/atinject.git</connection>
+		<developerConnection>scm:git:https://github.com/matlach/atinject.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 
-  <developers>
-    <developer>
-      <id>org.atinject</id>
-      <name>the atinject project contributors</name>
-      <url>https://github.com/matlach/atinject</url>
-      <organization>the atinject project</organization>
-      <organizationUrl>https://github.com/matlach/atinject</organizationUrl>
-    </developer>
-  </developers>
+	<developers>
+		<developer>
+			<id>org.atinject</id>
+			<name>the atinject project contributors</name>
+			<url>https://github.com/matlach/atinject</url>
+			<organization>the atinject project</organization>
+			<organizationUrl>https://github.com/matlach/atinject</organizationUrl>
+		</developer>
+	</developers>
 
 	<repositories>
 		<repository>
@@ -62,9 +60,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-		<sonar.language>java</sonar.language>
-		<sonar.dynamicAnalysis>true</sonar.dynamicAnalysis>
 
 		<slf4j.version>1.7.4</slf4j.version>
 		<logback.version>1.0.10</logback.version>
@@ -116,7 +111,7 @@
 				<artifactId>deltaspike-core-api</artifactId>
 				<version>${deltaspike.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.apache.deltaspike.core</groupId>
 				<artifactId>deltaspike-core-impl</artifactId>
@@ -145,7 +140,7 @@
 				<artifactId>jackson-databind</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
-	
+
 			<dependency>
 				<groupId>com.fasterxml.jackson.dataformat</groupId>
 				<artifactId>jackson-dataformat-smile</artifactId>
@@ -203,7 +198,7 @@
 			<groupId>org.apache.deltaspike.core</groupId>
 			<artifactId>deltaspike-core-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.deltaspike.core</groupId>
 			<artifactId>deltaspike-core-impl</artifactId>
@@ -213,7 +208,7 @@
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
@@ -231,7 +226,7 @@
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
-		    <artifactId>jackson-dataformat-smile</artifactId>
+			<artifactId>jackson-dataformat-smile</artifactId>
 		</dependency>
 
 		<dependency>
@@ -244,71 +239,105 @@
 			<artifactId>pojo-mbean</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<modules>
 		<module>atinject-core</module>
 		<module>atinject-integration</module>
 	</modules>
-	
-		<build>
-		
-		
+
+	<build>
+
+
 		<pluginManagement>
 			<plugins>
-			
-			      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
-        <version>2.0</version>
-      </plugin>
-			
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.1</version>
-        <executions>
-          <execution>
-            <id>enforce-tools</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <rules>
-                <requireJavaVersion>
-                  <!-- Enforce java 1.7 as minimum for compiling -->
-                  <version>[1.7.0,)</version>
-                </requireJavaVersion>
-                <requireMavenVersion>
-                  <version>[3.0.2,)</version>
-                </requireMavenVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-				      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.5.1</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-          <compilerVersion>1.7</compilerVersion>
-          <fork>true</fork>
-          <source>1.7</source>
-          <target>1.7</target>
-          <debug>true</debug>
-          <optimize>true</optimize>
-          <showDeprecation>true</showDeprecation>
-          <showWarnings>true</showWarnings>
-          <compilerArguments>
-            <Xlint:-options/>
-            <Xlint:unchecked/>
-            <Xlint:deprecation/>
-          </compilerArguments>
-        </configuration>
-      </plugin>
+
+				<!-- keep surefire and failsafe in sync -->
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.14</version>
+				</plugin>
+				<!-- keep surefire and failsafe in sync -->
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.14</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>2.0</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.1</version>
+					<executions>
+						<execution>
+							<id>enforce-tools</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireJavaVersion>
+										<!-- Enforce java 1.7 as minimum for compiling -->
+										<version>[1.7.0,)</version>
+									</requireJavaVersion>
+									<requireMavenVersion>
+										<version>[3.0.2,)</version>
+									</requireMavenVersion>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<compilerVersion>1.7</compilerVersion>
+						<fork>true</fork>
+						<source>1.7</source>
+						<target>1.7</target>
+						<debug>true</debug>
+						<optimize>true</optimize>
+						<!--
+						<showDeprecation>true</showDeprecation>
+						<showWarnings>true</showWarnings> 
+						<compilerArguments>
+							<Xlint:-options/>
+							<Xlint:unchecked/>
+							<Xlint:deprecation/> 
+						</compilerArguments>
+						-->
+					</configuration>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
-		
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+
 	</build>
 
 </project>
