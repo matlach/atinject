@@ -183,13 +183,12 @@ junit :
 
 ### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
 
-## Sonar analysis
+## Quality
 
-### installation
-
-### run analysis
+1. install sonar
+2. run analysis
+```
 mvn clean install
 mvn sonar:sonar
-
-### result
-...
+```
+3. see results at http://localhost:9000/
