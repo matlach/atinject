@@ -186,11 +186,13 @@ junit :
 ## Quality
 
 1. install sonar http://www.sonarsource.org
-2. run analysis
+2. run
 ```
 mvn clean install
 ```
+ and followed by 
 ```
 mvn sonar:sonar
 ```
-3. see results at http://localhost:9000
+to perform analysis
+3. finally see results at http://localhost:9000
