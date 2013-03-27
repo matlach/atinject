@@ -173,10 +173,12 @@ junit :
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
 ### Session Services
-A [Session](/atinject-core/src/main/java/org/atinject/api/session/Session.java) represents an individual connected via web socket (i.e. after web socket handshake has been completed).
-Session contains the ```channelId```, ```machineId```, ```rackId``` and ```siteId``` which identify physically where it is bound
-After a successful login, the session will be updated with the given ```userId```.
-The session is designed to be replicated across all server and not be persisted by any means.
+A [Session][] represents an individual connected via web socket (i.e. after web socket handshake has been completed).
+[Session][] contains the ```channelId```, ```machineId```, ```rackId``` and ```siteId``` which identify physically where it is bound
+After a successful login, the [Session][] will be updated with the given ```userId```.
+The [Session][] is designed to be replicated across all servers and not be persisted by any means i.e. in-memory only.
+
+[Session]: /atinject-core/src/main/java/org/atinject/api/session/Session.java
 
 ### User and User Credential Services
 ![User and User Credential Services](http://yuml.me/8e5dcc0f "User and User Credential Services")
