@@ -174,7 +174,7 @@ junit :
 
 ### Session Services
 A [Session][] represents an individual connected via web socket (i.e. after web socket handshake has been completed).
-[Session][] contains the ```channelId```, ```machineId```, ```rackId``` and ```siteId``` which identify physically where it is bound.
+[Session][] contains the ```channelId``` and ```machineId``` which identify physically where it is bound.
 After a successful login, the [Session][] will be updated with the given ```userId```.
 The [Session][] is designed to be replicated across all servers and not be persisted by any means i.e. in-memory only.
 
@@ -191,6 +191,12 @@ After registration a [User][] is flagged as ```registered```.
 [UserCredential]: /atinject-core/src/main/java/org/atinject/api/usercredential/entity/UserCredentialEntity.java
 
 ### Authentication, Registration and User Services
+Authentication is the process of identifing a [User][] with it is [UserCredential][].
+Registration is the process of creating a [User][] and it is [UserCredential][].
+Registration is performed in two phases.
+1. [User][] register as a ```guest``` which generate a [User][] with random ```username``` and ```password``` [UserCredential][].
+2. a [User][] flagged as a ```guest``` become flagged as ```registered``` when it provides it is own ```username``` and ```password``` [UserCredential][].
+
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
 
 ### Authorization, User, Role and Permission Services
