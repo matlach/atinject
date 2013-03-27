@@ -172,6 +172,12 @@ junit :
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
+### Session Services
+A [Session](http://github.com/matlach/atinject/blob/master/atinject-core/src/main/java/org/atinject/api/session/Session.java) represents an individual connected via web socket (i.e. after web socket handshake has been completed).
+Session contains the ```channelId```, ```machineId```, ```rackId``` and ```siteId``` which identify physically where it is bound
+After a successful login, the session will be updated with the given ```userId```.
+The session is designed to be replicated across all server and not be persisted by any means.
+
 ### User and User Credential Services
 ![User and User Credential Services](http://yuml.me/8e5dcc0f "User and User Credential Services")
 
@@ -186,13 +192,5 @@ junit :
 ## Quality
 
 1. install sonar http://www.sonarsource.org
-2. run
-```
-mvn clean install
-```
- and followed by 
-```
-mvn sonar:sonar
-```
-to perform analysis
+2. run ```mvn clean install``` and followed by ```mvn sonar:sonar``` to perform analysis
 3. finally see results at http://localhost:9000
