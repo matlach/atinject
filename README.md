@@ -191,11 +191,12 @@ After registration a [User][] is flagged as ```registered```.
 [UserCredential]: /atinject-core/src/main/java/org/atinject/api/usercredential/entity/UserCredentialEntity.java
 
 ### Authentication, Registration and User Services
-Authentication is the process of identifing a [User][] with it is [UserCredential][].
+Authentication is the process of identifing a [User][] with it is [UserCredential][] while the
 Registration is the process of creating a [User][] and it is [UserCredential][].
-Registration is performed in two phases.
-1. [User][] register as a ```guest``` which generate a [User][] with random ```username``` and ```password``` [UserCredential][].
-2. a [User][] flagged as a ```guest``` become flagged as ```registered``` when it provides it is own ```username``` and ```password``` [UserCredential][].
+
+Registration is performed in two phases :
+* [User][] register as a ```guest``` which generate a [User][] with random ```username``` and ```password``` [UserCredential][].
+* a [User][] flagged as a ```guest``` become flagged as ```registered``` when it provides it is own ```username``` and ```password``` [UserCredential][].
 
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
 
