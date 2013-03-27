@@ -27,7 +27,7 @@ public class NotificationService
         SendNotificationTask task = new SendNotificationTask();
         task.setEvent(event);
         
-        return distributedExecutor.submit(session.getMachineId(), session.getRackId(), session.getSiteId(), task);
+        return distributedExecutor.submit(session.getMachineId(), task);
     }
     
     public static class SendNotificationTask implements Callable<Void>{

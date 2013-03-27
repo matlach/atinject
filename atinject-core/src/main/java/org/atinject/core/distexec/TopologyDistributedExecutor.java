@@ -32,8 +32,8 @@ public class TopologyDistributedExecutor
         distributedExecutorService = new DefaultExecutorService(masterCacheNode, localExecutorService);
     }
     
-    public <T> Future<T> submit(String machineId, String rackId, String siteId, Callable<T> task){
-        TopologyAwareAddress target = topologyService.getAddress(machineId, rackId, siteId);
+    public <T> Future<T> submit(String machineId, Callable<T> task){
+        TopologyAwareAddress target = topologyService.getAddress(machineId);
         if (target == null){
             // member has left the cluster, no-op
             return null; // return null or throw exception ?

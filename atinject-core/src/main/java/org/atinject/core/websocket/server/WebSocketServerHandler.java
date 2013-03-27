@@ -406,9 +406,8 @@ public class WebSocketServerHandler {
                     .setChannelId(ctx.channel().id())
                     .setSessionId(UUID.randomUUID().toString());
                 TopologyAwareAddress address = topologyService.getLocalAddress();
-                session.setMachineId(address.getMachineId())
-                    .setRackId(address.getRackId())
-                    .setSiteId(address.getSiteId());
+                session.setMachineId(address.getMachineId());
+                
                 sessionAttribute.set(session);
                 SessionOpened sessionOpened = new SessionOpened().setSession(session);
                 sessionService.onSessionOpened(sessionOpened);

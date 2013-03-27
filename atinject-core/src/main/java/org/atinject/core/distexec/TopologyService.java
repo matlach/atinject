@@ -29,14 +29,12 @@ public class TopologyService
         return (TopologyAwareAddress) masterCacheNode.getAdvancedCache().getRpcManager().getAddress();
     }
     
-    public TopologyAwareAddress getAddress(String machineId, String rackId, String siteId){
+    public TopologyAwareAddress getAddress(String machineId){
         List<Address> members = masterCacheNode.getAdvancedCache().getRpcManager().getMembers();
         for (Address member : members)
         {
             TopologyAwareAddress topologyAwareMember = (TopologyAwareAddress) member;
-            if (topologyAwareMember.getMachineId().equals(machineId) &&
-                topologyAwareMember.getRackId().equals(rackId) &&
-                topologyAwareMember.getSiteId().equals(siteId)){
+            if (topologyAwareMember.getMachineId().equals(machineId)){
                 return topologyAwareMember;
             }
         }
