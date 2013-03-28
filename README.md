@@ -171,8 +171,10 @@ junit :
 
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
+Each tiers possesses many predefined inheritable interceptors. 
 
 ### Topology Services
+TopologyAwareAddress
 * machineId: identify the server uniquely across the cluster.
 * rackId: identify the server rack physically, ex: "blade-01".
 * siteId: identify the server site physically, ex: "bunker-01".
@@ -184,6 +186,22 @@ After a successful login, the [Session][] will be updated with the given ```user
 The [Session][] is designed to be replicated across all servers and not be persisted by any means i.e. in-memory only.
 
 [Session]: /atinject-core/src/main/java/org/atinject/api/session/Session.java
+
+### Rendezvous Services
+> Rendezvous (French: rendez-vous), to visit, to meet, tryst, less exclusive than tête-à-tête.
+
+> http://en.wikipedia.org/wiki/Rendezvous
+
+Map a given ```rendezvousId``` to a specific TopologyAwareAddress.
+A ```rendezvousId``` must be generated to be affine with a given ```machineId```.
+A [RendezvousPoint][] represents is a group of [Session][].
+A [RendezvousPoint][] is not designed to be distributed but without any copy i.e. number of owner equals 1.
+As it is [Session][] counterpart, [RendezvousPoint][] should not also be persisted by any means.
+
+[RendezVousPoint]: /atinject-core/ 
+
+### User Topology Services
+Map a given ```userId``` to a given TopologyAwareAddress.
 
 ### User and User Credential Services
 A [User][] represent an individual identified by it is [UserCredential][].
