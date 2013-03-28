@@ -195,10 +195,15 @@ The [Session][] is designed to be replicated across all servers and not be persi
 Map a given ```rendezvousId``` to a specific TopologyAwareAddress.
 A ```rendezvousId``` must be generated to be affine with a given ```machineId```.
 A [RendezvousPoint][] represents is a group of [Session][].
-A [RendezvousPoint][] is not designed to be distributed but without any copy i.e. number of owner equals 1.
+A [RendezvousPoint][] is designed to be distributed but without any copy i.e. number of owner equals 1.
 As it is [Session][] counterpart, [RendezvousPoint][] should not also be persisted by any means.
 
 [RendezVousPoint]: /atinject-core/ 
+
+### Notification Services
+Send a [WebSocketNotification][] to a given [Session][] or all [Session][] included in a given [RendezvousPoint][].
+
+[WebSocketNotification]: /atinject-core/src/main/java/org/atinject/core/websocket/dto/WebSocketNotification.java
 
 ### User Topology Services
 Map a given ```userId``` to a given TopologyAwareAddress.
