@@ -81,7 +81,7 @@ limitations under the License.
 
 ### CDI Provider
 ```java
-CDI.getCDI().getBeanManager()
+CDI.getBeanManager()
 ```
 
 ### Logger
