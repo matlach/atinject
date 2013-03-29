@@ -176,13 +176,18 @@ junit :
 
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
+
 Each tiers possesses many predefined inheritable interceptors. 
 
 ### Topology Services
-TopologyAwareAddress
+Provide a wrapper around infinispan TopologyAwareAddress
 * machineId: identify the server uniquely across the cluster.
 * rackId: identify the server rack physically, ex: "blade-01".
 * siteId: identify the server site physically, ex: "bunker-01".
+
+TopologyService is also responsible to map a given ```machineId``` to it is url.
+
+machineId, rackId and siteId can be overriden by...
 
 ### Session Services
 A [Session][] represents an individual connected via web socket (i.e. after web socket handshake has been completed).
