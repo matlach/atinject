@@ -23,7 +23,7 @@ import org.infinispan.distexec.DefaultExecutorService;
 @ApplicationScoped
 public class DistributedEventBus
 {
-    @Inject @CacheName("distributed-executor-master-cache-node") private Cache<Object, Object> masterCacheNode;
+    @Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
     
     @Inject
     private AsynchronousService localExecutorService;

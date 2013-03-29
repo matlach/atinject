@@ -14,14 +14,14 @@ public class DistributedExecutorMasterCacheNodeProducer {
 
     @Inject private ClusteredCacheManager cacheManager;
     
-    @Produces @CacheName("distributed-executor-master-cache-node")
+    @Produces @CacheName("distributed-executor")
     public Configuration newDistributedExecutorMasterCacheNodeConfiguration() {
         return new ConfigurationBuilder()
                     .clustering().cacheMode(CacheMode.DIST_SYNC).build();
     }
     
-    @Produces @CacheName("distributed-executor-master-cache-node")
+    @Produces @CacheName("distributed-executor")
     public Cache<Object, Object> newCache(){
-        return cacheManager.getCache("distributed-executor-master-cache-node");
+        return cacheManager.getCache("distributed-executor");
     }
 }

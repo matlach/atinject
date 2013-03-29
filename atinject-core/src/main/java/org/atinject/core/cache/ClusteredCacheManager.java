@@ -47,14 +47,15 @@ public class ClusteredCacheManager
         }
     }
 
+    // these settings must be configurable, system properties ???
     protected GlobalConfiguration newGlobalConfiguration(){
         return new GlobalConfigurationBuilder()
             .transport()
                 .defaultTransport()
-                .clusterName("clusterName")
-                .machineId("machineId")
-                .rackId("rackId")
-                .siteId("siteId")
+                .clusterName("atinject")
+                .machineId("localhost")
+                .rackId("no-rack")
+                .siteId("no-site")
             .build();
     }
     

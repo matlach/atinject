@@ -1,4 +1,4 @@
-package org.atinject.core.distexec;
+package org.atinject.core.topology;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
@@ -17,7 +17,7 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class TopologyDistributedExecutor
 {
-    @Inject @CacheName("distributed-executor-master-cache-node") private Cache<Object, Object> masterCacheNode;
+    @Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
     
     @Inject
     private AsynchronousService localExecutorService;
@@ -40,4 +40,6 @@ public class TopologyDistributedExecutor
         }
         return distributedExecutorService.submit(target, task);
     }
+    
+    // TODO submit all, etc.
 }

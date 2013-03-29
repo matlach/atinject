@@ -25,8 +25,8 @@ public class UserAffinityWebSocketService extends WebSocketService {
             TopologyAwareAddress topologyAwareAddress = userTopologyService.getUserKeyPrimaryLocation(event.getUser().getId());
             
             // send notification with user affinity information
-            UserAffinityNotification userAffinityNotification = new UserAffinityNotification();
-            userAffinityNotification.setUrl(topologyAwareAddress.getMachineId());
+            UserAffinityNotification userAffinityNotification = new UserAffinityNotification()
+                .setUrl(topologyAwareAddress.getMachineId());
             notificationService.sendNotification(event.getSession(), userAffinityNotification);
         }
     }

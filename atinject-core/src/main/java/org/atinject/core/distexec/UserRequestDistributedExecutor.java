@@ -16,7 +16,7 @@ import org.infinispan.distexec.DistributedExecutorService;
 @ApplicationScoped
 public class UserRequestDistributedExecutor {
 
-	@Inject @CacheName("distributed-executor-master-cache-node") private Cache<Object, Object> masterCacheNode;
+	@Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
 	
 	@Inject
 	private AsynchronousService localExecutorService;
