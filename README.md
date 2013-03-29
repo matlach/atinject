@@ -3,11 +3,13 @@ this article is in progress
 # atinject
 ##realtime, scalable, cdi enhanced, 3-tier architecture
 
-traditional architecture, apache + app server + database.
+traditional architecture, web server + app server + database server.
 each component must scale independently.
 how to scale ? a box per component which often leads to inefficient distribution of resources
 
-while this approach might still work for stateless application this is definitely not going for realtime / stateful application. 
+traditional architecture is suitable for stateless application where with limited interaction between connected clients.
+this is definitely not the case for realtime application where interactions between connected clients is the goal.
+atinject address this issue.
 
 the atinject project feature an integrated pipeline which can deliver static content, run business logic and store data in a distributed fashion.
 just scale when more cpu, ram or storage is needed.
@@ -179,15 +181,22 @@ junit :
 
 Each tiers possesses many predefined inheritable interceptors. 
 
+### Clustered Cache Manager Services
+Provide a wrapper around infinispan [EmbeddedCacheManager][].
+
+[EmbeddedCacheManager]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/manager/EmbeddedCacheManager.html
+
 ### Topology Services
-Provide a wrapper around infinispan TopologyAwareAddress
+Provide a wrapper around infinispan [TopologyAwareAddress][]
 * machineId: identify the server uniquely across the cluster.
 * rackId: identify the server rack physically, ex: "blade-01".
 * siteId: identify the server site physically, ex: "bunker-01".
 
 TopologyService is also responsible to map a given ```machineId``` to it is url.
 
-machineId, rackId and siteId can be overriden by...
+```machineId```, ```rackId``` and ```siteId``` can be overriden by...
+
+[TopologyAwareAddress]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/remoting/transport/TopologyAwareAddress.html
 
 ### Session Services
 A [Session][] represents an individual connected via web socket (i.e. after web socket handshake has been completed).
