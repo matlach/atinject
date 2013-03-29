@@ -181,20 +181,20 @@ junit :
 
 Each tiers possesses many predefined inheritable interceptors. 
 
-### Clustered Cache Manager Services
-Provide a wrapper around infinispan [EmbeddedCacheManager][].
-
-[EmbeddedCacheManager]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/manager/EmbeddedCacheManager.html
-
-### Topology Services
-Provide a wrapper around infinispan [TopologyAwareAddress][]
+### Clustered Cache Manager
+Provides a wrapper around infinispan [EmbeddedCacheManager][].
+It also defines the infinispan [GlobalConfiguration][] which is used especially to configure the cache transport.
+Cache transport defines :
 * machineId: identify the server uniquely across the cluster.
 * rackId: identify the server rack physically, ex: "blade-01".
 * siteId: identify the server site physically, ex: "bunker-01".
 
-TopologyService is also responsible to map a given ```machineId``` to it is url.
+[EmbeddedCacheManager]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/manager/EmbeddedCacheManager.html
+[GlobalConfiguration]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/configuration/global/GlobalConfiguration.html
 
-```machineId```, ```rackId``` and ```siteId``` can be overriden by...
+### Topology Services
+Provide a wrapper around infinispan [TopologyAwareAddress][]
+TopologyService is also responsible to map a given ```machineId``` to it is url.
 
 [TopologyAwareAddress]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/remoting/transport/TopologyAwareAddress.html
 
