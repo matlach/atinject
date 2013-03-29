@@ -73,11 +73,16 @@ limitations under the License.
 
 ### Weld SE enhancements
 
+* CDI Provider : see [CDI Provider](#cdi-provider)
 * Transaction : see [@Transactional, Transaction Manager and Transaction Services](#transactional-transaction-manager-and-transaction-services)
-* Security
 * Validation
 
 ![Weld SE enhancements](http://yuml.me/3e673ac4 "Weld SE enhancements")
+
+### CDI Provider
+```java
+CDI.getCDI().getBeanManager()
+```
 
 ### Logger
 
