@@ -176,6 +176,45 @@ junit :
 ![Entity, Versionable Entity and Serialization](http://yuml.me/31dfb262 "Entity, Versionable Entity and Serialization")
 ![Entity, Versionable Entity and Serialization](http://yuml.me/cac95d6b "Entity, Versionable Entity and Serialization")
 
+
+```java
+@ApplicationScoped
+public class VersionableUserExternalizer implements VersionableEntityExternalizer<UserEntity> {
+    
+    private static final int CURRENT_VERSION = 1;
+    
+    @Inject
+    private VersionableEntityObjectMapper objectMapper;
+    
+    @Override
+    public void writeObject(ObjectOutput output, UserEntity user) throws IOException {
+        objectMapper.writeObject(output, user, CURRENT_VERSION);
+    }
+
+    @Override
+    public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException {
+        int version = objectMapper.readVersion(input);
+        byte[] json = objectMapper.readJSONBytes(input);
+        
+        switch (version) {
+            // case ANY_OLD_VERSION :
+            // read json as tree
+            // then reconstruct object as needed ex:
+            // JsonNode node = JSon.readTree(json);
+            // UserEntity user = new UserEntity();
+            // user.setName(node.get("name"));
+            case CURRENT_VERSION:
+                // just leave everything to jackson
+                return objectMapper.readValue(json, UserEntity.class);
+        }
+        
+        throw new IOException("bad version '" + version + "'");
+    }
+
+}
+
+```
+
 ### Tiers
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
