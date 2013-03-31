@@ -2,18 +2,18 @@ package org.atinject.integration;
 
 import javax.enterprise.inject.spi.CDI;
 
-import org.atinject.core.cdi.CDIProvider;
+import org.atinject.core.cdi.JavaSECDIProvider;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
-public class WeldRunner extends BlockJUnit4ClassRunner {
+public class CDIRunner extends BlockJUnit4ClassRunner {
     
     static{
-        CDI.setCDIProvider(new CDIProvider());
+        CDI.setCDIProvider(new JavaSECDIProvider());
     }
     
-    public WeldRunner(Class<?> klass) throws InitializationError {
+    public CDIRunner(Class<?> klass) throws InitializationError {
         super(klass);
     }
  

@@ -2,7 +2,7 @@ package org.atinject.integration;
 
 import javax.enterprise.inject.spi.CDI;
 
-import org.atinject.core.cdi.CDIProvider;
+import org.atinject.core.cdi.JavaSECDIProvider;
 
 
 
@@ -32,7 +32,7 @@ public class IntegrationBootstrap {
         shutdownThread.setDaemon(true);
         shutdownThread.start();
         
-        CDI.setCDIProvider(new CDIProvider());
+        CDI.setCDIProvider(new JavaSECDIProvider());
     }
 	
 }

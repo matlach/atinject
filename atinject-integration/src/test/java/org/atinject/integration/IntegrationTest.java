@@ -8,10 +8,10 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-@RunWith(WeldRunner.class)
+@RunWith(CDIRunner.class)
 public abstract class IntegrationTest
 {
-    Logger logger = LoggerFactory.getLogger(WeldRunner.class);
+    Logger logger = LoggerFactory.getLogger(CDIRunner.class);
     
     @Rule public TestRule watchman = new TestWatcher() {
 
