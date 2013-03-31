@@ -113,7 +113,7 @@ usage:
 public class PerformAllAsynchronously{...}
 ```
 ### Scheduled Service
-Wrap a java ScheduledThreadPoolExecutor and ThreadFactory that will be used to perform all scheduling operation.
+Wrap a java ScheduledThreadPoolExecutor and ThreadFactory that will be used to perform all delayed operation.
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry and Scheduled Service
