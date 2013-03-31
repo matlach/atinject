@@ -77,9 +77,8 @@ limitations under the License.
 
 * CDI Provider : see [CDI Provider](#cdi-provider)
 * Transaction : see [@Transactional, Transaction Manager and Transaction Services](#transactional-transaction-manager-and-transaction-services)
-* Validation
 
-![Weld SE enhancements](http://yuml.me/3e673ac4 "Weld SE enhancements")
+![Weld SE enhancements](http://yuml.me/ec44f248 "Weld SE enhancements")
 
 ### CDI Provider
 ```java
