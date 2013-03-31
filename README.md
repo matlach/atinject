@@ -262,9 +262,20 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
 ```
 
 ### Tiers
+WebSocketService is responsible for managing incoming WebSocketRequest and
+outgoing WebSocketResponse and WebSocketNotification. All business logic should be handled to the Service.
+
+Service is responsible of the business logic execution and coordinate the usage of the CacheStore.
+
+CacheStore is responsible to providing all access to the ClusteredCache.
+
 ![Tiers](http://yuml.me/870ee2f1 "Tiers")
 
-Each tiers possesses many predefined inheritable interceptors. 
+Factory is responsible to create any new entity or dto.
+
+Adapter is responsible of the conversion of any entity to dto and vice-versa.
+
+Each tiers possesses many predefined inheritable interceptors.
 
 ### Clustered Cache Manager
 Provides a wrapper around infinispan [EmbeddedCacheManager][].
