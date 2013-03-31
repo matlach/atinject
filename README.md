@@ -151,6 +151,43 @@ public class PerformAllWithinTransaction{...}
 ```
 note : WebSocketService and Services are @Transactional
 
+#### Transaction algorithms
+
+get:
+```java
+// 1. with key, get value from cache
+// 2. return value
+```
+
+get and create:
+```java
+// 1. with key, get value from cache
+// 2. if value is not null, return value
+// 3. value is null, lock key
+// 4. with key, get value from cache, again
+// 5. if value is not null, return value
+// 6. value is still null, create value
+// 7. put newly created value in cache
+// 8. return value
+```
+
+get and update:
+```java
+// 1. lock key
+// 2. with key, get value from get and create algorithm
+// 3. update value
+// 4. put updated value in cache
+// 5. optionally return updated value
+```
+
+get and remove:
+```java
+// 1. lock key
+// 2. with key, get value from get algorithm
+// 3. if value is not null, remove value from cache
+// 4. optionally return removed value
+```
+
 ### @ValidateRequest, @ValidateMethod and Validation Service
 
 running :
