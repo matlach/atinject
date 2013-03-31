@@ -19,6 +19,8 @@ public class ValidateRequestInterceptor {
 
     @AroundInvoke
     public Object validateMethod(InvocationContext ctx) throws Exception {
+        // TODO do not validate Session, only request
+        
         Set<ConstraintViolation<Object>> violations = validator.validateParameters(ctx.getTarget(), ctx.getMethod(), ctx.getParameters());
 
         if (! violations.isEmpty()) {

@@ -16,7 +16,9 @@
 		<class>org.atinject.core.authorization.RequiresGuestInterceptor</class>
 		<class>org.atinject.core.authorization.RequiresRolesInterceptor</class>
 		<class>org.atinject.core.authorization.RequiresPermissionsInterceptor</class>
-		<class>org.atinject.core.validation.ValidateMethodInterceptor</class><!-- should be added programmatically -->
+		<!-- test should use hibernate-validator-cdi -->
+		<class>org.atinject.core.validation.ValidateMethodInterceptor</class>
+		<class>org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor</class>
 	</interceptors>
 	
 	<alternatives>
