@@ -21,28 +21,25 @@ public class AsynchronousInterceptor
     public Object invokeAsynchronously(final InvocationContext ctx) throws Exception
     {
         // we assume AsynchronousInterceptor is the first in chain
-        if (hack.get() == null)
-        {
-            return asynchronousService.submit(new Callable<Object>(){
-                @Override
-                public Object call() throws Exception
-                {
-                    hack.set(new Object());
-                    try
-                    {
-                        return ctx.getMethod().invoke(ctx.getTarget(), ctx.getParameters());
-                    }
-                    finally
-                    {
-                        hack.remove();
-                    }
-                }
-            });
-        }
-        else
-        {
+        if (hack.get() != null){
             return ctx.proceed();
         }
+        
+        return asynchronousService.submit(new Callable<Object>(){
+            @Override
+            public Object call() throws Exception
+            {
+                hack.set(new Object());
+                try
+                {
+                    return ctx.getMethod().invoke(ctx.getTarget(), ctx.getParameters());
+                }
+                finally
+                {
+                    hack.remove();
+                }
+            }
+        });
     }
 
 }
