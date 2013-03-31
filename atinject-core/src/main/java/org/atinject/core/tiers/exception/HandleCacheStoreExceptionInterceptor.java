@@ -1,4 +1,4 @@
-package org.atinject.core.exception;
+package org.atinject.core.tiers.exception;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;

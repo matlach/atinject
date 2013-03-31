@@ -1,4 +1,4 @@
-package org.atinject.core.exception;
+package org.atinject.core.tiers.exception;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

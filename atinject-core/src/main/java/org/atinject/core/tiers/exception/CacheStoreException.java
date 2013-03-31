@@ -1,4 +1,4 @@
-package org.atinject.core.exception;
+package org.atinject.core.tiers.exception;
 
 public class CacheStoreException extends RuntimeException
 {

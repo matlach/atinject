@@ -1,4 +1,4 @@
-package org.atinject.core.exception;
+package org.atinject.core.tiers.exception;
 
 import java.util.ArrayList;
 import java.util.Arrays;

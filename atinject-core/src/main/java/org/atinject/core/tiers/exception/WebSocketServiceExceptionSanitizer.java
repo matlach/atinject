@@ -1,4 +1,4 @@
-package org.atinject.core.exception;
+package org.atinject.core.tiers.exception;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ServiceExceptionSanitizer {
+public class WebSocketServiceExceptionSanitizer {
 
     List<String> keywords = new ArrayList<>();
     
