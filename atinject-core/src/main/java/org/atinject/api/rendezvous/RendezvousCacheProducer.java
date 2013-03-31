@@ -19,7 +19,7 @@ public class RendezvousCacheProducer {
 
     @Inject private ClusteredCacheManager cacheManager;
     
-    @Produces @CacheName("rendez-vous")
+    @Produces @CacheName("rendezvous")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
@@ -39,14 +39,14 @@ public class RendezvousCacheProducer {
                     .build();
     }
     
-    @Produces @CacheName("rendez-vous")
+    @Produces @CacheName("rendezvous")
     public ClusteredCache<String, RendezvousEntity> newClusteredCache(){
-        Cache<String, RendezvousEntity> cache = cacheManager.getCache("rendez-vous");
+        Cache<String, RendezvousEntity> cache = cacheManager.getCache("rendezvous");
         return new ClusteredCache<>(cache);
     }
     
-    @Produces @CacheName("rendez-vous") Cache<String, RendezvousEntity> newCache(){
-        return cacheManager.getCache("rendez-vous");
+    @Produces @CacheName("rendezvous") Cache<String, RendezvousEntity> newCache(){
+        return cacheManager.getCache("rendezvous");
     }
     
 }

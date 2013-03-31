@@ -17,7 +17,7 @@ import org.infinispan.affinity.KeyGenerator;
 @ApplicationScoped
 public class RendezvousIdGenerator {
 
-    @Inject @CacheName("rendez-vous") private Cache<String, RendezvousEntity> cache;
+    @Inject @CacheName("rendezvous") private Cache<String, RendezvousEntity> cache;
     
     @Inject private AsynchronousService asynchronousService;
     
