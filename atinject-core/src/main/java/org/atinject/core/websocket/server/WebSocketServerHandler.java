@@ -54,6 +54,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.session.Session;
 import org.atinject.api.session.SessionContext;
+import org.atinject.api.session.SessionFactory;
 import org.atinject.api.session.SessionService;
 import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.api.session.event.SessionClosed;
@@ -104,6 +105,9 @@ public class WebSocketServerHandler {
     
     @Inject
     private SessionService sessionService;
+    
+    @Inject
+    private SessionFactory sessionFactory;
     
     @Inject
     private DTOObjectMapper dtoObjectMapper;
@@ -402,9 +406,9 @@ public class WebSocketServerHandler {
                 
                 // we should dispatch instead to "web socket open" method
                 Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
-                Session session = new Session()
-                    .setChannelId(ctx.channel().id())
-                    .setSessionId(UUID.randomUUID().toString());
+                Session session = sessionFactory.newSession()
+                    .setSessionId(UUID.randomUUID().toString())    
+                    .setChannelId(ctx.channel().id());
                 TopologyAwareAddress address = topologyService.getLocalAddress();
                 session.setMachineId(address.getMachineId());
                 

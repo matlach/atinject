@@ -2,18 +2,29 @@ package org.atinject.api.session;
 
 import java.util.List;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.session.event.SessionClosed;
 import org.atinject.api.session.event.SessionOpened;
+import org.atinject.core.topology.TopologyService;
 
 @ApplicationScoped
 public class SessionService{
     
     @Inject
     private SessionCache sessionCache;
+    
+    @Inject
+    private TopologyService topologyService;
+    
+    @PreDestroy
+    public void cleanUp(){
+        String machineId = topologyService.getLocalAddress().getMachineId();
+        // TODO sessionCache.removeAllSessionByMachineId(machineId);
+    }
     
     // what happen if session open / close get mixed up, potential leak ? can we ensure netty will fire event in the right order ?
     public void onSessionOpened(@Observes SessionOpened event){
@@ -33,16 +44,18 @@ public class SessionService{
         return sessionCache.getSessionByUserId(userId);
     }
     
-    public List<Session> getAllSessionsByMachineId(){
-        return sessionCache.getAllSessionsByMachineId();
+    public List<Session> getAllSessionsByMachineId(String machineId){
+        return sessionCache.getAllSessionsByMachineId(machineId);
     }
     
-    public List<Session> getAllSessionsByRackId(){
-        return sessionCache.getAllSessionsByRackId();
+    public List<Session> getAllSessionsByRackId(String rackId){
+        //TODO return sessionCache.getAllSessionsByRackId(rackId);
+        throw new RuntimeException("not implemented");
     }
     
-    public List<Session> getAllSessionsBySiteId(){
-        return sessionCache.getAllSessionsBySiteId();
+    public List<Session> getAllSessionsBySiteId(String siteId){
+        //TODO return sessionCache.getAllSessionsBySiteId(siteId);
+        throw new RuntimeException("not implements");
     }
     
     public void updateSession(Session session){

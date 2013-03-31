@@ -32,8 +32,20 @@ public class TopologyService
         return (TopologyAwareAddress) masterCacheNode.getAdvancedCache().getRpcManager().getAddress();
     }
     
+    public String getLocalMachineId(){
+        return getLocalAddress().getMachineId();
+    }
+    
+    public String getLocalRackId(){
+        return getLocalAddress().getRackId();
+    }
+    
+    public String getLocalSiteId(){
+        return getLocalAddress().getSiteId();
+    }
+    
     public String getLocalUrl(){
-        return getUrl(getLocalAddress().getMachineId());
+        return getUrl(getLocalMachineId());
     }
     
     public String getUrl(String machineId){
@@ -60,6 +72,30 @@ public class TopologyService
         return topologyAwareAddresses;
     }
     
+    public List<TopologyAwareAddress> getAllAddressByRackId(String rackId){
+        List<Address> members = masterCacheNode.getAdvancedCache().getRpcManager().getMembers();
+        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
+        for (Address member : members)
+        {
+            if (((TopologyAwareAddress) member).getRackId().equals(rackId)){
+                topologyAwareAddresses.add((TopologyAwareAddress) member);
+            }
+        }
+        return topologyAwareAddresses;
+    }
+    
+    public List<TopologyAwareAddress> getAllAddressBySiteId(String siteId){
+        List<Address> members = masterCacheNode.getAdvancedCache().getRpcManager().getMembers();
+        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
+        for (Address member : members)
+        {
+            if (((TopologyAwareAddress) member).getSiteId().equals(siteId)){
+                topologyAwareAddresses.add((TopologyAwareAddress) member);
+            }
+        }
+        return topologyAwareAddresses;
+    }
+    
     public TopologyAwareAddress getAddress(String machineId){
         List<Address> members = masterCacheNode.getAdvancedCache().getRpcManager().getMembers();
         for (Address member : members)
@@ -72,7 +108,4 @@ public class TopologyService
         return null;
     }
     
-    // TODO get addresses, rackId
-    
-    // TODO get addresses, siteId
 }

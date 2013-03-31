@@ -17,10 +17,6 @@ public class RetryInterceptor
 
     private static ThreadLocal<Object> hack = new ThreadLocal<Object>();
     
-    // TODO retry count and timeout should be in the @Retry annotation instead
-    private int RETRY_COUNT = 3;
-    private int MIN_TIMEOUT = 100;
-    
     @Inject
     private ScheduledService scheduledService;
     
@@ -30,8 +26,9 @@ public class RetryInterceptor
         // we assume RetryInterceptor is the first in chain
         if (hack.get() == null)
         {
+            Retry retryAnnotation = ctx.getMethod().getAnnotation(Retry.class);
             long delay = 0;
-            for (int i = 0 ; i < RETRY_COUNT; i++)
+            for (int i = 0 ; i < retryAnnotation.count(); i++)
             {
                 Future<Object> future = scheduledService.schedule(new Callable<Object>(){
                     @Override
@@ -54,11 +51,11 @@ public class RetryInterceptor
                 }
                 catch (ExecutionException e)
                 {
-                    if (i == (RETRY_COUNT - 1))
+                    if (i == (retryAnnotation.count() - 1))
                     {
                         throw new Exception(e.getCause());
                     }
-                    delay = MIN_TIMEOUT + (long) (MIN_TIMEOUT * Math.random() * (i + 1));
+                    delay = retryAnnotation.timeout() + (long) (retryAnnotation.count() * Math.random() * (i + 1));
                 }
             }
         }
