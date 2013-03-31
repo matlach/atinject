@@ -98,10 +98,12 @@ usage:
 note : logback can be replaced by any slf4j compatible implementation. 
 
 ### Asynchronous Service
+Wrap java ThreadPoolExecutor and ThreadFactory that will be used to perform all asynchronous operation.
 ![Asynchronous Service](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
 ### @Asynchronous and Asynchronous Service
 Provides a way to execute asynchronously a method that either returns ```void``` or ```Future<?>```.
+Asynchronous execution of the method is ensured by the AsynchronousService.
 usage:
 ```java
 @Asynchronous public void performAsynchronously(...){...}
@@ -111,6 +113,7 @@ usage:
 public class PerformAllAsynchronously{...}
 ```
 ### Scheduled Service
+Wrap a java ScheduledThreadPoolExecutor and ThreadFactory that will be used to perform all scheduling operation.
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry and Scheduled Service
