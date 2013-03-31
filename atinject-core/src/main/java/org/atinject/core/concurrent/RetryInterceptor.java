@@ -26,7 +26,7 @@ public class RetryInterceptor
         // we assume RetryInterceptor is the first in chain
         if (hack.get() == null)
         {
-            Retry retryAnnotation = ctx.getMethod().getAnnotation(Retry.class);
+            Retry retryAnnotation = getRetryAnnotation(ctx);
             long delay = 0;
             for (int i = 0 ; i < retryAnnotation.count(); i++)
             {
@@ -64,6 +64,14 @@ public class RetryInterceptor
             return ctx.proceed();
         }
         throw new AssertionError("should have return value or thrown exception");
+    }
+    
+    private Retry getRetryAnnotation(InvocationContext ctx){
+        Retry retry = ctx.getMethod().getAnnotation(Retry.class);
+        if (retry != null){
+            return retry;
+        }
+        return ctx.getTarget().getClass().getAnnotation(Retry.class);
     }
 
 }
