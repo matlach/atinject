@@ -101,7 +101,7 @@ note : logback can be replaced by any slf4j compatible implementation.
 ![Asynchronous Service](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
 ### @Asynchronous and Asynchronous Service
-TODO
+Provides a way to execute asynchronously a method that either returns ```void``` or ```Future<?>```.
 usage:
 ```java
 @Asynchronous public void performAsynchronously(...){...}
@@ -114,8 +114,9 @@ public class PerformAllAsynchronously{...}
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry and Scheduled Service
-Retry provides a way to re-execute a method which execution has failed using exponential backoff algorithm.
+Provides a way to re-execute a method which execution has failed using exponential backoff algorithm.
 By default, a method that has failed will try to re-executor 3 times with a backoff of 100ms.
+Execution and / or re-execution of the method is ensured by the ScheduledService.
 Retry count and backoff are configurable.
 http://en.wikipedia.org/wiki/Exponential_backoff
 
