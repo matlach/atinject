@@ -114,10 +114,16 @@ public class PerformAllAsynchronously{...}
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
 ### @Retry and Scheduled Service
-TODO
+Retry provides a way to re-execute a method which execution has failed using exponential backoff algorithm.
+By default, a method that has failed will try to re-executor 3 times with a backoff of 100ms.
+Retry count and backoff are configurable.
+http://en.wikipedia.org/wiki/Exponential_backoff
+
 usage:
 ```java
 @Retry public Object performWithRetry(...){...}
+
+@Retry(count=..., timeout=...) public Object performWithCustomRetry(...){...}
 
 @Retry
 public class PerformAllWithRetry{...}
