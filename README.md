@@ -291,6 +291,15 @@ Registration is performed in two phases :
 
 ### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
 
+### User Preference Service
+Associate a given ```userId``` and ```preferenceId``` any [UserPreference][].
+A [SimpleUserPreference][] provides the default implementation for [UserPreference][].
+All [UserPreference][] are grouped by an [UserPreferences][].
+
+[UserPreferences]: /
+[UserPreference]: /
+[SimpleUserPreference]: /
+
 ## Quality
 
 1. install sonar http://www.sonarsource.org
