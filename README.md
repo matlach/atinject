@@ -323,6 +323,17 @@ Send a [WebSocketNotification][] to a given [Session][] or all [Session][] inclu
 ### User Topology Services
 Map a given ```userId``` to a given TopologyAwareAddress.
 
+### Password Digester
+When registering, client will provide it is password as clear text (over ssl).
+For subsequent login, client will provide it is hashed password (over ssl or not).
+[PasswordDigester][] provides a way to hash a password using a pre-defined algorithm making the application less vunerable to attack.
+[SimplePasswordDigester][] use SHA-1 algorithm to hash password as it is defacto provided by the JVM.
+
+note : to provide stronger encryption, [PasswordDigester][] implementation can be replaced by defining an @Alternative class.
+
+[PasswordDigester]: /
+[SimplePasswordDigester]: /
+
 ### User and User Credential Services
 A [User][] represent an individual identified by it is [UserCredential][].
 [UserCredential][] contains the ```username``` and ```password```.
