@@ -8,11 +8,18 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class SimplePasswordDigester implements PasswordDigester {
     
+    public static final String ALGORITHM = "SHA-1";
+    
+    @Override
+    public String getAlgorithm(){
+        return ALGORITHM;
+    }
+    
     @Override
     public String digest(String input){
         
         try {
-            MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+            MessageDigest sha1 = MessageDigest.getInstance(ALGORITHM);
             byte[] inputBytes = input.getBytes(Charset.forName("UTF-8"));
             byte[] digestedBytes = sha1.digest(inputBytes);
             return new String(encodeHex(digestedBytes));
