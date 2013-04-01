@@ -2,8 +2,9 @@
 <html>
 <head>
 <meta charset="utf-8" />
+<script type="text/javascript" src="easeljs-0.6.0.min.js"></script>
 </head>
-<body>
+<body onload="initCanvas();">
 
 <script>
 
@@ -416,7 +417,19 @@ function closeWebSocket(){
 	socket.close();
 };
 
+function initCanvas(){
+	var canvas = document.getElementById("canvas");
+	stage = new createjs.Stage(canvas);
+	shape = new createjs.Shape();
+	shape.graphics.f("red").r(50, 50, 100, 100);
+	stage.addChild(shape);
+	stage.update();
+};
+
 </script>
+
+<canvas id="canvas" width="480" height="240"></canvas>
+
 <div id="websocketConsole">
 <form>
 
