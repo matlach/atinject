@@ -1,4 +1,4 @@
-package org.atinject.integration;
+package org.atinject.core;
 
 import javax.enterprise.inject.spi.CDI;
 
@@ -6,7 +6,7 @@ import org.atinject.core.cdi.JavaSECDIProvider;
 
 
 
-public class IntegrationBootstrap {
+public class Bootstrap {
 
     public static void main(String[] args) throws Exception
     {
