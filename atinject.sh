@@ -1,4 +1,4 @@
-java -jar atinject.jar
+java -jar atinject.jar org.atinject.Boostrap
 -server
 -XX:+AggressiveOpts
 -Xms1g
@@ -6,3 +6,5 @@ java -jar atinject.jar
 -XX:NewRatio=1
 -XX:+UseG1GC
 -XX:+DisableExplicitGC
+-Duser.timezone=GMT
+-Dinfinispan.unsafe.allow_jdk8_chm=true
