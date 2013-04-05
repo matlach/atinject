@@ -68,7 +68,7 @@
 		<netty.version>4.0.0.CR1</netty.version>
 		<infinispan.version>5.2.5.Final</infinispan.version>
 		<jackson.version>2.1.4</jackson.version>
-		<hibernate.validator.version>5.0.0.CR4</hibernate.validator.version>
+		<hibernate.validator.version>5.0.0.CR5</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
 		<junit.version>4.11</junit.version>
 	</properties>
