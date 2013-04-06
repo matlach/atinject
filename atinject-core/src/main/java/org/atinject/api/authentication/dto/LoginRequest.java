@@ -1,29 +1,34 @@
 package org.atinject.api.authentication.dto;
 
+import javax.validation.constraints.NotNull;
+
+import org.atinject.core.nullanalysis.NonNull;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 
 public class LoginRequest extends WebSocketRequest {
 
     private static final long serialVersionUID = 1L;
 
-    private String username;
-    private String password;
+    @NotNull private String username;
+    @NotNull private String passwordHash;
     
+    @NonNull
     public String getUsername() {
         return username;
     }
     
-    public LoginRequest setUsername(String username) {
+    public LoginRequest setUsername(@NonNull String username) {
         this.username = username;
         return this;
     }
     
-    public String getPassword() {
-        return password;
+    @NonNull
+    public String getPasswordHash() {
+        return passwordHash;
     }
     
-    public LoginRequest setPassword(String password) {
-        this.password = password;
+    public LoginRequest setPasswordHash(@NonNull String passwordHash) {
+        this.passwordHash = passwordHash;
         return this;
     }
     

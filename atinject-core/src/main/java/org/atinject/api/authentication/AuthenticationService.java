@@ -15,6 +15,7 @@ import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.core.distevent.Distributed;
+import org.atinject.core.nullanalysis.NonNull;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
@@ -32,7 +33,7 @@ public class AuthenticationService extends Service {
     
     @Inject @Distributed private Event<UserLoggedOut> userLoggerOutEvent;
     
-    public UserEntity login(Session session, String username, String password){
+    public UserEntity login(@NonNull Session session, @NonNull String username, @NonNull String password){
         if (session.getUserId() != null){
             throw new IllegalStateException("session user id is not null");
         }
