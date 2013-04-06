@@ -55,6 +55,11 @@ atinject is built with [maven](http://maven.apache.org) and require jdk7 to buil
 3. install git scm connector from m2e marketplace
 4. checkout maven project from scm
 
+TODO, null analysis
+@NonNull
+@Nullable
+@NonNullByDefault
+
 TODO, running core 
 * open IntegrationBootstrap run as... java application
 * mvn ... run server.sh / bat
