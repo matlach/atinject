@@ -32,11 +32,15 @@ features (frontend) :
 * polymorphic dto support
 * javascript web socket service prototype generation
 
-atinject is built on 4 key components :
+atinject backend is built on 4 key components :
 * [weld](http://seamframework.org/Weld) provides the cdi backbone
 * [netty](https://www.netty.io) provides the http and websockets transport between client and server
 * [infinispan](http://www.jboss.org/infinispan) provides the distributed executor and map reduce framework, distributed and replicated cache and finally data storage abstraction
 * [jackson](https://github.com/FasterXML/jackson-core) provides the serialization framework used between client and server and the support for data versioning
+
+atinject frontend is build on 2 key components :
+* [requirejs](http://www.requirejs.org)
+* [createjs](http://www.createjs.com)
 
 ##contributors
 
@@ -45,6 +49,9 @@ video game industry grown up, worked 4 years as lead r&d backend for [frimastudi
 along with a small intercourse at [funcom](http://www.funcom.com) as java developper.
 since now a year i have been working at [myca health inc.](http://www.myca.com) as a software engineer.
 feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
+
+### pierre-alain chabot
+TODO
 
 ##installation
 
