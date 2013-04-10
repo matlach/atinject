@@ -1,4 +1,4 @@
-package org.atinject.core;
+package org.atinject.integration;
 
 import javax.enterprise.inject.spi.CDI;
 
