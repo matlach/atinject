@@ -373,6 +373,18 @@ Registration is performed in two phases :
 ### Authorization, User, Role and Permission Services
 ![Authorization, User, Role and Permission Services](http://yuml.me/14648e63 "Authorization, User, Role and Permission Services")
 
+TODO based on apache shiro design
+
+> Permissions are the most atomic level of a security policy and they are statements of functionality. Permissions represent what can be done in your application. A well formed permission describes a resource types and what actions are possible when you interact with those resources. Can you open a door? Can you read a file? Can you delete a customer record? Can you push a button?
+> Common actions for data-related resources are create, read, update, and delete, commonly referred to as CRUD.
+> It is important to understand that permissions do not have knowledge of who can perform the actions-- they are just statements of what actions can be performed.
+
+> In the context of Authorization, Roles are effectively a collection of permissions used to simplify the management of permissions and users. So users can be assigned roles instead of being assigned permissions directly, which can get complicated with larger user bases and more complex applications. So, for example, a bank application might have an administrator role or a bank teller role.
+> An explicit role has permissions explicitly assigned to it and therefore is an explicit collection of permissions. Permission checks in code are a reflection of an explicit role. You can view patient data because because you have the view patient data permission as part of your administrator role. You can create an account because you have the create account permission as part of your bank teller role. You can perform these actions, not because of some implicit role name based on a string but because the corresponding permission was explicitly assigned to your role.
+> The big benefits of explicit roles are easier manageability and lower maintenance of your application. If you ever need to add, remove, or change a role, you can do so without touching your source code
+
+> http://shiro.apache.org/java-authorization-guide.html
+
 ### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
 
 ### User Preference Service
