@@ -240,10 +240,12 @@ Entities versioning in a no sql database is not that trivial but can be easily a
 Storing entity as json make is easy to evolve.
 
 Serialization is plain simple:
+
 1. write the current version number
 2. serialize object to json.
 
 Deserialization :
+
 1. read version number
 2. if version number equals the current one, deserialize json.
 3. if not, for each version, read json, and update object as required by the new version.
