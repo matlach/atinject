@@ -234,6 +234,24 @@ junit :
 ![DTO and Polymorphic Serialization](http://yuml.me/92190f13 "DTO and Polymorphic Serialization")
 
 ### Entity, Versionable Entity and Serialization
+Entities versioning in a relational database context is easy to manage.
+When something has to evolve, change the entity, run a sql migration script, done.
+Entities versioning in a no sql database is not that trivial but can be easily accomplish with some work.
+Storing entity as json make is easy to evolve.
+
+Serialization is plain simple:
+1. write the current version number
+2. serialize object to json.
+
+Deserialization :
+1. read version number
+2. if version number equals the current one, deserialize json.
+3. if not, for each version, read json, and update object as required by the new version.
+
+see also [@SerializeWith][].
+
+[@SerializeWith]: /
+
 ![Entity, Versionable Entity and Serialization](http://yuml.me/dc91ade3 "Entity, Versionable Entity and Serialization")
 ![Entity, Versionable Entity and Serialization](http://yuml.me/31dfb262 "Entity, Versionable Entity and Serialization")
 ![Entity, Versionable Entity and Serialization](http://yuml.me/cac95d6b "Entity, Versionable Entity and Serialization")
