@@ -41,7 +41,7 @@ public class AuthenticationService extends Service {
         if (userCredential == null) {
             throw new WrongUsernameException();
         }
-        if (! userCredential.getPassword().equals(password)){
+        if (! userCredential.getPasswordHash().equals(password)){
             throw new WrongPasswordException();
         }
         

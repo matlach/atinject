@@ -5,7 +5,6 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
-import org.atinject.api.user.enumeration.UserState;
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.entity.VersionableEntity;
 import org.infinispan.marshall.Externalizer;
@@ -17,7 +16,6 @@ public class UserEntity extends VersionableEntity {
 
     private String id;
     private String name;
-    private int state;
 
     public UserEntity() {
         super();
@@ -38,15 +36,6 @@ public class UserEntity extends VersionableEntity {
 
     public UserEntity setName(String name) {
         this.name = name;
-        return this;
-    }
-    
-    public int getState(){
-        return state;
-    }
-    
-    public UserEntity setState(UserState userState){
-        this.state = userState.getState();
         return this;
     }
     

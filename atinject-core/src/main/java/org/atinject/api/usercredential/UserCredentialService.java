@@ -18,6 +18,16 @@ public class UserCredentialService extends Service {
         return userCredentialCacheStore.getUserCredential(username);
     }
     
+    public UserCredentialEntity setUserCredential(String userId, String username, String password){
+        userCredentialCacheStore.lock(username);
+        UserCredentialEntity userCredential = new UserCredentialEntity()
+            .setUserId(userId)
+            .setUsername(username)
+            .setPasswordHash(passwordDigester.digest(password));
+        userCredentialCacheStore.put(userCredential);
+        return userCredential;
+    }
+    
     public UserCredentialEntity changePassword(String username, String newPassword){
         userCredentialCacheStore.lock(username);
         UserCredentialEntity userCredential = userCredentialCacheStore.getUserCredential(username);
@@ -30,11 +40,11 @@ public class UserCredentialService extends Service {
     public UserCredentialEntity changePassword(UserCredentialEntity userCredential, String newPassword){
         String hashedPassword = passwordDigester.digest(newPassword);
         
-        if (userCredential.getPassword().equals(hashedPassword)) {
+        if (userCredential.getPasswordHash().equals(hashedPassword)) {
             throw new RuntimeException("password is the same");
         }
         
-        userCredential.setPassword(hashedPassword);
+        userCredential.setPasswordHash(hashedPassword);
         
         userCredentialCacheStore.put(userCredential);
         

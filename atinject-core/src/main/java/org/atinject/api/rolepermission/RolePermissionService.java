@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.atinject.api.permission.PermissionService;
 import org.atinject.api.permission.entity.Permission;
 import org.atinject.api.role.RoleService;
-import org.atinject.api.role.entity.Role;
+import org.atinject.api.role.enumeration.Role;
 
 public class RolePermissionService {
 

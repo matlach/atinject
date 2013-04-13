@@ -3,7 +3,7 @@ package org.atinject.api.role;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.atinject.api.role.entity.Role;
+import org.atinject.api.role.enumeration.Roles;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
@@ -14,7 +14,15 @@ public class RoleService extends Service {
         
     }
     
-    public Role getRole(){
-        return null;
+    public boolean isGuest(int role){
+        return Roles.isGuest(role);
+    }
+    
+    public boolean isRegistered(int role){
+        return Roles.isGuest(role);
+    }
+    
+    public boolean isAdmin(int role){
+        return Roles.isGuest(role);
     }
 }
