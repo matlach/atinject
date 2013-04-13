@@ -34,6 +34,8 @@ public class DTOToJavascript
     
     private static final String NEWLINE = "\r\n";
     
+    private static final String BASE_JAVASCRIPT_PATH = "/Users/mathieu/Desktop/generated-code/";
+    
     @PostConstruct
     public void initialize(){
         
@@ -84,49 +86,49 @@ public class DTOToJavascript
     public String generate(Class<? extends DTO> dtoClass){
         if (dtoClass.equals(DTO.class)){
             String javascript = generateDTO(DTO.class);
-            String path = "/Users/mathieu/Desktop/generated-code/" + DTO.class.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + DTO.class.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (dtoClass.equals(WebSocketRequest.class)){
             String javascript = generateBaseWebSocketRequest(WebSocketRequest.class);
-            String path = "/Users/mathieu/Desktop/generated-code/" + WebSocketRequest.class.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + WebSocketRequest.class.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (dtoClass.equals(WebSocketNotification.class)){
             String javascript = generateBaseWebSocketNotification(WebSocketNotification.class);
-            String path = "/Users/mathieu/Desktop/generated-code/" + WebSocketNotification.class.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + WebSocketNotification.class.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (dtoClass.equals(WebSocketResponse.class)){
             String javascript = generateBaseWebSocketResponse(WebSocketResponse.class);
-            String path = "/Users/mathieu/Desktop/generated-code/" + WebSocketResponse.class.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + WebSocketResponse.class.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (WebSocketRequest.class.isAssignableFrom(dtoClass)){
             String javascript = generateRequest((Class<? extends WebSocketRequest>) dtoClass);
-            String path = "/Users/mathieu/Desktop/generated-code/" + dtoClass.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + dtoClass.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (WebSocketNotification.class.isAssignableFrom(dtoClass)){
             String javascript = generateNotification((Class<? extends WebSocketNotification>) dtoClass);
-            String path = "/Users/mathieu/Desktop/generated-code/" + dtoClass.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + dtoClass.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (WebSocketResponse.class.isAssignableFrom(dtoClass)){
             String javascript = generateResponse((Class<? extends WebSocketResponse>) dtoClass);
-            String path = "/Users/mathieu/Desktop/generated-code/" + dtoClass.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + dtoClass.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
         else if (DTO.class.isAssignableFrom(dtoClass)){
             String javascript = generateComplexDTO(dtoClass);
-            String path = "/Users/mathieu/Desktop/generated-code/" + dtoClass.getSimpleName() + ".js";
+            String path = BASE_JAVASCRIPT_PATH + dtoClass.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
