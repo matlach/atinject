@@ -405,6 +405,9 @@ TODO based on apache shiro design
 
 > http://shiro.apache.org/java-authorization-guide.html
 
+
+![Shiro design](http://yuml.me/d2037488 "Shiro design")
+
 ### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
 
 ### User Preference Service
