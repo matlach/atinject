@@ -104,6 +104,7 @@ CDI.getBeanManager()
 ### Logger
 
 inject an [slf4j](http://www.slf4j.org) logger interface based on the injection point bean class backed by the [logback](http://logback.qos.ch) implementation.
+by default, logging level can be changed at runtime any time through it is mbean located under ```ch.qos.logback.classic```.
 
 ![Logger](http://yuml.me/36c406d7 "Logger")
 
@@ -111,7 +112,7 @@ usage:
 ```java
 @Inject Logger logger;
 ```
-note : logback can be replaced by any slf4j compatible implementation. 
+note : logback can be replaced by any slf4j compatible implementation by changing pom.xml.
 
 ### Asynchronous Service
 Wrap java ThreadPoolExecutor and ThreadFactory that will be used to perform all asynchronous operation.
