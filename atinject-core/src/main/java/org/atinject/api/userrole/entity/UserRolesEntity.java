@@ -10,12 +10,23 @@ public class UserRolesEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
 
+    private String userId;
+    
     private Set<Role> roles;
     
     public UserRolesEntity(){
         this.roles = new HashSet<>();
     }
     
+    public String getUserId() {
+        return userId;
+    }
+
+    public UserRolesEntity setUserId(String userId) {
+        this.userId = userId;
+        return this;
+    }
+
     public Set<Role> getRoles(){
         return this.roles;
     }

@@ -16,4 +16,12 @@ public class UserRoleCacheStore extends CacheStore {
     public UserRolesEntity getUserRole(String userId){
         return cache.get(userId);
     }
+    
+    public void putUserRoles(UserRolesEntity userRoles){
+        cache.put(userRoles.getUserId(), userRoles);
+    }
+    
+    public void removeUserRoles(UserRolesEntity userRoles){
+        cache.remove(userRoles.getUserId());
+    }
 }

@@ -17,15 +17,25 @@ public class UserRoleService extends Service {
     @Inject private UserRoleCacheStore userRoleCache;
     
     public UserRolesEntity getUserRole(String userId){
-        return userRoleCache.getUserRole(userId);
+        UserRolesEntity userRoles = userRoleCache.getUserRole(userId);
+        if (userRoles != null){
+            return userRoles;
+        }
+        userRoles = new UserRolesEntity().setUserId(userId);
+        userRoleCache.putUserRoles(userRoles);
+        return userRoles;
     }
     
     public void addUserRole(String userId, Role role){
-        
+        UserRolesEntity userRoles = getUserRole(userId);
+        userRoles.addRole(role);
+        userRoleCache.putUserRoles(userRoles);
     }
     
     public void removeUserRole(String userId, Role role){
-        
+        UserRolesEntity userRoles = getUserRole(userId);
+        userRoles.removeRole(role);
+        userRoleCache.putUserRoles(userRoles);
     }
-    
+
 }
