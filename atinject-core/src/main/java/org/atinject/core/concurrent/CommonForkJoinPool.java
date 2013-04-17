@@ -23,6 +23,7 @@ public class CommonForkJoinPool implements ExecutorService{
     
     @PostConstruct
     public void initialize() {
+        // TODO this can be replaced by jdk8 ForkJoinPool.commonPool(); once it become available
         forkJoinPool = new ForkJoinPool();
     }
     
