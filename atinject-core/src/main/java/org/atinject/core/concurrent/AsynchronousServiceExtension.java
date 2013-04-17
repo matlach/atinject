@@ -11,28 +11,22 @@ public class AsynchronousServiceExtension implements Extension
 {
 
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-
         Class<T> clazz = event.getAnnotatedType().getJavaClass();
-        for (Method method : clazz.getMethods())
-        {
+        for (Method method : clazz.getMethods()) {
             processMethod(method);
         }
      }
     
-    private void processMethod(Method method)
-    {
-        if (method.isAnnotationPresent(Asynchronous.class))
-        {
+    private void processMethod(Method method) {
+        if (method.isAnnotationPresent(Asynchronous.class)) {
             processAsynchronousMethod(method);
         }
     }
     
     private void processAsynchronousMethod(Method method){
         if (!void.class.isAssignableFrom(method.getReturnType()) &&
-            !Future.class.isAssignableFrom(method.getReturnType()))
-        {
+            !Future.class.isAssignableFrom(method.getReturnType())) {
             throw new RuntimeException("@Asynchronous annotated method return type must be either void or Future<?>");
         }
-            
     }
 }

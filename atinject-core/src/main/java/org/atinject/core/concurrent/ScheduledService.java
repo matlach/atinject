@@ -25,8 +25,7 @@ public class ScheduledService implements ScheduledExecutorService
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     
     @PostConstruct
-    public void initialize()
-    {
+    public void initialize() {
         scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory());
     }
     
@@ -62,160 +61,130 @@ public class ScheduledService implements ScheduledExecutorService
     }
 
     @PreDestroy
-    public void cleapUp()
-    {
+    public void cleapUp() {
         shutdown();
-        try
-        {
+        try {
             awaitTermination(30L, TimeUnit.SECONDS);
         }
-        catch (InterruptedException e)
-        {
+        catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
     
-    public void getActiveCount()
-    {
+    public void getActiveCount() {
         scheduledThreadPoolExecutor.getActiveCount();
     }
     
-    public void getCompletedTaskCount()
-    {
+    public void getCompletedTaskCount() {
         scheduledThreadPoolExecutor.getCompletedTaskCount();
     }
     
-    public void getCorePoolSize()
-    {
+    public void getCorePoolSize() {
         scheduledThreadPoolExecutor.getCorePoolSize();
     }
     
-    public void getLargestPoolSize()
-    {
+    public void getLargestPoolSize() {
         scheduledThreadPoolExecutor.getLargestPoolSize();
     }
     
-    public void getMaximumPoolSize()
-    {
+    public void getMaximumPoolSize() {
         scheduledThreadPoolExecutor.getMaximumPoolSize();
     }
     
-    public void getPoolSize()
-    {
+    public void getPoolSize() {
         scheduledThreadPoolExecutor.getPoolSize();
     }
     
-    public void getQueueSize()
-    {
+    public void getQueueSize() {
         scheduledThreadPoolExecutor.getQueue().size();
     }
     
-    public void getTaskCount()
-    {
+    public void getTaskCount() {
         scheduledThreadPoolExecutor.getTaskCount();
     }
     
     @Override
-    public void shutdown()
-    {
+    public void shutdown() {
         scheduledThreadPoolExecutor.shutdown();
     }
 
     @Override
-    public List<Runnable> shutdownNow()
-    {
+    public List<Runnable> shutdownNow() {
         return scheduledThreadPoolExecutor.shutdownNow();
     }
 
     @Override
-    public boolean isShutdown()
-    {
+    public boolean isShutdown() {
         return scheduledThreadPoolExecutor.isShutdown();
     }
 
     @Override
-    public boolean isTerminated()
-    {
+    public boolean isTerminated() {
         return scheduledThreadPoolExecutor.isTerminated();
     }
 
     @Override
-    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException
-    {
+    public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
         return scheduledThreadPoolExecutor.awaitTermination(timeout, unit);
     }
 
     @Override
-    public <T> Future<T> submit(Callable<T> task)
-    {
-        throw new RuntimeException("not implemented");
+    public <T> Future<T> submit(Callable<T> task) {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public <T> Future<T> submit(Runnable task, T result)
-    {
-        throw new RuntimeException("not implemented");
+    public <T> Future<T> submit(Runnable task, T result) {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public Future<?> submit(Runnable task)
-    {
-        throw new RuntimeException("not implemented");
+    public Future<?> submit(Runnable task) {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException
-    {
-        throw new RuntimeException("not implemented");
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-            throws InterruptedException
-    {
-        throw new RuntimeException("not implemented");
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException
-    {
-        throw new RuntimeException("not implemented");
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws InterruptedException, ExecutionException {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
-            throws InterruptedException, ExecutionException, TimeoutException
-    {
-        throw new RuntimeException("not implemented");
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public void execute(Runnable command)
-    {
-        throw new RuntimeException("not implemented");
+    public void execute(Runnable command) {
+        throw new RuntimeException("not implemented, use asynchronous service");
     }
 
     @Override
-    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit)
-    {
+    public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
         return scheduledThreadPoolExecutor.schedule(command, delay, unit);
     }
 
     @Override
-    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit)
-    {
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
         return scheduledThreadPoolExecutor.schedule(callable, delay, unit);
     }
 
     @Override
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit)
-    {
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
         return scheduledThreadPoolExecutor.scheduleAtFixedRate(command, initialDelay, period, unit);
     }
 
     @Override
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit)
-    {
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
         return scheduledThreadPoolExecutor.scheduleWithFixedDelay(command, initialDelay, delay, unit);
     }
 }

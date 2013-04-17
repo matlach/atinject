@@ -18,8 +18,7 @@ public class AsynchronousInterceptor
     private AsynchronousService asynchronousService;
     
     @AroundInvoke 
-    public Object invokeAsynchronously(final InvocationContext ctx) throws Exception
-    {
+    public Object invokeAsynchronously(final InvocationContext ctx) throws Exception {
         // we assume AsynchronousInterceptor is the first in chain
         if (hack.get() != null){
             return ctx.proceed();
