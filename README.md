@@ -129,6 +129,10 @@ usage:
 @Asynchronous
 public class PerformAllAsynchronously{...}
 ```
+
+### CommonForkJoinPool
+Wrap a java ForkJoinPool that will be used to perform any fork join operation.
+
 ### Scheduled Service
 Wrap a java ScheduledThreadPoolExecutor and ThreadFactory that will be used to perform all delayed operation.
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
