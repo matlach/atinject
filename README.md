@@ -424,6 +424,15 @@ All [UserPreference][] are grouped by an [UserPreferences][].
 [UserPreference]: /
 [SimpleUserPreference]: /
 
+## Analytics
+
+who, when, what.
+
+UserLogin -> time of the day
+UserLogout -> how much time logged in
+GuestRegistration -> number of
+UserRegistration -> number of (guest to registered user conversion)
+
 ## Quality
 
 1. install sonar http://www.sonarsource.org
