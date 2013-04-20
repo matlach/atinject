@@ -154,6 +154,12 @@ usage:
 public class PerformAllWithRetry{...}
 ```
 
+### Job and Trigger
+Provides a way to execute a method at a defined time of the day across the cluster.
+@Schedules
+@Schedule
+second, minute, hour, dayOfWeek, dayOfMonth, month, year
+
 ### @Profile and Profiling Service
 TODO
 
