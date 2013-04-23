@@ -436,6 +436,7 @@ who, when, what.
 
 UserLogin -> time of the day
 UserLogout -> how much time logged in
+           -> concurrent user
 GuestRegistration -> number of
 UserRegistration -> number of (guest to registered user conversion)
 
