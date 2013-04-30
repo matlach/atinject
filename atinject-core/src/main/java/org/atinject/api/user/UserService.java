@@ -45,6 +45,13 @@ public class UserService extends Service{
      */
     public UserEntity addUser(String name, String password) {
         String userId = UUID.randomUUID().toString();
+        // be extra careful here as everything is based on user id
+        // TODO any better way to do this ? what about locking ?
+        if (userCacheStore.getUser(userId) != null){
+            // an extraordinary event just happened
+            // try again
+            return addUser(name, password);
+        }
         UserEntity user = userEntityFactory.newUserEntity()
                 .setId(userId)
                 .setName(name);
@@ -75,10 +82,7 @@ public class UserService extends Service{
     public UserEntity removeUser(String userId) {
         lockUser(userId);
         UserEntity user = userCacheStore.getUser(userId);
-        if (user == null) {
-            throw new NullPointerException("user");
-        }
-        userCacheStore.removeUser(user);
+        removeUser(user);
         return user;
     }
     
@@ -86,6 +90,9 @@ public class UserService extends Service{
      * Note : it is assumed that userId has been locked before
      */
     public void removeUser(UserEntity user) {
+        if (user == null) {
+            throw new NullPointerException("user");
+        }
         userCacheStore.removeUser(user);
     }
 }
