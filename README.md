@@ -430,6 +430,70 @@ All [UserPreference][] are grouped by an [UserPreferences][].
 [UserPreference]: /
 [SimpleUserPreference]: /
 
+### Efficient data structure
+
+in nosql architecture it is very important to limitate at a maximum searching operation.
+in distributed architecture it is also very important to limitate remote lookup.
+everything related to an User should use whenever possible the ```userId``` as key that way searching operation is limited within the entity and no remote lookup is done.
+this approach will work very efficiently in many scenario, where data structure is simple.
+
+but what happen when 
+
+ex : user and documents
+
+in a relational world :
+user (pk userId, name), documents (pk documentId, fk userId, title, content)
+TODO yuml.me
+
+nosql :
+1. user(userId, name, list<document>), document(documentId, title, content)
+2. user(userId, name, list<documentId>), document(documentId, title, content), document key (userId, documentId)
+3. user(userId, name), user documents(userId, list<documentId>), document(documentId, title, content), document key(userId, documentId)
+TODO yuml.me x3
+
+in 1, get one document
+1. with userId, get User
+2. with User, get Document
+
+in 1 add or update or delete, one document
+1. lock userId
+2. with userId, get User
+3. with User, add/delete Document or get+update Document
+4. put User
+
+in 2, get one document
+1. with userId, get User
+2. with User, get documentId
+3. with userId and documentId, get DocumentKey
+4. with DocumentKey, get Document
+
+in 2, update one document
+1. lock userId
+2. with userId, get User
+3. with User, get documentId
+4. with userId and documentId, get DocumentKey
+5. lock DocumentKey
+6. with DocumentKey, get+update Document
+7. put Document
+
+in 2, add/remove one document
+1. lock userId,
+2. with userId, get User
+3. with User, get documentId
+4. with userId and documentId, get DocumentKey
+5. lockDocumentKey
+6. add/remove documentId from User
+7. put/remove Document
+8. put User
+
+in 3, get
+same as 2, get is on UserDocuments instead of User
+
+in 3, add or update or delete
+same as 2, but lock is on UserDocuments instead of User
+
+as the examples go, the contention is moved from the User toward the Document.
+
 ## Analytics
 
 who, when, what.
