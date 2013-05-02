@@ -456,10 +456,12 @@ nosql :
 TODO yuml.me x3
 
 in 1, get one document
+
 1. with userId, get User
 2. with User, get Document
 
 in 1 add or update or delete, one document
+
 1. lock userId
 2. with userId, get User
 3. with User, add/delete Document or get+update Document
