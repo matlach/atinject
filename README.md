@@ -448,6 +448,7 @@ user (pk userId, name), documents (pk documentId, fk userId, title, content)
 TODO yuml.me
 
 nosql :
+
 1. user(userId, name, list<document>), document(documentId, title, content)
 2. user(userId, name, list<documentId>), document(documentId, title, content), document key (userId, documentId)
 3. user(userId, name), user documents(userId, list<documentId>), document(documentId, title, content), document key(userId, documentId)
@@ -465,12 +466,14 @@ in 1 add or update or delete, one document
 4. put User
 
 in 2, get one document
+
 1. with userId, get User
 2. with User, get documentId
 3. with userId and documentId, get DocumentKey
 4. with DocumentKey, get Document
 
 in 2, update one document
+
 1. lock userId
 2. with userId, get User
 3. with User, get documentId
@@ -480,6 +483,7 @@ in 2, update one document
 7. put Document
 
 in 2, add/remove one document
+
 1. lock userId,
 2. with userId, get User
 3. with User, get documentId
