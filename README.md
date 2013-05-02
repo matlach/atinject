@@ -442,13 +442,16 @@ but what happen when
 ex : user and documents
 
 in a relational world :
+
 user (pk userId, name), documents (pk documentId, fk userId, title, content)
+
 TODO yuml.me
 
 nosql :
 1. user(userId, name, list<document>), document(documentId, title, content)
 2. user(userId, name, list<documentId>), document(documentId, title, content), document key (userId, documentId)
 3. user(userId, name), user documents(userId, list<documentId>), document(documentId, title, content), document key(userId, documentId)
+
 TODO yuml.me x3
 
 in 1, get one document
@@ -487,9 +490,11 @@ in 2, add/remove one document
 8. put User
 
 in 3, get
+
 same as 2, get is on UserDocuments instead of User
 
 in 3, add or update or delete
+
 same as 2, but lock is on UserDocuments instead of User
 
 as the examples go, the contention is moved from the User toward the Document.
