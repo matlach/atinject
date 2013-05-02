@@ -449,11 +449,12 @@ TODO yuml.me
 
 nosql :
 
-1. user(userId, name, list<document>), document(documentId, title, content)
-2. user(userId, name, list<documentId>), document(documentId, title, content), document key (userId, documentId)
-3. user(userId, name), user documents(userId, list<documentId>), document(documentId, title, content), document key(userId, documentId)
+1. user(userId, name, list of document), document(documentId, title, content)
+2. user(userId, name, list of documentId), document(documentId, title, content), document key (userId, documentId)
+3. user(userId, name), user documents(userId, list of documentId), document(documentId, title, content), document key(userId, documentId)
+4. user(userId, name), user documents(userId, list of document), document(documentId, title, content)
 
-TODO yuml.me x3
+TODO yuml.me x4
 
 in 1, get one document
 
@@ -502,6 +503,14 @@ same as 2, get is on UserDocuments instead of User
 in 3, add or update or delete
 
 same as 2, but lock is on UserDocuments instead of User
+
+in 4, get
+
+same as 1, get is on UserDocuments instead of User
+
+in 4, add or update or delete
+
+same as 1, but lock is on UserDocuments instead of User
 
 as the examples go, the contention is moved from the User toward the Document.
 
