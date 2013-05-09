@@ -88,6 +88,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ## Documentation
+atinject framework is divided into two big packages :
+1. ```org.atinject.core```
+2. ```org.atinject.api```
+
+```org.atinject.core``` package contains all classes required to manage a public web socket intensive application in a scalable way.
+it also contains all low level and utility classes.
+
+```org.atinject.api``` package contains all classes built over the ```org.atinject.core``` package to manage an authoritative web socket intensive application in a scalable way.
+
+note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection. 
+
+### core
+
+### api
 
 ### Weld SE enhancements
 
