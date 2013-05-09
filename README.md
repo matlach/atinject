@@ -94,7 +94,7 @@ atinject framework is divided into two big packages :
 2. ```org.atinject.api```
 
 ```org.atinject.core``` package contains all classes required to manage a public web socket intensive application in a scalable way.
-it also contains all low level and utility classes.
+it also contains all low level and utility classes to do so.
 
 ```org.atinject.api``` package contains all classes built over the ```org.atinject.core``` package to manage an authoritative web socket intensive application in a scalable way.
 
