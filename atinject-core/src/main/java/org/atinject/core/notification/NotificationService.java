@@ -7,9 +7,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.rendezvous.entity.RendezvousEntity;
-import org.atinject.api.session.Session;
-import org.atinject.api.session.SessionService;
 import org.atinject.core.cdi.CDI;
+import org.atinject.core.session.Session;
+import org.atinject.core.session.SessionService;
 import org.atinject.core.topology.TopologyDistributedExecutor;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 

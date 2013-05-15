@@ -52,19 +52,19 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.api.session.Session;
-import org.atinject.api.session.SessionContext;
-import org.atinject.api.session.SessionFactory;
-import org.atinject.api.session.SessionService;
-import org.atinject.api.session.dto.SessionOpenedNotification;
-import org.atinject.api.session.event.SessionClosed;
-import org.atinject.api.session.event.SessionOpened;
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
+import org.atinject.core.session.Session;
+import org.atinject.core.session.SessionContext;
+import org.atinject.core.session.SessionFactory;
+import org.atinject.core.session.SessionService;
+import org.atinject.core.session.dto.SessionOpenedNotification;
+import org.atinject.core.session.event.SessionClosed;
+import org.atinject.core.session.event.SessionOpened;
 import org.atinject.core.topology.TopologyService;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
@@ -227,7 +227,7 @@ public class WebSocketServerHandler {
             res.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8");
             HttpHeaders.setContentLength(res, content.readableBytes());
 
-            res.data().writeBytes(content);
+            res.content().writeBytes(content);
             sendHttpResponse(ctx, req, res);
         }
         
@@ -385,7 +385,7 @@ public class WebSocketServerHandler {
         private void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
             FullHttpResponse response = new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1, status);
-            response.data().writeBytes(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
+            response.content().writeBytes(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
             response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/plain; charset=UTF-8");
 
             // Close the connection as soon as the error message is sent.
@@ -435,8 +435,8 @@ public class WebSocketServerHandler {
         private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
             // Generate an error page if response getStatus code is not OK (200).
             if (res.getStatus().code() != 200) {
-                res.data().writeBytes(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
-                HttpHeaders.setContentLength(res, res.data().readableBytes());
+                res.content().writeBytes(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
+                HttpHeaders.setContentLength(res, res.content().readableBytes());
             }
 
             // Send the response and close the connection if necessary.
@@ -482,7 +482,7 @@ public class WebSocketServerHandler {
         }
         
         private void handlePingWebSocketFrame(ChannelHandlerContext ctx, PingWebSocketFrame frame){
-            ctx.channel().write(new PongWebSocketFrame(frame.data()));
+            ctx.channel().write(new PongWebSocketFrame(frame.content()));
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
@@ -523,7 +523,7 @@ public class WebSocketServerHandler {
         
         private WebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
             // read json
-            final String json = ByteBufUtil.readUTF8(frame.data());
+            final String json = ByteBufUtil.readUTF8(frame.content());
             
             // unserialize json
             final WebSocketRequest request = dtoObjectMapper.readValue(json);
@@ -551,27 +551,29 @@ public class WebSocketServerHandler {
             // response could be sent asynchronously instead ?
             // should we use completion service ?
             Future<WebSocketResponse> future;
-            if (session.getUserId() == null){
-                if (request.getRendezvous() == null){
+// TODO re-enable after distinguish authoritative from non
+//            if (session.getUserId() == null){
+//                if (request.getRendezvous() == null){
                     // perform locally through asynchronous service
                     // no gain of submitting request on any member of the cluster ?
+                    // what if we do not use netty's asynchronous handler ?
                     future = asynchronousService.submit(task);
-                }
-                else {
-                    // submit task to distributed executor with given rendezvous
-                    future = distributedExecutor.submit(task, request.getRendezvous());
-                }
-            }
-            else{
-                if (request.getRendezvous() == null){
-                    // submit task to distributed executor using user id as rendezvous
-                    future = distributedExecutor.submit(task, session.getUserId());
-                }
-                else {
-                    // submit task to distributed executor with given rendezvous
-                    future = distributedExecutor.submit(task, request.getRendezvous());
-                }
-            }
+//                }
+//                else {
+//                    // submit task to distributed executor with given rendezvous
+//                    future = distributedExecutor.submit(task, request.getRendezvous());
+//                }
+//            }
+//            else{
+//                if (request.getRendezvous() == null){
+//                    // submit task to distributed executor using user id as rendezvous
+//                    future = distributedExecutor.submit(task, session.getUserId());
+//                }
+//                else {
+//                    // submit task to distributed executor with given rendezvous
+//                    future = distributedExecutor.submit(task, request.getRendezvous());
+//                }
+//            }
             
             // wait for response to come back
             WebSocketResponse response = getWebSocketResponseFromFuture(future);

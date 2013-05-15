@@ -1,6 +1,6 @@
 package org.atinject.core.notification;
 
-import org.atinject.api.session.Session;
+import org.atinject.core.session.Session;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 
 public class NotificationEvent

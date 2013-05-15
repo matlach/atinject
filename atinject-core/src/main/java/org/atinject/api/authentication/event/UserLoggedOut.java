@@ -1,8 +1,8 @@
 package org.atinject.api.authentication.event;
 
-import org.atinject.api.session.Session;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.core.event.Event;
+import org.atinject.core.session.Session;
 
 public class UserLoggedOut extends Event {
 

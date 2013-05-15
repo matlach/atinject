@@ -2,8 +2,8 @@ package org.atinject.core.json;
 
 import javax.inject.Inject;
 
-import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.core.dto.DTOObjectMapper;
+import org.atinject.core.session.dto.SessionOpenedNotification;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
 import org.junit.Test;

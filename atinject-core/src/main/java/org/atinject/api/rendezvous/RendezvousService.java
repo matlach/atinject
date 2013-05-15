@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.rendezvous.entity.RendezvousEntity;
-import org.atinject.api.session.Session;
+import org.atinject.core.session.Session;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped

@@ -3,7 +3,7 @@ package org.atinject.core.topology;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.session.Session;
+import org.atinject.core.session.Session;
 import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.topology.dto.GetTopologyRequest;
 import org.atinject.core.topology.dto.GetTopologyResponse;

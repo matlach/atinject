@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.UserLoggedIn;
 import org.atinject.api.useraffinity.dto.UserAffinityNotification;
-import org.atinject.core.distexec.UserTopologyService;
+import org.atinject.api.usertopology.UserTopologyService;
 import org.atinject.core.notification.NotificationService;
 import org.atinject.core.tiers.WebSocketService;
 import org.infinispan.remoting.transport.TopologyAwareAddress;

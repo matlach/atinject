@@ -36,10 +36,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.api.session.dto.SessionOpenedNotification;
 import org.atinject.core.dto.DTO;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
+import org.atinject.core.session.dto.SessionOpenedNotification;
 import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.server.WebSocketServer;
@@ -195,7 +195,7 @@ public class WebSocketClient {
         }
 
         @Override
-        public void beforeAdd(ChannelHandlerContext ctx) throws Exception {
+        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
             handshakeFuture = ctx.newPromise();
         }
 
@@ -222,7 +222,7 @@ public class WebSocketClient {
             if (msg instanceof FullHttpResponse) {
                 FullHttpResponse response = (FullHttpResponse) msg;
                 throw new Exception("Unexpected HttpResponse (status=" + response.getStatus() + ", content="
-                        + response.data().toString(CharsetUtil.UTF_8) + ")");
+                        + response.content().toString(CharsetUtil.UTF_8) + ")");
             }
 
             WebSocketFrame frame = (WebSocketFrame) msg;
@@ -242,7 +242,7 @@ public class WebSocketClient {
         }
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
-            ByteBuf byteBuf = frame.data();
+            ByteBuf byteBuf = frame.content();
             
             String json = ByteBufUtil.readUTF8(byteBuf);
             DTO dto = dtoObjectMapper.readValue(json);

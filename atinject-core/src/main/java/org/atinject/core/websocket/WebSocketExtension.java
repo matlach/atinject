@@ -11,7 +11,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
-import org.atinject.api.session.Session;
+import org.atinject.core.session.Session;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.dto.WebSocketResponse;
 

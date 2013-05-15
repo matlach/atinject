@@ -16,6 +16,7 @@ import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.util.concurrent.NotifyingFuture;
 
+// TODO distinguish between local, clustered, distributed and replicated caches
 public class ClusteredCache<K, V>
 {
     

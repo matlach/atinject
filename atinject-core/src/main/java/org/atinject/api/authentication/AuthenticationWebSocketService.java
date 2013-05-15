@@ -7,10 +7,10 @@ import org.atinject.api.authentication.dto.LoginRequest;
 import org.atinject.api.authentication.dto.LoginResponse;
 import org.atinject.api.authentication.dto.LogoutRequest;
 import org.atinject.api.authentication.dto.LogoutResponse;
-import org.atinject.api.session.Session;
 import org.atinject.api.user.adapter.UserAdapter;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.core.nullanalysis.NonNull;
+import org.atinject.core.session.Session;
 import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.websocket.WebSocketMessage;
 

@@ -12,16 +12,17 @@
 		<class>org.atinject.core.tiers.exception.HandleServiceExceptionInterceptor</class>
 		<class>org.atinject.core.tiers.exception.HandleCacheStoreExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
-		<class>org.atinject.core.authorization.RequiresUserInterceptor</class>
-		<class>org.atinject.core.authorization.RequiresGuestInterceptor</class>
-		<class>org.atinject.core.authorization.RequiresRolesInterceptor</class>
-		<class>org.atinject.core.authorization.RequiresPermissionsInterceptor</class>
+		<class>org.atinject.api.authorization.RequiresUserInterceptor</class>
+		<class>org.atinject.api.authorization.RequiresGuestInterceptor</class>
+		<class>org.atinject.api.authorization.RequiresRolesInterceptor</class>
+		<class>org.atinject.api.authorization.RequiresPermissionsInterceptor</class>
 		<!-- test should use hibernate-validator-cdi ? -->
 		<class>org.atinject.core.validation.ValidateMethodInterceptor</class>
 	</interceptors>
 	
-	<alternatives>
-		<stereotype>org.atinject.core.environment.JUnit</stereotype>
+ 	<alternatives>
+		<class>org.atinject.api.usersession.UserSessionCache</class>
+		<class>org.atinject.api.usersession.UserSessionService</class>
 	</alternatives>
 
 </beans>
