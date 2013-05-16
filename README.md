@@ -97,6 +97,7 @@ atinject framework is divided into two big packages :
 it also contains all low level and utility classes to do so.
 
 ```org.atinject.api``` package contains all classes built over the ```org.atinject.core``` package to manage an authoritative web socket intensive application in a scalable way.
+in other terms, api ```@Specialize```s the core.
 
 note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection. 
 
