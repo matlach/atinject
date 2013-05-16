@@ -62,12 +62,12 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<slf4j.version>1.7.5</slf4j.version>
-		<logback.version>1.0.12</logback.version>
+		<logback.version>1.0.13</logback.version>
 		<weld.version>2.0.0.Final</weld.version>
 		<deltaspike.version>0.3-incubating</deltaspike.version>
 		<netty.version>4.0.0.CR2</netty.version>
 		<infinispan.version>5.3.0.Beta1</infinispan.version>
-		<jackson.version>2.2.0</jackson.version>
+		<jackson.version>2.2.1</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
 		<junit.version>4.11</junit.version>
