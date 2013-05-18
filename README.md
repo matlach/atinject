@@ -50,9 +50,6 @@ along with a small intercourse at [funcom](http://www.funcom.com) as java develo
 since now a year i have been working at [myca health inc.](http://www.myca.com) as a software engineer.
 feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
-### pierre-alain chabot
-TODO
-
 ##installation
 
 atinject is built with [maven](http://maven.apache.org) and require jdk7 to build and run. the easiest way to checkout, build and start using atinject is to follow the following steps:
@@ -70,6 +67,15 @@ TODO, null analysis
 TODO, running core 
 * open IntegrationBootstrap run as... java application
 * mvn ... run server.sh / bat
+
+TODO, suggested jvm switches (java7u21)
+* -Xms1g : Specify the initial size, in bytes, of the memory allocation pool.
+* -Xmx1g : Specify the maximum size, in bytes, of the memory allocation pool.
+* -XX:NewRatio=1 : Ratio of new/old generation sizes.
+* -XX:+UseG1GC : Use the Garbage First (G1) Collector
+* -XX:+AggressiveOpts : Turn on point performance compiler optimizations that are expected to be default in upcoming releases. 
+
+http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
 
 ## licence
 
@@ -99,7 +105,7 @@ it also contains all low level and utility classes to do so.
 ```org.atinject.api``` package contains all classes built over the ```org.atinject.core``` package to manage an authoritative web socket intensive application in a scalable way.
 in other terms, api ```@Specialize```s the core.
 
-note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection. 
+note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection mechanism. 
 
 ### core
 
