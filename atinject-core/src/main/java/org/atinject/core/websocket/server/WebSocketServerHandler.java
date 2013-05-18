@@ -145,6 +145,10 @@ public class WebSocketServerHandler {
     @Sharable
     public class ChannelInboundMessageHandlerAdapterHolder extends ChannelInboundMessageHandlerAdapter<Object>
     {
+        public ChannelInboundMessageHandlerAdapterHolder(){
+            super();
+        }
+        
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) {
             logger.info("channel registered");
