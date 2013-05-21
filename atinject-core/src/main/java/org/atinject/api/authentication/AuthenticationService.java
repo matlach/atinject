@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
+import org.atinject.api.authentication.event.AuthenticationFailed;
 import org.atinject.api.authentication.event.UserLoggedIn;
 import org.atinject.api.authentication.event.UserLoggedOut;
 import org.atinject.api.authentication.exception.WrongPasswordException;
@@ -30,6 +31,8 @@ public class AuthenticationService extends Service {
     
     @Inject private AuthenticationEventFactory authenticationEventFactory;
     
+    @Inject private Event<AuthenticationFailed> authenticationFailedEvent;
+    
     @Inject @Distributed private Event<UserLoggedIn> userLoggedInEvent;
     
     @Inject @Distributed private Event<UserLoggedOut> userLoggerOutEvent;
@@ -44,6 +47,11 @@ public class AuthenticationService extends Service {
             throw new WrongUsernameException();
         }
         if (! userCredential.getPasswordHash().equals(password)){
+            AuthenticationFailed event = authenticationEventFactory.newAuthenticationFailed()
+                    .setUserSession(userSession)
+                    .setUserCredential(userCredential);
+            // TODO listen this event to implement a lock user credential feature, apply on user credential ?
+            authenticationFailedEvent.fire(event);
             throw new WrongPasswordException();
         }
         
