@@ -40,6 +40,12 @@ public class WebSocketServer
     @PostConstruct
     public void initialize() throws Exception
     {
+        // manage these features
+        // Start servicing all request, vs. admin only,
+        // Stop when work complete, force stop now, "stop" but continue admin request.
+        // this should also work for any "tiers" components
+        // that way it is possible to shutdown / test any system component live without impacting any non dependant features
+        
         this.port = 8080;
         run();
     }

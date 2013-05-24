@@ -2,6 +2,8 @@ package org.atinject.api.role.enumeration;
 
 public enum Roles implements Role {
 
+    // weblogic : admin, operator, deployer, monitor, app tester,anonymous, others
+    
     // use power of 2 ?
     GUEST(1),
     REGISTERED(2),
