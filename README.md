@@ -74,7 +74,7 @@ TODO, suggested jvm switches (java7u21)
 * -XX:NewRatio=1 : Ratio of new/old generation sizes.
 * -XX:+UseG1GC : Use the Garbage First (G1) Collector
 * -XX:+AggressiveOpts : Turn on point performance compiler optimizations that are expected to be default in upcoming releases. 
-
+* -XX:CompileThreshold=8000 : Number of method invocations/branches before compiling
 http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
 
 ## licence
