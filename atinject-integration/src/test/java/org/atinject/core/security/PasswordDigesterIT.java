@@ -4,8 +4,11 @@ import javax.inject.Inject;
 
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PasswordDigesterIT extends IntegrationTest {
 
     @Inject private SimplePasswordDigester passwordDigester;

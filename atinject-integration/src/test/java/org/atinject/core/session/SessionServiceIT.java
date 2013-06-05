@@ -9,9 +9,12 @@ import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.session.event.SessionOpened;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SessionServiceIT extends IntegrationTest
 {
 

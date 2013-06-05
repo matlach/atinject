@@ -6,10 +6,13 @@ import org.atinject.api.user.dto.GetUserRequest;
 import org.atinject.core.websocket.client.WebSocketClient;
 import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.integration.IntegrationTest;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class WebSocketIT extends IntegrationTest
 {
 

@@ -6,9 +6,12 @@ import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.session.dto.SessionOpenedNotification;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DTOObjectMapperIT extends IntegrationTest
 {
 

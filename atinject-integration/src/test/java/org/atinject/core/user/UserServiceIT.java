@@ -6,9 +6,12 @@ import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UserServiceIT extends IntegrationTest
 {
 
