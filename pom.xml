@@ -250,6 +250,7 @@
 		<module>atinject-core</module>
 		<module>atinject-integration</module>
 		<module>atinject-local</module>
+		<module>atinject-api</module>
 	</modules>
 
 	<build>
