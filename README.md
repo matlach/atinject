@@ -111,21 +111,19 @@ note : there is no such ```org.atinject.spi``` package as everything has been de
 
 ### core
 
-### api
-
-### Weld SE enhancements
+#### Weld SE enhancements
 
 * CDI Provider : see [CDI Provider](#cdi-provider)
 * Transaction : see [@Transactional, Transaction Manager and Transaction Services](#transactional-transaction-manager-and-transaction-services)
 
 ![Weld SE enhancements](http://yuml.me/ec44f248 "Weld SE enhancements")
 
-### CDI Provider
+#### CDI Provider
 ```java
 CDI.getBeanManager()
 ```
 
-### Logger
+#### Logger
 
 inject an [slf4j](http://www.slf4j.org) logger interface based on the injection point bean class backed by the [logback](http://logback.qos.ch) implementation.
 by default, logging level can be changed at runtime any time through it is mbean located under ```ch.qos.logback.classic```.
@@ -138,11 +136,11 @@ usage:
 ```
 note : logback can be replaced by any slf4j compatible implementation by changing pom.xml.
 
-### Asynchronous Service
+#### Asynchronous Service
 Wrap java ThreadPoolExecutor and ThreadFactory that will be used to perform all asynchronous operation.
 ![Asynchronous Service](http://yuml.me/d8ac2fd9 "Asynchronous Service")
 
-### @Asynchronous and Asynchronous Service
+#### @Asynchronous and Asynchronous Service
 Provides a way to execute asynchronously a method that either returns ```void``` or ```Future<?>```.
 Asynchronous execution of the method is ensured by the AsynchronousService.
 usage:
@@ -154,14 +152,14 @@ usage:
 public class PerformAllAsynchronously{...}
 ```
 
-### CommonForkJoinPool
+#### CommonForkJoinPool
 Wrap a java ForkJoinPool that will be used to perform any fork join operation.
 
-### Scheduled Service
+#### Scheduled Service
 Wrap a java ScheduledThreadPoolExecutor and ThreadFactory that will be used to perform all delayed operation.
 ![Scheduled Service](http://yuml.me/d61b82f1 "Scheduled Service")
 
-### @Retry and Scheduled Service
+#### @Retry and Scheduled Service
 Provides a way to re-execute a method which execution has failed using exponential backoff algorithm.
 By default, a method that has failed will try to re-executor 3 times with a backoff of 100ms.
 Execution and / or re-execution of the method is ensured by the ScheduledService.
@@ -178,16 +176,16 @@ usage:
 public class PerformAllWithRetry{...}
 ```
 
-### Job and Trigger
+#### Job and Trigger
 Provides a way to execute a method at a defined time of the day across the cluster.
 @Schedules
 @Schedule
 second, minute, hour, dayOfWeek, dayOfMonth, month, year
 
-### @Profile and Profiling Service
+#### @Profile and Profiling Service
 TODO
 
-### Distributed Event and Distributed Event Service 
+#### Distributed Event and Distributed Event Service 
 ![Distributed Event Service](http://yuml.me/ad529290 "Distributed Event Service")
 
 usage:
@@ -199,7 +197,7 @@ myEvent.fire(new MyEvent());
 public void onMyEvent(@Observes MyEvent myEvent){...}
 ```
 
-### @Transactional, Transaction Manager and Transaction Services
+#### @Transactional, Transaction Manager and Transaction Services
 ![@Transactional, Transaction Manager and Transaction Services](http://yuml.me/ac71653f "@Transactional, Transaction Manager and Transaction Services")
 
 usage:
@@ -248,7 +246,7 @@ get and remove:
 // 4. optionally return removed value
 ```
 
-### @ValidateRequest, @ValidateMethod and Validation Service
+#### @ValidateRequest, @ValidateMethod and Validation Service
 
 running :
 ```xml
@@ -264,11 +262,11 @@ junit :
 </beans>
 ```
 
-### DTO and [Polymorphic] Serialization
+#### DTO and [Polymorphic] Serialization
 ![DTO and Polymorphic Serialization](http://yuml.me/51685dbc "DTO and Polymorphic Serialization")
 ![DTO and Polymorphic Serialization](http://yuml.me/92190f13 "DTO and Polymorphic Serialization")
 
-### Entity, Versionable Entity and Serialization
+#### Entity, Versionable Entity and Serialization
 Entities versioning in a relational database context is easy to manage.
 When something has to evolve, change the entity, run a sql migration script, done.
 Entities versioning in a no sql database is not that trivial but can be easily accomplish with some work.
@@ -332,7 +330,7 @@ public class VersionableUserExternalizer implements VersionableEntityExternalize
 
 ```
 
-### Tiers
+#### Tiers
 WebSocketService is responsible for managing incoming WebSocketRequest and
 outgoing WebSocketResponse and WebSocketNotification. All business logic should be handled to the Service.
 
@@ -348,7 +346,7 @@ Adapter is responsible of the conversion of any entity to dto and vice-versa.
 
 Each tiers possesses many predefined inheritable interceptors.
 
-### Clustered Cache Manager
+#### Clustered Cache Manager
 Provides a wrapper around infinispan [EmbeddedCacheManager][].
 It also defines the infinispan [GlobalConfiguration][] which is used especially to configure the cache transport.
 Cache transport defines :
@@ -359,13 +357,13 @@ Cache transport defines :
 [EmbeddedCacheManager]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/manager/EmbeddedCacheManager.html
 [GlobalConfiguration]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/configuration/global/GlobalConfiguration.html
 
-### Topology Services
+#### Topology Services
 Provide a wrapper around infinispan [TopologyAwareAddress][]
 TopologyService is also responsible to map a given ```machineId``` to it is url.
 
 [TopologyAwareAddress]: http://docs.jboss.org/infinispan/5.2/apidocs/org/infinispan/remoting/transport/TopologyAwareAddress.html
 
-### Session Services
+#### Session Services
 A [Session][] represents an individual connected via web socket (i.e. after web socket handshake has been completed).
 [Session][] contains the ```channelId``` and ```machineId``` which identify physically where it is bound.
 After a successful login, the [Session][] will be updated with the given ```userId```.
@@ -373,7 +371,7 @@ The [Session][] is designed to be replicated across all servers and not be persi
 
 [Session]: /atinject-core/src/main/java/org/atinject/api/session/Session.java
 
-### Rendezvous Services
+#### Rendezvous Services
 > Rendezvous (French: rendez-vous), to visit, to meet, tryst, less exclusive than tête-à-tête.
 
 > http://en.wikipedia.org/wiki/Rendezvous
@@ -386,15 +384,17 @@ As it is [Session][] counterpart, [RendezvousPoint][] should not also be persist
 
 [RendezVousPoint]: /atinject-core/ 
 
-### Notification Services
+#### Notification Services
 Send a [WebSocketNotification][] to a given [Session][] or all [Session][] included in a given [RendezvousPoint][].
 
 [WebSocketNotification]: /atinject-core/src/main/java/org/atinject/core/websocket/dto/WebSocketNotification.java
 
-### User Topology Services
+### api
+
+#### User Topology Services
 Map a given ```userId``` to a given TopologyAwareAddress.
 
-### Password Digester
+#### Password Digester
 When registering, client will provide it is password as clear text (over ssl).
 For subsequent login, client will provide it is hashed password (over ssl or not).
 [PasswordDigester][] provides a way to hash a password using a pre-defined algorithm making the application less vunerable to attack.
@@ -405,7 +405,7 @@ note : to provide stronger encryption, [PasswordDigester][] implementation can b
 [PasswordDigester]: /
 [SimplePasswordDigester]: /
 
-### User and User Credential Services
+#### User and User Credential Services
 A [User][] represent an individual identified by it is [UserCredential][].
 [UserCredential][] contains the ```username``` and ```password```.
 A [User][] is flagged as a ```guest``` as long as it does not have registered.
@@ -415,7 +415,7 @@ After registration a [User][] is flagged as ```registered```.
 [User]: /atinject-core/src/main/java/org/atinject/api/user/entity/UserEntity.java
 [UserCredential]: /atinject-core/src/main/java/org/atinject/api/usercredential/entity/UserCredentialEntity.java
 
-### Authentication, Registration and User Services
+#### Authentication, Registration and User Services
 Authentication is the process of identifing a [User][] with it is [UserCredential][] while the
 Registration is the process of creating a [User][] and it is [UserCredential][].
 
@@ -425,7 +425,7 @@ Registration is performed in two phases :
 
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
 
-### Authorization, User, Role and Permission Services
+#### Authorization, User, Role and Permission Services
 ![Authorization, User, Role and Permission Services](http://yuml.me/14648e63 "Authorization, User, Role and Permission Services")
 
 TODO based on apache shiro design
@@ -443,9 +443,9 @@ TODO based on apache shiro design
 
 ![Shiro design](http://yuml.me/d2037488 "Shiro design")
 
-### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
+#### @RequiresUser, @RequiresGuest, @RequiresRoles, RequiresPermissions and Authorization Service
 
-### User Preference Service
+#### User Preference Service
 Associate a given ```userId``` and ```preferenceId``` any [UserPreference][].
 A [SimpleUserPreference][] provides the default implementation for [UserPreference][].
 All [UserPreference][] are grouped by an [UserPreferences][].
