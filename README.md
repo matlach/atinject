@@ -49,7 +49,7 @@ atinject frontend is build on 2 key components :
 video game industry grown up, worked 4 years as lead r&d backend for [frimastudio](http://www.frimastudio.com)
 along with a small intercourse at [funcom](http://www.funcom.com) as java developer.
 last year i have been working on some serious business project at [myca health inc.](http://www.myca.com) as a software engineer.
-i recently just began a new career at oracle as senior software developer.
+i recently just began a new career at [oracle](http://www.oracle.com) as senior software developer.
 feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
