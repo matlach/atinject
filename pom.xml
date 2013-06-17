@@ -66,7 +66,7 @@
 		<weld.version>2.0.1.Final</weld.version>
 		<deltaspike.version>0.3-incubating</deltaspike.version>
 		<netty.version>4.0.0.CR3</netty.version>
-		<infinispan.version>5.3.0.CR1</infinispan.version>
+		<infinispan.version>5.3.0.CR2</infinispan.version>
 		<jackson.version>2.2.2</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
