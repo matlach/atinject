@@ -21,7 +21,8 @@
 	</interceptors>
 	
  	<alternatives>
-		<class>org.atinject.api.usersession.UserSessionCache</class>
+ 		<class>org.atinject.api.usersession.UserSessionCache</class>
+ 		<class>org.atinject.api.usersession.UserSessionFactory</class>
 		<class>org.atinject.api.usersession.UserSessionService</class>
 	</alternatives>
 

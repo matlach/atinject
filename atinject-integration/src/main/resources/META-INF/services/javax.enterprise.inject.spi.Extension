@@ -1,3 +1,4 @@
+org.atinject.api.systemproperty.SystemPropertyExtension
 org.atinject.core.dto.DTORegistryExtension
 org.atinject.core.entity.EntityRegistryExtension
 org.atinject.core.tiers.WebSocketServiceRegistryExtension
