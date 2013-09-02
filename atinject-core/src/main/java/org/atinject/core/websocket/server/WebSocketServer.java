@@ -65,7 +65,7 @@ public class WebSocketServer
         {
             if (b != null)
             {
-                b.shutdown();
+                //b.shutdown();
             }
         }
     }

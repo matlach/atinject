@@ -63,10 +63,10 @@
 
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
-		<weld.version>2.0.1.Final</weld.version>
+		<weld.version>2.0.3.Final</weld.version>
 		<deltaspike.version>0.3-incubating</deltaspike.version>
-		<netty.version>4.0.0.CR3</netty.version>
-		<infinispan.version>5.3.0.CR2</infinispan.version>
+		<netty.version>4.0.8.Final</netty.version>
+		<infinispan.version>6.0.0.Alpha3</infinispan.version>
 		<jackson.version>2.2.2</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
@@ -123,9 +123,16 @@
 				<artifactId>netty-all</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.infinispan</groupId>
 				<artifactId>infinispan-core</artifactId>
+				<version>${infinispan.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.infinispan</groupId>
+				<artifactId>infinispan-jcache</artifactId>
 				<version>${infinispan.version}</version>
 			</dependency>
 
@@ -187,6 +194,12 @@
 		<dependency>
 			<groupId>org.jboss.weld</groupId>
 			<artifactId>weld-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>weld-core-jsf</artifactId>
+					<groupId>org.jboss.weld</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -212,6 +225,11 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-jcache</artifactId>
 		</dependency>
 
 		<dependency>

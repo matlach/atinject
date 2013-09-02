@@ -14,11 +14,11 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class RegistrationService extends Service {
 
-    @Inject private UserService userService;
+    @Inject UserService userService;
     
-    @Inject private RegistrationEventFactory registrationEventFactory;
+    @Inject RegistrationEventFactory registrationEventFactory;
     
-    @Inject private Event<UserRegistered> userRegisteredEvent;
+    @Inject Event<UserRegistered> userRegisteredEvent;
     
     public boolean isUsernameAvailable(String username){
         UserEntity user = userService.getUserByName(username);

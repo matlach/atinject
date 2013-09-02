@@ -9,8 +9,8 @@ import org.atinject.api.role.enumeration.Role;
 
 public class RolePermissionService {
 
-    @Inject private RoleService roleService;
-    @Inject private PermissionService permissionService;
+    @Inject RoleService roleService;
+    @Inject PermissionService permissionService;
     
     public boolean isPermitted(Role role, Permission privilege){
         return true;

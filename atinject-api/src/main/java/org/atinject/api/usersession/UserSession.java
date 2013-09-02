@@ -9,8 +9,6 @@ public class UserSession extends MarshallableObject implements Session {
 
     private String sessionId;
     
-    private Integer channelId;
-    
     private String machineId;
     
     private String userId;
@@ -30,17 +28,6 @@ public class UserSession extends MarshallableObject implements Session {
         return this;
     }
     
-    @Override
-    public Integer getChannelId() {
-        return channelId;
-    }
-
-    @Override
-    public UserSession setChannelId(Integer channelId) {
-        this.channelId = channelId;
-        return this;
-    }
-
     @Override
     public String getMachineId() {
         return machineId;

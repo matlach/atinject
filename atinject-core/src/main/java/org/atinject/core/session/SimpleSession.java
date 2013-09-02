@@ -8,8 +8,6 @@ public class SimpleSession extends MarshallableObject implements Session {
 
     private String sessionId;
     
-    private Integer channelId;
-    
     private String machineId;
     
     public SimpleSession(){
@@ -27,17 +25,6 @@ public class SimpleSession extends MarshallableObject implements Session {
         return this;
     }
     
-    @Override
-    public Integer getChannelId() {
-        return channelId;
-    }
-
-    @Override
-    public SimpleSession setChannelId(Integer channelId) {
-        this.channelId = channelId;
-        return this;
-    }
-
     @Override
     public String getMachineId() {
         return machineId;

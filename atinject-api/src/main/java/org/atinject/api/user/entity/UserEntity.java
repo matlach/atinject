@@ -7,8 +7,8 @@ import java.io.ObjectOutput;
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.entity.VersionableEntity;
-import org.infinispan.marshall.Externalizer;
-import org.infinispan.marshall.SerializeWith;
+import org.infinispan.commons.marshall.Externalizer;
+import org.infinispan.commons.marshall.SerializeWith;
 
 @SerializeWith(UserExternalizer.class)
 public class UserEntity extends VersionableEntity {

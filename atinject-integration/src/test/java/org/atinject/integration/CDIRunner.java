@@ -10,7 +10,7 @@ import org.junit.runners.model.InitializationError;
 public class CDIRunner extends BlockJUnit4ClassRunner {
     
     static{
-        CDI.setCDIProvider(new JavaSECDIProvider());
+        new JavaSECDIProvider();
     }
     
     public CDIRunner(Class<?> klass) throws InitializationError {

@@ -1,7 +1,5 @@
 package org.atinject.integration;
 
-import javax.enterprise.inject.spi.CDI;
-
 import org.atinject.core.cdi.JavaSECDIProvider;
 
 
@@ -10,6 +8,9 @@ public class Bootstrap {
 
     public static void main(String[] args) throws Exception
     {
+        // TODO create a wrapper class to provide default system properties
+        // TODO this wrapper class should be instantiated by reflection using a well known system property like
+        // -Dorg.atinject.bootstrap.custom.system.properties=org.atinject....
         System.setProperty("user.timezone", "GMT");
         System.setProperty("infinispan.unsafe.allow_jdk8_chm", "true");
 
@@ -32,7 +33,10 @@ public class Bootstrap {
         shutdownThread.setDaemon(true);
         shutdownThread.start();
         
-        CDI.setCDIProvider(new JavaSECDIProvider());
+        new JavaSECDIProvider();
+        
+        // TODO inject here a "version service"
+        System.out.println("booting atinject core version 1");
     }
 	
 }

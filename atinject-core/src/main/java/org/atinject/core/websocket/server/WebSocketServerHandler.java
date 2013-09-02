@@ -7,9 +7,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -40,9 +39,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -98,10 +99,11 @@ public class WebSocketServerHandler {
 
     private ChannelInboundMessageHandlerAdapterHolder handler;
     
-    private static final AttributeKey<Session> SESSION_ATTRIBUTE_KEY = new AttributeKey<>("session");
+    private static final AttributeKey<String> SESSION_ID_ATTRIBUTE_KEY = new AttributeKey<>("session");
     private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = new AttributeKey<>("handshaker");
     
-    private ChannelGroup channelGroup = new DefaultChannelGroup("websocket clients");
+    // TODO we must pass the executor from the initializer to here 
+    private Map<String, Channel> channelGroup = new ConcurrentHashMap<>();
     
     @Inject
     private SessionService sessionService;
@@ -128,7 +130,7 @@ public class WebSocketServerHandler {
     }
     
     public void onNotificationEvent(@Observes NotificationEvent event){
-        Channel channel = channelGroup.find(event.getSession().getChannelId());
+        Channel channel = channelGroup.get(event.getSession().getSessionId());
         if (channel == null){
             // channel has been removed, cannot send notification, no-op
             return;
@@ -143,7 +145,7 @@ public class WebSocketServerHandler {
     }
     
     @Sharable
-    public class ChannelInboundMessageHandlerAdapterHolder extends ChannelInboundMessageHandlerAdapter<Object>
+    public class ChannelInboundMessageHandlerAdapterHolder extends SimpleChannelInboundHandler<Object>
     {
         public ChannelInboundMessageHandlerAdapterHolder(){
             super();
@@ -157,11 +159,10 @@ public class WebSocketServerHandler {
         @Override
         public void channelActive(ChannelHandlerContext ctx) {
             logger.info("channel active");
-            channelGroup.add(ctx.channel());
         }
         
         @Override
-        public void messageReceived(ChannelHandlerContext ctx, Object msg) {
+        public void channelRead0(ChannelHandlerContext ctx, Object msg) {
             if (msg instanceof FullHttpRequest) {
                 handleHttpRequest(ctx, (FullHttpRequest) msg);
                 return;
@@ -171,6 +172,11 @@ public class WebSocketServerHandler {
                 handleWebSocketFrame(ctx, (WebSocketFrame) msg);
                 return;
             }
+        }
+        
+        @Override
+        public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+            ctx.flush();
         }
         
         // TODO this method could be upgraded to handle REST/JAX-RS request
@@ -409,14 +415,15 @@ public class WebSocketServerHandler {
                 handshaker.handshake(ctx.channel(), req);
                 
                 // we should dispatch instead to "web socket open" method
-                Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
+                Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
+                String sessionId = UUID.randomUUID().toString();
                 Session session = sessionFactory.newSession()
-                    .setSessionId(UUID.randomUUID().toString())    
-                    .setChannelId(ctx.channel().id());
+                    .setSessionId(sessionId);
                 TopologyAwareAddress address = topologyService.getLocalAddress();
                 session.setMachineId(address.getMachineId());
                 
-                sessionAttribute.set(session);
+                sessionAttribute.set(sessionId);
+                channelGroup.put(sessionId, ctx.channel());
                 SessionOpened sessionOpened = new SessionOpened().setSession(session);
                 sessionService.onSessionOpened(sessionOpened);
                 
@@ -491,9 +498,9 @@ public class WebSocketServerHandler {
         
         private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
             // validate session (need to be bound at that point)
-            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
-            Session session = sessionAttribute.get();
-            if (session == null){
+            Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
+            String sessionId = sessionAttribute.get();
+            if (sessionId == null){
                 throw new RuntimeException("handshake is not complete, kick");
             }
             
@@ -501,7 +508,7 @@ public class WebSocketServerHandler {
             WebSocketRequest request = decodeBinaryWebSocketFrame(frame);
             
             // perform request
-            WebSocketResponse response = performRequest(session, request);
+            WebSocketResponse response = performRequest(sessionId, request);
             
             // send response
             sendResponseAsBinary(ctx.channel(), response);
@@ -509,9 +516,9 @@ public class WebSocketServerHandler {
         
         private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
             // validate session (need to be bound at that point)
-            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
-            Session session = sessionAttribute.get();
-            if (session == null){
+            Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
+            String sessionId = sessionAttribute.get();
+            if (sessionId == null){
                 throw new RuntimeException("handshake is not complete, kick");
             }
             
@@ -519,7 +526,7 @@ public class WebSocketServerHandler {
             WebSocketRequest request = decodeTextWebSocketFrame(frame);
             
             // perform request
-            WebSocketResponse response = performRequest(session, request);
+            WebSocketResponse response = performRequest(sessionId, request);
             
             // send response
             sendResponseAsText(ctx.channel(), response);
@@ -545,10 +552,10 @@ public class WebSocketServerHandler {
             return request;
         }
         
-        private WebSocketResponse performRequest(Session session, WebSocketRequest request){
+        private WebSocketResponse performRequest(String sessionId, WebSocketRequest request){
             // build task
             WebSocketMessageTask task = new WebSocketMessageTask()
-                .setSession(session)
+                .setSessionId(sessionId)
                 .setRequest(request);
             
             // should we use a future here to wait for response ?
@@ -590,15 +597,15 @@ public class WebSocketServerHandler {
         
         public class WebSocketMessageTask implements Callable<WebSocketResponse>{
             
-            private Session session;
+            private String sessionId;
             private WebSocketRequest request;
             
-            public Session getSession() {
-                return session;
+            public String getSessionId() {
+                return sessionId;
             }
 
-            public WebSocketMessageTask setSession(Session session) {
-                this.session = session;
+            public WebSocketMessageTask setSessionId(String sessionId) {
+                this.sessionId = sessionId;
                 return this;
             }
             
@@ -613,6 +620,7 @@ public class WebSocketServerHandler {
 
             @Override
             public WebSocketResponse call() throws Exception {
+                Session session = CDI.select(SessionService.class).get().getSession(sessionId);
                 // set current session
                 SessionContext.setCurrentSession(session);
                 try{
@@ -692,9 +700,10 @@ public class WebSocketServerHandler {
         public void channelInactive(ChannelHandlerContext ctx) {
             logger.info("channel inactive");
             
-            Attribute<Session> sessionAttribute = ctx.channel().attr(SESSION_ATTRIBUTE_KEY);
-            Session session = sessionAttribute.get();
-            if (session != null){
+            Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
+            String sessionId = sessionAttribute.get();
+            if (sessionId != null){
+                Session session = sessionService.getSession(sessionId);
                 // we should dispatch instead to "web socket close" method
                 SessionClosed sessionClosed = new SessionClosed().setSession(session);
                 sessionService.onSessionClosed(sessionClosed);
@@ -713,7 +722,7 @@ public class WebSocketServerHandler {
         }
     }
     
-    public ChannelInboundMessageHandlerAdapter<Object> get(){
+    public ChannelInboundHandlerAdapter get(){
         return handler;
     }
 

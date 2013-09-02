@@ -7,10 +7,6 @@ public interface Session {
 
     Session setSessionId(String sessionId);
     
-    Integer getChannelId();
-
-    Session setChannelId(Integer channelId);
-
     String getMachineId();
 
     Session setMachineId(String machineId);

@@ -12,11 +12,11 @@ import org.slf4j.Logger;
 @ApplicationScoped
 public class UserService extends Service{
     
-    @Inject private Logger logger;
+    @Inject Logger logger;
     
-    @Inject private UserCacheStore userCacheStore;
+    @Inject UserCacheStore userCacheStore;
     
-    @Inject private UserEntityFactory userEntityFactory;
+    @Inject UserEntityFactory userEntityFactory;
     
     /**
      * get the user by delegating to {@link UserCacheStore#getUser(String)}

@@ -13,10 +13,10 @@ import org.atinject.core.websocket.WebSocketMessage;
 public class UserWebSocketService extends WebSocketService {
 
 	@Inject
-	private UserService userService;
+	UserService userService;
 	
 	@Inject
-	private UserAdapter userAdapter;
+	UserAdapter userAdapter;
 	
 	@WebSocketMessage
 	public GetUserResponse getUser(GetUserRequest request){

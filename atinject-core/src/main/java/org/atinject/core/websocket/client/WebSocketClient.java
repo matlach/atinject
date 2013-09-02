@@ -6,10 +6,10 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.ChannelPromise;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -81,7 +81,7 @@ public class WebSocketClient {
     {
         if (b != null)
         {
-            b.shutdown();
+            //b.shutdown();
         }
     }
     
@@ -102,7 +102,7 @@ public class WebSocketClient {
             @Observes @WebSocketEndpoint(path="/websocket") WebSocketServerStopped event){
         if (b != null)
         {
-            b.shutdown();
+            //b.shutdown();
         }
     }
 
@@ -181,7 +181,7 @@ public class WebSocketClient {
         ch.closeFuture().sync();
     }
 
-    public class WebSocketClientHandler extends ChannelInboundMessageHandlerAdapter<Object> {
+    public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
 
         private final WebSocketClientHandshaker handshaker;
         private ChannelPromise handshakeFuture;
@@ -210,7 +210,7 @@ public class WebSocketClient {
         }
 
         @Override
-        public void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
+        public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
             Channel ch = ctx.channel();
             if (!handshaker.isHandshakeComplete()) {
                 handshaker.finishHandshake(ch, (FullHttpResponse) msg);

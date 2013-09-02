@@ -2,6 +2,7 @@ package org.atinject.api.systemproperty;
 
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +18,24 @@ public class SystemPropertyService extends Service {
 	
 	@Inject RuntimeMXBean runtimeMXBean;
 	
+	// TODO move everything into extension, this class should use the extension as a delegate instead
+	@Inject SystemPropertyExtension systemPropertyExtension;
+	
 	@PostConstruct
 	public void initialize(){
-		// TODO move these checks in a separate @Startup @ApplicationScoped class
+		
+		for (Entry<String, String> entry : System.getenv().entrySet()){
+			logger.info("{}={}", entry.getKey(), entry.getValue());
+		}
+		
+		for (Entry<Object, Object> entry : System.getProperties().entrySet()){
+			logger.info("{}={}", entry.getKey(), entry.getValue());
+		}
+		
+		if (! isJavaVersionMet()){
+			logger.warn("java version is not met, expecting '{}'", "1.7.0_25");
+		}
+		
 		// TODO add configuration to halt service if not provided
 		// TODO find the actual value through jmx if not provided
 		if (! isXmsArgumentProvided()){
@@ -33,6 +49,14 @@ public class SystemPropertyService extends Service {
 	
 	public List<String> getInputArguments(){
 		return runtimeMXBean.getInputArguments();
+	}
+	
+	public String getJavaVersion(){
+		return getArgument("java.version");
+	}
+	
+	public boolean isJavaVersionMet(){
+		return getJavaVersion().equals("1.7.0_25");
 	}
 	
 	public String getXmsArgument(){
