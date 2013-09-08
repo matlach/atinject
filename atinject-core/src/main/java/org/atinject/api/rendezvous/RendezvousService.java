@@ -1,10 +1,13 @@
 package org.atinject.api.rendezvous;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.rendezvous.entity.RendezvousEntity;
+import org.atinject.api.rendezvous.event.SessionJoinedRendezvous;
+import org.atinject.api.rendezvous.event.SessionLeftRendezvous;
 import org.atinject.core.session.Session;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;
@@ -12,22 +15,43 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class RendezvousService extends Service {
 
+    @Inject RendezvousEntityFactory entityFactory;
+    
     @Inject RendezvousCache rendezvousCache;
+    
+    @Inject Event<SessionJoinedRendezvous> sessionJoinedRendezvousEvent;
+    @Inject Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
     
     public RendezvousEntity newRendezvous(){
         String rendezvousId = rendezvousCache.getId();
-        RendezvousEntity rendezvous = new RendezvousEntity()
+        RendezvousEntity rendezvous = entityFactory.newRendezvous()
             .setId(rendezvousId);
         return rendezvous;
     }
     
     public void onSessionClosed(@Observes SessionClosed event) {
-        // TODO how to effectively remove session from all rendez vous
-        
+        // TODO remove session from all rendez vous
+        // by using session rendez vous cache
+    }
+    
+    public void onSessionJoinedRendezvous(@Observes SessionJoinedRendezvous event) {
+        // add rendez vous id to session rendez vous
+    }
+    
+    public void onSessionLeftRendezvous(@Observes SessionLeftRendezvous event) {
+        // remove rendez vous id to session rendez vous
     }
     
     public void addRendezvous(RendezvousEntity rendezvous){
         rendezvousCache.putRendezvous(rendezvous);
+    }
+    
+    public RendezvousEntity addAndJoin(Session session) {
+        RendezvousEntity rendezvous = newRendezvous();
+        rendezvousCache.lockRendezvous(rendezvous.getId());
+        rendezvous.getSessionIds().add(session.getSessionId());
+        addRendezvous(rendezvous);
+        return rendezvous;
     }
     
     public RendezvousEntity join(String rendezvousId, Session session){
@@ -44,6 +68,7 @@ public class RendezvousService extends Service {
             throw new RuntimeException("already joined");
         }
         rendezvous.getSessionIds().add(session.getSessionId());
+        sessionJoinedRendezvousEvent.fire(null);
         return rendezvous;
     }
     
@@ -61,6 +86,7 @@ public class RendezvousService extends Service {
             throw new RuntimeException("already left");
         }
         rendezvous.getSessionIds().remove(session.getSessionId());
+        sessionLeftRendezvousEvent.fire(null);
         return rendezvous;
     }
 }
