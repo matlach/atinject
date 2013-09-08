@@ -8,6 +8,9 @@ public class Bootstrap {
 
     public static void main(String[] args) throws Exception
     {
+        // TODO create a custom logger for jgroups that will use slf4j
+        // TODO add feature request / make pull request for jgroups
+        
         // TODO create a wrapper class to provide default system properties
         // TODO this wrapper class should be instantiated by reflection using a well known system property like
         // -Dorg.atinject.bootstrap.custom.system.properties=org.atinject....

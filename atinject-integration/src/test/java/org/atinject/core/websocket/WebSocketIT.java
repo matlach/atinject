@@ -19,17 +19,15 @@ public class WebSocketIT extends IntegrationTest
     @Inject
     private Logger logger;
     
-    @Inject @WebSocketEndpoint(path="/websocket")
+    @Inject
     private WebSocketClient client;
     
-    @Inject @WebSocketEndpoint(path="/websocket")
+    @Inject
     private WebSocketServer server;
     
-    @Ignore @Test
+    @Test
     public void testWebSockets() throws Exception
     {
-        server.toString();
-        
         Thread.sleep(1000L); // wait for session id
         
         client.send(new GetUserRequest());

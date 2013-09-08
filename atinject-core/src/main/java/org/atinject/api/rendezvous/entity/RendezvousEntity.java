@@ -12,6 +12,10 @@ public class RendezvousEntity extends Entity {
     private String id;
     
     private Set<String> sessionIds;
+
+    public RendezvousEntity(){
+        sessionIds = new HashSet<>();
+    }
     
     public String getId() {
         return id;
@@ -20,10 +24,6 @@ public class RendezvousEntity extends Entity {
     public RendezvousEntity setId(String id) {
         this.id = id;
         return this;
-    }
-    
-    public RendezvousEntity(){
-        sessionIds = new HashSet<>();
     }
     
     public Set<String> getSessionIds(){

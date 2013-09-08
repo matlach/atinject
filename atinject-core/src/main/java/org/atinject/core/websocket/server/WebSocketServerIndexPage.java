@@ -7,10 +7,7 @@ import io.netty.util.CharsetUtil;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.websocket.WebSocketEndpoint;
-
 @ApplicationScoped
-@WebSocketEndpoint(path="/websocket")
 public class WebSocketServerIndexPage {
 
     private static final String NEWLINE = "\r\n";

@@ -1,7 +1,7 @@
 package org.atinject.integration;
 
-import javax.enterprise.inject.spi.CDI;
 
+import org.atinject.core.cdi.CDI;
 import org.atinject.core.cdi.JavaSECDIProvider;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -24,7 +24,7 @@ public class CDIRunner extends BlockJUnit4ClassRunner {
      
     @Override
     protected Object createTest() throws Exception {
-        return CDI.current().select(getTestClass().getJavaClass()).get();
+        return CDI.select(getTestClass().getJavaClass()).get();
     }
  
 }

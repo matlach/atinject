@@ -1,22 +1,29 @@
 package org.atinject.api.rendezvous;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.session.Session;
+import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class RendezvousService extends Service {
 
-    @Inject private RendezvousCache rendezvousCache;
+    @Inject RendezvousCache rendezvousCache;
     
     public RendezvousEntity newRendezvous(){
         String rendezvousId = rendezvousCache.getId();
         RendezvousEntity rendezvous = new RendezvousEntity()
             .setId(rendezvousId);
         return rendezvous;
+    }
+    
+    public void onSessionClosed(@Observes SessionClosed event) {
+        // TODO how to effectively remove session from all rendez vous
+        
     }
     
     public void addRendezvous(RendezvousEntity rendezvous){

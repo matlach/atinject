@@ -14,18 +14,19 @@ import org.atinject.core.topology.TopologyDistributedExecutor;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 
 @ApplicationScoped
-public class NotificationService
-{
+public class NotificationService {
     
-    @Inject private TopologyDistributedExecutor distributedExecutor;
+    @Inject NotificationEventFactory notificationEventFactory;
     
-    @Inject private SessionService sessionService;
+    @Inject TopologyDistributedExecutor distributedExecutor;
+    
+    @Inject SessionService sessionService;
     
     public Future<Void> sendNotification(Session session, WebSocketNotification notification){
         
-        NotificationEvent event = new NotificationEvent();
-        event.setSession(session);
-        event.setNotification(notification);
+        NotificationEvent event = notificationEventFactory.newNotificationEvent()
+                .setSession(session)
+                .setNotification(notification);
         
         SendNotificationTask task = new SendNotificationTask();
         task.setEvent(event);
@@ -34,15 +35,17 @@ public class NotificationService
     }
 
     // TODO implements batching
-    public Future<Void> sendNotification(RendezvousEntity rendezvous, WebSocketNotification notification){
-        for(String sessionId : rendezvous.getSessionIds()){
+    public Future<Void> sendNotification(RendezvousEntity rendezvous, WebSocketNotification notification) {
+        for (String sessionId : rendezvous.getSessionIds()) {
             Session session = sessionService.getSession(sessionId);
-            sendNotification(session, notification);
+            if (session != null) {
+                sendNotification(session, notification);
+            }
         }
         return null;
     }
     
-    public static class SendNotificationTask implements Callable<Void>{
+    public static class SendNotificationTask implements Callable<Void> {
 
         private NotificationEvent event;
         

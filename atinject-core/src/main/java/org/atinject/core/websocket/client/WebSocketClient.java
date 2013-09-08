@@ -40,7 +40,6 @@ import org.atinject.core.dto.DTO;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.session.dto.SessionOpenedNotification;
-import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.core.websocket.server.event.WebSocketServerStarted;
@@ -48,13 +47,12 @@ import org.atinject.core.websocket.server.event.WebSocketServerStopped;
 import org.slf4j.Logger;
 
 @ApplicationScoped
-@WebSocketEndpoint(path="/websocket")
 public class WebSocketClient {
 
     @Inject
     private Logger logger;
     
-    @Inject @WebSocketEndpoint(path="/websocket")
+    @Inject
     private WebSocketServer server;
     
     @Inject
@@ -94,12 +92,12 @@ public class WebSocketClient {
     }
     
     public void onWebSocketServerStarted(
-            @Observes @WebSocketEndpoint(path="/websocket") WebSocketServerStarted event) throws Exception{
+            @Observes WebSocketServerStarted event) throws Exception{
         run();        
     }
     
     public void onWebSocketServerStopped(
-            @Observes @WebSocketEndpoint(path="/websocket") WebSocketServerStopped event){
+            @Observes WebSocketServerStopped event){
         if (b != null)
         {
             //b.shutdown();

@@ -1,22 +1,36 @@
 package org.atinject.core.netty;
 
-import javax.inject.Inject;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import org.atinject.integration.IntegrationTest;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NettyInjectionIT extends IntegrationTest
 {
-    @Inject private InjectableChannelInitializer injectableChannelInitializer;
-    @Inject private InjectableInboundMessageHandlerAdapter injectableInboundMessageHandlerAdapter;
     
     @Test
-    public void testInject(){
-        Assert.assertNotNull(injectableChannelInitializer);
-        Assert.assertNotNull(injectableInboundMessageHandlerAdapter);
+    public void testInject() throws Exception {
+        int port = 8090;
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        try {
+            ServerBootstrap b = new ServerBootstrap();
+            b.group(bossGroup, workerGroup)
+             .channel(NioServerSocketChannel.class)
+             .childHandler(new NonInjectableChannelInitializer());
+
+            Channel ch = b.bind(port).sync().channel();
+            System.out.println("Web socket server started at port " + port + '.');
+            System.out.println("Open your browser and navigate to http://localhost:" + port + '/');
+
+            ch.close().syncUninterruptibly();
+        } finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
     }
 }

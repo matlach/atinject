@@ -5,10 +5,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -48,7 +45,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.activation.MimetypesFileTypeMap;
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -67,7 +63,6 @@ import org.atinject.core.session.dto.SessionOpenedNotification;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.session.event.SessionOpened;
 import org.atinject.core.topology.TopologyService;
-import org.atinject.core.websocket.WebSocketEndpoint;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
 import org.atinject.core.websocket.dto.WebSocketNotification;
@@ -77,13 +72,12 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 import org.slf4j.Logger;
 
 @ApplicationScoped
-@WebSocketEndpoint(path="/websocket")
 public class WebSocketServerHandler {
 
     @Inject
     private Logger logger;
     
-    @Inject @WebSocketEndpoint(path="/websocket")
+    @Inject
     private WebSocketServerIndexPage webSocketServerIndexPage;
     
     @Inject
@@ -97,8 +91,6 @@ public class WebSocketServerHandler {
     
     private String WEBSOCKET_PATH = "/websocket";
 
-    private ChannelInboundMessageHandlerAdapterHolder handler;
-    
     private static final AttributeKey<String> SESSION_ID_ATTRIBUTE_KEY = new AttributeKey<>("session");
     private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = new AttributeKey<>("handshaker");
     
@@ -124,11 +116,6 @@ public class WebSocketServerHandler {
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
     public static final int HTTP_CACHE_SECONDS = 60;
     
-    @PostConstruct
-    public void initialize(){
-        handler = new ChannelInboundMessageHandlerAdapterHolder();
-    }
-    
     public void onNotificationEvent(@Observes NotificationEvent event){
         Channel channel = channelGroup.get(event.getSession().getSessionId());
         if (channel == null){
@@ -137,31 +124,21 @@ public class WebSocketServerHandler {
         }
         // send to websocket
         if (binary){
-            handler.sendNotificationAsBinary(channel, event.getNotification());
+            sendNotificationAsBinary(channel, event.getNotification());
         }
         else{
-            handler.sendNotificationAsText(channel, event.getNotification());
+            sendNotificationAsText(channel, event.getNotification());
         }
     }
     
-    @Sharable
-    public class ChannelInboundMessageHandlerAdapterHolder extends SimpleChannelInboundHandler<Object>
-    {
-        public ChannelInboundMessageHandlerAdapterHolder(){
-            super();
-        }
-        
-        @Override
         public void channelRegistered(ChannelHandlerContext ctx) {
             logger.info("channel registered");
         }
         
-        @Override
         public void channelActive(ChannelHandlerContext ctx) {
             logger.info("channel active");
         }
         
-        @Override
         public void channelRead0(ChannelHandlerContext ctx, Object msg) {
             if (msg instanceof FullHttpRequest) {
                 handleHttpRequest(ctx, (FullHttpRequest) msg);
@@ -174,7 +151,6 @@ public class WebSocketServerHandler {
             }
         }
         
-        @Override
         public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
             ctx.flush();
         }
@@ -685,18 +661,15 @@ public class WebSocketServerHandler {
             return channel.write(new TextWebSocketFrame(byteBuf));
         }
         
-        @Override
         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
             logger.warn(cause.getMessage());
             ctx.close();
         }
         
-        @Override
         public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
             logger.info("user event triggered '" + evt + "'");
         }
 
-        @Override
         public void channelInactive(ChannelHandlerContext ctx) {
             logger.info("channel inactive");
             
@@ -712,7 +685,6 @@ public class WebSocketServerHandler {
             channelGroup.remove(ctx.channel());
         }
         
-        @Override
         public void channelUnregistered(ChannelHandlerContext ctx) {
             logger.info("channel unregistered");
         }
@@ -720,10 +692,5 @@ public class WebSocketServerHandler {
         private String getWebSocketLocation(FullHttpRequest req) {
             return "ws://" + req.headers().get(HttpHeaders.Names.HOST) + WEBSOCKET_PATH;
         }
-    }
     
-    public ChannelInboundHandlerAdapter get(){
-        return handler;
-    }
-
 }
