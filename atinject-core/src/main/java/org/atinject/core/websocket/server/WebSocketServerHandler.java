@@ -51,7 +51,6 @@ import javax.inject.Inject;
 
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.AsynchronousService;
-import org.atinject.core.distexec.UserRequestDistributedExecutor;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
@@ -82,9 +81,6 @@ public class WebSocketServerHandler {
     
     @Inject
     private TopologyService topologyService;
-    
-    @Inject
-    private UserRequestDistributedExecutor distributedExecutor;
     
     @Inject
     private WebSocketExtension webSocketExtension;
@@ -156,7 +152,7 @@ public class WebSocketServerHandler {
         }
         
         // TODO this method could be upgraded to handle REST/JAX-RS request
-        private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+        public void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
             // Handle a bad request.
             if (!req.getDecoderResult().isSuccess()) {
                 handleHttpBadRequest(ctx, req);
@@ -197,15 +193,15 @@ public class WebSocketServerHandler {
             handleHttpNotFound(ctx, req);
         }
 
-        private void handleHttpBadRequest(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpBadRequest(ChannelHandlerContext ctx, FullHttpRequest req){
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
         }
         
-        private void handleHttpNonGetRequest(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpNonGetRequest(ChannelHandlerContext ctx, FullHttpRequest req){
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN));
         }
         
-        private void handleHttpIndexPage(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpIndexPage(ChannelHandlerContext ctx, FullHttpRequest req){
             FullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 
             ByteBuf content = webSocketServerIndexPage.getContent(getWebSocketLocation(req));
@@ -217,12 +213,12 @@ public class WebSocketServerHandler {
             sendHttpResponse(ctx, req, res);
         }
         
-        private void handleHttpFavico(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpFavico(ChannelHandlerContext ctx, FullHttpRequest req){
             FullHttpResponse res = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
             sendHttpResponse(ctx, req, res);
         }
         
-        private void handleHttpStaticContent(ChannelHandlerContext ctx, FullHttpRequest request){
+        public void handleHttpStaticContent(ChannelHandlerContext ctx, FullHttpRequest request){
             try
             {
                 final String uri = request.getUri();
@@ -300,7 +296,7 @@ public class WebSocketServerHandler {
             }
         }
         
-        private String sanitizeUri(String uri) {
+        public String sanitizeUri(String uri) {
             // Decode the path.
             try {
                 uri = URLDecoder.decode(uri, "UTF-8");
@@ -332,7 +328,7 @@ public class WebSocketServerHandler {
             return System.getProperty("user.dir") + File.separator + uri;
         }
         
-        private void sendNotModified(ChannelHandlerContext ctx) {
+        public void sendNotModified(ChannelHandlerContext ctx) {
             FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_MODIFIED);
             setDateHeader(response);
 
@@ -340,7 +336,7 @@ public class WebSocketServerHandler {
             ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         }
 
-        private void setDateHeader(FullHttpResponse response) {
+        public void setDateHeader(FullHttpResponse response) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
 
@@ -348,7 +344,7 @@ public class WebSocketServerHandler {
             response.headers().set(HttpHeaders.Names.DATE, dateFormatter.format(time.getTime()));
         }
 
-        private void setDateAndCacheHeaders(FullHttpResponse response, File fileToCache) {
+        public void setDateAndCacheHeaders(FullHttpResponse response, File fileToCache) {
             SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
             dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
 
@@ -363,12 +359,12 @@ public class WebSocketServerHandler {
             response.headers().set(HttpHeaders.Names.LAST_MODIFIED, dateFormatter.format(new Date(fileToCache.lastModified())));
         }
 
-        private void setContentTypeHeader(FullHttpResponse response, File file) {
+        public void setContentTypeHeader(FullHttpResponse response, File file) {
             MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
             response.headers().set(HttpHeaders.Names.CONTENT_TYPE, mimeTypesMap.getContentType(file.getPath()));
         }
         
-        private void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
+        public void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
             FullHttpResponse response = new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1, status);
             response.content().writeBytes(Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
@@ -378,7 +374,7 @@ public class WebSocketServerHandler {
             ctx.write(response).addListener(ChannelFutureListener.CLOSE);
         }
         
-        private void handleHttpWebSocketHandshake(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpWebSocketHandshake(ChannelHandlerContext ctx, FullHttpRequest req){
             // TODO this probably can be instantiated only once
             WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
                     getWebSocketLocation(req), null, false);
@@ -415,11 +411,11 @@ public class WebSocketServerHandler {
             }
         }
         
-        private void handleHttpNotFound(ChannelHandlerContext ctx, FullHttpRequest req){
+        public void handleHttpNotFound(ChannelHandlerContext ctx, FullHttpRequest req){
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
         }
         
-        private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
+        public void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
             // Generate an error page if response getStatus code is not OK (200).
             if (res.getStatus().code() != 200) {
                 res.content().writeBytes(Unpooled.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
@@ -433,7 +429,7 @@ public class WebSocketServerHandler {
             }
         }
         
-        private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+        public void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
             if (frame instanceof CloseWebSocketFrame) {
                 handleCloseWebSocketFrame(ctx, (CloseWebSocketFrame) frame);
                 return;
@@ -460,7 +456,7 @@ public class WebSocketServerHandler {
             throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
         }
         
-        private void handleCloseWebSocketFrame(ChannelHandlerContext ctx, CloseWebSocketFrame frame){
+        public void handleCloseWebSocketFrame(ChannelHandlerContext ctx, CloseWebSocketFrame frame){
             Attribute<WebSocketServerHandshaker> handshakerAttribute = ctx.channel().attr(WEB_SOCKET_SERVER_HANDSHAKER_KEY);
             WebSocketServerHandshaker handshaker = handshakerAttribute.get();
             if (handshaker != null){
@@ -468,11 +464,11 @@ public class WebSocketServerHandler {
             }
         }
         
-        private void handlePingWebSocketFrame(ChannelHandlerContext ctx, PingWebSocketFrame frame){
+        public void handlePingWebSocketFrame(ChannelHandlerContext ctx, PingWebSocketFrame frame){
             ctx.channel().write(new PongWebSocketFrame(frame.content()));
         }
         
-        private void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
+        public void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
             // validate session (need to be bound at that point)
             Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
             String sessionId = sessionAttribute.get();
@@ -490,7 +486,7 @@ public class WebSocketServerHandler {
             sendResponseAsBinary(ctx.channel(), response);
         }
         
-        private void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
+        public void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
             // validate session (need to be bound at that point)
             Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
             String sessionId = sessionAttribute.get();
@@ -508,7 +504,7 @@ public class WebSocketServerHandler {
             sendResponseAsText(ctx.channel(), response);
         }
         
-        private WebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
+        public WebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
             // read json
             final String json = ByteBufUtil.readUTF8(frame.content());
             
@@ -518,7 +514,7 @@ public class WebSocketServerHandler {
             return request;
         }
         
-        private WebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
+        public WebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
             // read json
             final String json = frame.text();
             
@@ -528,7 +524,7 @@ public class WebSocketServerHandler {
             return request;
         }
         
-        private WebSocketResponse performRequest(String sessionId, WebSocketRequest request){
+        public WebSocketResponse performRequest(String sessionId, WebSocketRequest request){
             // build task
             WebSocketMessageTask task = new WebSocketMessageTask()
                 .setSessionId(sessionId)
@@ -538,29 +534,7 @@ public class WebSocketServerHandler {
             // response could be sent asynchronously instead ?
             // should we use completion service ?
             Future<WebSocketResponse> future;
-// TODO re-enable after distinguish authoritative from non
-//            if (session.getUserId() == null){
-//                if (request.getRendezvous() == null){
-                    // perform locally through asynchronous service
-                    // no gain of submitting request on any member of the cluster ?
-                    // what if we do not use netty's asynchronous handler ?
-                    future = asynchronousService.submit(task);
-//                }
-//                else {
-//                    // submit task to distributed executor with given rendezvous
-//                    future = distributedExecutor.submit(task, request.getRendezvous());
-//                }
-//            }
-//            else{
-//                if (request.getRendezvous() == null){
-//                    // submit task to distributed executor using user id as rendezvous
-//                    future = distributedExecutor.submit(task, session.getUserId());
-//                }
-//                else {
-//                    // submit task to distributed executor with given rendezvous
-//                    future = distributedExecutor.submit(task, request.getRendezvous());
-//                }
-//            }
+            future = asynchronousService.submit(task);
             
             // wait for response to come back
             WebSocketResponse response = getWebSocketResponseFromFuture(future);
@@ -626,7 +600,7 @@ public class WebSocketServerHandler {
             }
         }
         
-        private WebSocketResponse getWebSocketResponseFromFuture(Future<WebSocketResponse> future){
+        public WebSocketResponse getWebSocketResponseFromFuture(Future<WebSocketResponse> future){
             try {
                 return future.get();
             }
@@ -639,24 +613,24 @@ public class WebSocketServerHandler {
             }
         }
         
-        private ChannelFuture sendNotificationAsBinary(Channel channel, WebSocketNotification notification){
+        public ChannelFuture sendNotificationAsBinary(Channel channel, WebSocketNotification notification){
             ByteBuf byteBuf = Unpooled.buffer();
             ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
             return channel.write(new BinaryWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendResponseAsBinary(Channel channel, WebSocketResponse response){
+        public ChannelFuture sendResponseAsBinary(Channel channel, WebSocketResponse response){
             ByteBuf byteBuf = Unpooled.buffer();
             ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
             return channel.write(new BinaryWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendNotificationAsText(Channel channel, WebSocketNotification notification){
+        public ChannelFuture sendNotificationAsText(Channel channel, WebSocketNotification notification){
             ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(notification));
             return channel.write(new TextWebSocketFrame(byteBuf));
         }
         
-        private ChannelFuture sendResponseAsText(Channel channel, WebSocketResponse response){
+        public ChannelFuture sendResponseAsText(Channel channel, WebSocketResponse response){
             ByteBuf byteBuf = Unpooled.buffer().writeBytes(dtoObjectMapper.writeValueAsBytes(response));
             return channel.write(new TextWebSocketFrame(byteBuf));
         }
