@@ -1,5 +1,8 @@
 package org.atinject.api.rendezvous;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -33,5 +36,13 @@ public class RendezvousCache extends CacheStore {
     
     public void removeRendezvous(RendezvousEntity rendezvous){
         cache.remove(rendezvous.getId());
+    }
+    
+    /**
+     * note : it is assumed that cache is distributed
+     * and thus will only returns local rendezvous
+     */
+    public List<RendezvousEntity> getAllRendezvous() {
+        return new ArrayList<>(cache.values());
     }
 }

@@ -1,5 +1,8 @@
 package org.atinject.api.rendezvous;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -30,16 +33,15 @@ public class RendezvousService extends Service {
     }
     
     public void onSessionClosed(@Observes SessionClosed event) {
-        // TODO remove session from all rendez vous
-        // by using session rendez vous cache
-    }
-    
-    public void onSessionJoinedRendezvous(@Observes SessionJoinedRendezvous event) {
-        // add rendez vous id to session rendez vous
-    }
-    
-    public void onSessionLeftRendezvous(@Observes SessionLeftRendezvous event) {
-        // remove rendez vous id to session rendez vous
+        List<String> rendezvousIds = new ArrayList<>();
+        for (RendezvousEntity rendezvous : rendezvousCache.getAllRendezvous()){
+            if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())){
+                rendezvousIds.add(event.getSession().getSessionId());
+            }
+        }
+        for (String rendezvousId : rendezvousIds){
+            leave(rendezvousId, event.getSession());
+        }
     }
     
     public void addRendezvous(RendezvousEntity rendezvous){
