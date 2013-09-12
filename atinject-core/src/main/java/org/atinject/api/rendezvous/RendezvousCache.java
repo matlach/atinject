@@ -11,6 +11,16 @@ import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
 import org.atinject.core.tiers.CacheStore;
 
+/**
+ * read access :
+ * - each time a session want to interact with all sessions within the rendezvous (get)
+ * - each time a session close (get all)
+ * write access :
+ * - each time a session create a rendezvous (put)
+ * - each time a session join a rendezvous (put)
+ * - each time a session leave a rendezvous (put)
+ * - one last time when the last session leave a rendezvous (remove)
+ */
 @ApplicationScoped
 public class RendezvousCache extends CacheStore {
 
