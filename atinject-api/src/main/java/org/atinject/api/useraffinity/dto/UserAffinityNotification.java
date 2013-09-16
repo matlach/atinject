@@ -8,10 +8,6 @@ public class UserAffinityNotification extends WebSocketNotification
 
     private String url;
     
-    public UserAffinityNotification(){
-        super();
-    }
-
     public String getUrl()
     {
         return url;

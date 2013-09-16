@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.atinject.core.session.event.SessionClosed;
@@ -14,24 +14,32 @@ import org.atinject.core.topology.TopologyService;
 @ApplicationScoped
 public class SessionService{
     
-    @Inject protected SessionCache sessionCache;
+    @Inject SessionCache sessionCache;
     
-    @Inject protected TopologyService topologyService;
+    @Inject Event<SessionOpened> sessionOpenedEvent;
+    
+    @Inject Event<SessionClosed> sessionClosedEvent;
+    
+    @Inject TopologyService topologyService;
     
     @PreDestroy
     public void cleanUp() {
         String machineId = topologyService.getLocalAddress().getMachineId();
-        // TODO sessionCache.removeAllSessionByMachineId(machineId);
+        List<Session> sessions = getAllSessionsByMachineId(machineId);
+        sessionCache.removeAllSession(sessions);
     }
     
     // what happen if session open / close get mixed up, potential leak ? can we ensure netty will fire event in the right order ?
-    public void onSessionOpened(@Observes SessionOpened event) {
-        sessionCache.put(event.getSession()); // this will replicate
+    public void openSession(Session session) {
+        sessionCache.put(session); // this will replicate
+        SessionOpened sessionOpened = new SessionOpened().setSession(session);
+        sessionOpenedEvent.fire(sessionOpened);
     }
     
-    public void onSessionClosed(@Observes SessionClosed event) {
-        sessionCache.remove(event.getSession()); // this will replicate
-        // fire an event that user will probably listen, then user will fire an event as well
+    public void closeSession(Session session) {
+        sessionCache.remove(session); // this will replicate
+        SessionClosed sessionClosed = new SessionClosed().setSession(session);
+        sessionClosedEvent.fire(sessionClosed);
     }
     
     public Session getSession(String sessionId) {

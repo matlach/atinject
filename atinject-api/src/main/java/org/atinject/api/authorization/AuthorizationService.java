@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.atinject.api.registration.event.GuestRegistered;
 import org.atinject.api.registration.event.UserRegistered;
 import org.atinject.api.role.enumeration.Roles;
+import org.atinject.api.role.enumeration.SimpleRoles;
 import org.atinject.api.user.UserService;
 import org.atinject.api.userpermission.UserPermissionService;
 import org.atinject.api.userrole.UserRoleService;
@@ -17,9 +18,9 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class AuthorizationService extends Service {
     // this service should provides caching to lower the performance impact of applying authorization ?
-    @Inject private UserService userService;
-    @Inject private UserRoleService userRoleService;
-    @Inject private UserPermissionService userPermissionService;
+    @Inject UserService userService;
+    @Inject UserRoleService userRoleService;
+    @Inject UserPermissionService userPermissionService;
     
     // FIXME if enum is "extended",
     // userRoles.getRoles().contains(Roles.GUEST) is error prone.
@@ -32,7 +33,7 @@ public class AuthorizationService extends Service {
     }
     
     public boolean isGuest(UserRolesEntity userRoles){
-        return userRoles.getRoles().contains(Roles.GUEST);
+        return userRoles.containsRole(SimpleRoles.GUEST);
     }
     
     public boolean isRegistered(UserSession session){
@@ -41,7 +42,7 @@ public class AuthorizationService extends Service {
     }
     
     public boolean isRegistered(UserRolesEntity userRoles){
-        return userRoles.getRoles().contains(Roles.REGISTERED);
+        return userRoles.containsRole(SimpleRoles.REGISTERED);
     }
     
     public boolean isAdmin(UserSession session){
@@ -50,19 +51,20 @@ public class AuthorizationService extends Service {
     }
     
     public boolean isAdmin(UserRolesEntity userRoles){
-        return userRoles.getRoles().contains(Roles.ADMIN);
+        return userRoles.containsRole(SimpleRoles.ADMIN);
     }
     
     public void onGuest(@Observes GuestRegistered event){
         // add guest role
-        userRoleService.addUserRole(event.getUser().getId(), Roles.GUEST);
+        userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.GUEST);
     }
     
     public void onUserRegistered(@Observes UserRegistered event){
+    	// TODO optimize here: lock, get, remove, add, put
         // remove guest role
-        userRoleService.removeUserRole(event.getUser().getId(), Roles.GUEST);
+        userRoleService.revokeUserRole(event.getUser().getId(), SimpleRoles.GUEST);
         
         // add registered role
-        userRoleService.addUserRole(event.getUser().getId(), Roles.REGISTERED);
+        userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.REGISTERED);
     }
 }

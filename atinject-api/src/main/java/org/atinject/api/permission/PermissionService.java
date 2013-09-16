@@ -1,20 +1,30 @@
 package org.atinject.api.permission;
 
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-import org.atinject.api.permission.entity.Permission;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class PermissionService extends Service {
 
-    @PostConstruct
-    public void initialize(){
-        
+	@Inject PermissionExtension permissionExtension;
+	
+	private Set<String> permissions;
+	
+	@PostConstruct
+	public void initialize() {
+		permissions = permissionExtension.getAllPermission();
+	}
+	
+    public Set<String> getAllPermission() {
+    	return permissions;
     }
     
-    public Permission getPrivilege(String privilege){
-        return null;
+    public boolean isPermission(String permission) {
+    	return permission.contains(permission);
     }
 }

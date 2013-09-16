@@ -14,9 +14,9 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class UserAffinityWebSocketService extends WebSocketService {
 
-    @Inject private NotificationService notificationService;
+    @Inject NotificationService notificationService;
     
-    @Inject private UserTopologyService userTopologyService;
+    @Inject UserTopologyService userTopologyService;
     
     public void onUserLoggedIn(@Observes UserLoggedIn event){
         // user logged in locally i.e. on this websocket
@@ -31,5 +31,7 @@ public class UserAffinityWebSocketService extends WebSocketService {
         }
     }
     
-    // TODO on topology changed, recompute for each local client (i.e. session with machineId = localAddress.machineId) the best affinity
+    // TODO on topology change (begin), send potential server slow down warning notification
+    // TODO on topology changed (completed), send potential server slow down back to normal
+    // TODO on topology changed (completed), recompute for each local client (i.e. session with machineId = localAddress.machineId) the best affinity
 }

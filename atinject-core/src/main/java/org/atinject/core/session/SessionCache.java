@@ -59,4 +59,10 @@ public class SessionCache extends CacheStore {
     public void remove(Session session){
         cache.remove(session.getSessionId());
     }
+    
+    public void removeAllSession(Collection<Session> sessions) {
+        for (Session session : sessions){
+            cache.remove(session.getSessionId());
+        }
+    }
 }

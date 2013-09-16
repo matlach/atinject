@@ -1,42 +1,24 @@
 package org.atinject.api.usersession;
 
-import org.atinject.core.marshallable.MarshallableObject;
 import org.atinject.core.session.Session;
+import org.atinject.core.session.SimpleSession;
 
-public class UserSession extends MarshallableObject implements Session {
+public class UserSession extends SimpleSession implements Session {
 
     private static final long serialVersionUID = 1L;
 
-    private String sessionId;
-    
-    private String machineId;
-    
     private String userId;
     
-    public UserSession() {
-        super();
-    }
-    
-    @Override
-    public String getSessionId() {
-        return sessionId;
-    }
-
     @Override
     public UserSession setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-        return this;
+    	super.setSessionId(sessionId);
+    	return this;
     }
     
     @Override
-    public String getMachineId() {
-        return machineId;
-    }
-
-    @Override
     public UserSession setMachineId(String machineId) {
-        this.machineId = machineId;
-        return this;
+    	super.setMachineId(machineId);
+    	return this;
     }
     
     public String getUserId() {

@@ -2,6 +2,7 @@ package org.atinject.api.authentication;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.AuthenticationFailed;
@@ -16,8 +17,8 @@ import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.distevent.Distributed;
 import org.atinject.core.nullanalysis.NonNull;
-import org.atinject.core.session.Session;
 import org.atinject.core.session.SessionService;
+import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
@@ -37,9 +38,8 @@ public class AuthenticationService extends Service {
     
     @Inject @Distributed private Event<UserLoggedOut> userLoggerOutEvent;
     
-    public UserEntity login(@NonNull Session session, @NonNull String username, @NonNull String password){
-        UserSession userSession = (UserSession) session;
-        if (userSession.getUserId() != null){
+    public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password){
+        if (session.getUserId() != null){
             throw new IllegalStateException("session user id is not null");
         }
         UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
@@ -48,7 +48,7 @@ public class AuthenticationService extends Service {
         }
         if (! userCredential.getPasswordHash().equals(password)){
             AuthenticationFailed event = authenticationEventFactory.newAuthenticationFailed()
-                    .setUserSession(userSession)
+                    .setUserSession(session)
                     .setUserCredential(userCredential);
             // TODO listen this event to implement a lock user credential feature, apply on user credential ?
             authenticationFailedEvent.fire(event);
@@ -56,7 +56,7 @@ public class AuthenticationService extends Service {
         }
         
         // update session
-        userSession.setUserId(userCredential.getUserId());
+        session.setUserId(userCredential.getUserId());
         sessionService.updateSession(session);
         
         UserEntity user = userService.getUser(userCredential.getUserId());
@@ -70,7 +70,17 @@ public class AuthenticationService extends Service {
         return user;
     }
     
-    public void logout(){
-        
+    public void logout(UserSession session){
+    	if (session.getUserId() == null) {
+    		// nothing to do
+    		return;
+    	}
+    	UserEntity user = userService.getUser(session.getUserId());
+    	UserLoggedOut userLoggedOut = authenticationEventFactory
+                .newUserLoggedOut()
+                .setSession(session)
+                .setUser(user);
+    	userLoggerOutEvent.fire(userLoggedOut);
     }
+    
 }

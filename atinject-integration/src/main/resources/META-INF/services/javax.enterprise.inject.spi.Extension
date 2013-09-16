@@ -1,4 +1,6 @@
 org.atinject.api.systemproperty.SystemPropertyExtension
+org.atinject.api.role.RoleExtension
+org.atinject.api.permission.PermissionExtension
 org.atinject.core.dto.DTORegistryExtension
 org.atinject.core.entity.EntityRegistryExtension
 org.atinject.core.tiers.WebSocketServiceRegistryExtension

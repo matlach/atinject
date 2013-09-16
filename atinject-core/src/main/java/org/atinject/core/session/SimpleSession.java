@@ -10,10 +10,6 @@ public class SimpleSession extends MarshallableObject implements Session {
     
     private String machineId;
     
-    public SimpleSession(){
-        super();
-    }
-    
     @Override
     public String getSessionId() {
         return sessionId;

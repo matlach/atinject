@@ -1,28 +1,30 @@
 package org.atinject.api.role;
 
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-import org.atinject.api.role.enumeration.Roles;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class RoleService extends Service {
 
+	@Inject RoleExtension roleExtension;
+	
+	private Set<String> roles;
+	
     @PostConstruct
     public void initialize(){
-        
+        roles = roleExtension.getAllRole();
     }
     
-    public boolean isGuest(int role){
-        return Roles.isGuest(role);
+    public Set<String> getAllRole(){
+    	return roles;
     }
     
-    public boolean isRegistered(int role){
-        return Roles.isGuest(role);
-    }
-    
-    public boolean isAdmin(int role){
-        return Roles.isGuest(role);
+    public boolean isRole(String role) {
+    	return roles.contains(role);
     }
 }

@@ -13,7 +13,7 @@ import org.atinject.core.tiers.WebSocketService;
 @ApplicationScoped
 public class SystemPropertiesWebSocketService extends WebSocketService{
 
-	@RequiresPermissions(/*TODO Permissions.READ_SYSTEM_PROPERTIES*/)
+	@RequiresPermissions(SystemPropertyPermissions.READ_SYSTEM_PROPERTIES)
 	public GetSystemPropertiesResponse getSystemProperties(GetSystemPropertiesRequest request){
 		for (Entry<Object, Object> entry : System.getProperties().entrySet()){
 			SystemProperty systemProperty = new SystemProperty()

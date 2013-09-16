@@ -3,7 +3,6 @@ package org.atinject.api.userrole.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.atinject.api.role.enumeration.Role;
 import org.atinject.core.entity.Entity;
 
 public class UserRolesEntity extends Entity {
@@ -12,7 +11,7 @@ public class UserRolesEntity extends Entity {
 
     private String userId;
     
-    private Set<Role> roles;
+    private Set<String> roles;
     
     public UserRolesEntity(){
         this.roles = new HashSet<>();
@@ -26,18 +25,18 @@ public class UserRolesEntity extends Entity {
         this.userId = userId;
         return this;
     }
-
-    public Set<Role> getRoles(){
-        return this.roles;
-    }
     
-    public UserRolesEntity addRole(Role role){
-        getRoles().add(role);
+    public UserRolesEntity addRole(String role){
+    	roles.add(role);
         return this;
     }
     
-    public UserRolesEntity removeRole(Role role){
-        getRoles().remove(role);
+    public UserRolesEntity removeRole(String role){
+    	roles.remove(role);
         return this;
+    }
+    
+    public boolean containsRole(String role){
+    	return roles.contains(role);
     }
 }

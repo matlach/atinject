@@ -239,14 +239,14 @@ public class WebSocketExtension implements Extension
             throw new RuntimeException();
         }
         
-        if (method.getReturnType() != Void.class)
+        if (method.getReturnType() != void.class)
         {
-            throw new RuntimeException();
+            throw new RuntimeException("method '" + method + "' return type must be void");
         }
         Class<?>[] parameterTypes = method.getParameterTypes();
         if (parameterTypes.length > 1)
         {
-            throw new RuntimeException();
+            throw new RuntimeException("method '" + method + "' can only accept Session as parameter");
         }
         
         WebSocketCloseMethod webSocketCloseMethod = new WebSocketCloseMethod();
@@ -255,7 +255,7 @@ public class WebSocketExtension implements Extension
         {
             if (! Session.class.isAssignableFrom(parameterTypes[0]))
             {
-                throw new RuntimeException();
+                throw new RuntimeException("method '" + method + "' can only accept Session as parameter");
             }
             webSocketCloseMethod.setInjectSessionParameter(true);
         }

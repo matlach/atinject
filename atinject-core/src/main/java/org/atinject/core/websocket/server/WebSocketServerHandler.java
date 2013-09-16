@@ -59,8 +59,6 @@ import org.atinject.core.session.SessionContext;
 import org.atinject.core.session.SessionFactory;
 import org.atinject.core.session.SessionService;
 import org.atinject.core.session.dto.SessionOpenedNotification;
-import org.atinject.core.session.event.SessionClosed;
-import org.atinject.core.session.event.SessionOpened;
 import org.atinject.core.topology.TopologyService;
 import org.atinject.core.websocket.WebSocketExtension;
 import org.atinject.core.websocket.WebSocketExtension.WebSocketMessageMethod;
@@ -396,8 +394,7 @@ public class WebSocketServerHandler {
                 
                 sessionAttribute.set(sessionId);
                 channelGroup.put(sessionId, ctx.channel());
-                SessionOpened sessionOpened = new SessionOpened().setSession(session);
-                sessionService.onSessionOpened(sessionOpened);
+                sessionService.openSession(session);
                 
                 // send notification to provide session id to the client
                 SessionOpenedNotification notification = new SessionOpenedNotification();
@@ -652,8 +649,7 @@ public class WebSocketServerHandler {
             if (sessionId != null){
                 Session session = sessionService.getSession(sessionId);
                 // we should dispatch instead to "web socket close" method
-                SessionClosed sessionClosed = new SessionClosed().setSession(session);
-                sessionService.onSessionClosed(sessionClosed);
+                sessionService.closeSession(session);
             }
             
             channelGroup.remove(ctx.channel());

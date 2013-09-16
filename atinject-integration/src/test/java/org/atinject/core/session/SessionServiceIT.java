@@ -5,8 +5,6 @@ import javax.inject.Inject;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.api.usersession.UserSessionFactory;
 import org.atinject.api.usersession.UserSessionService;
-import org.atinject.core.session.event.SessionClosed;
-import org.atinject.core.session.event.SessionOpened;
 import org.atinject.integration.IntegrationTest;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -28,34 +26,26 @@ public class SessionServiceIT extends IntegrationTest
     private UserSessionFactory sessionFactory;
     
     @Test
-    public void testSessionOpened()
+    public void testOpenSession()
     {
-        Session newSession = sessionFactory.newSession();
-        newSession.setSessionId("123");
+        Session newSession = sessionFactory.newSession()
+                .setSessionId("123");
         
-        SessionOpened sessionOpened = new SessionOpened();
-        sessionOpened.setSession(newSession);
-        sessionService.onSessionOpened(sessionOpened);
+        sessionService.openSession(newSession);
         
         Session session = sessionService.getSession(newSession.getSessionId());
         
         Assert.assertEquals(newSession, session);
-        
-        // TODO create SessionService @Alternative for unit test and provide clear method
     }
     
     @Test
-    public void testSessionClosed(){
-        Session newSession = sessionFactory.newSession();
-        newSession.setSessionId("123");
+    public void testCloseSession(){
+        Session newSession = sessionFactory.newSession()
+                .setSessionId("123");
         
-        SessionOpened sessionOpened = new SessionOpened();
-        sessionOpened.setSession(newSession);
-        sessionService.onSessionOpened(sessionOpened);
+        sessionService.openSession(newSession);
         
-        SessionClosed sessionClosed = new SessionClosed();
-        sessionClosed.setSession(newSession);
-        sessionService.onSessionClosed(sessionClosed);
+        sessionService.closeSession(newSession);
         
         Session session = sessionService.getSession(newSession.getSessionId());
         
@@ -64,13 +54,11 @@ public class SessionServiceIT extends IntegrationTest
     
     @Test
     public void testGetSessionByUserId(){
-        UserSession newSession = sessionFactory.newSession();
-        newSession.setSessionId("123");
-        newSession.setUserId("456");
+        UserSession newSession = sessionFactory.newSession()
+                .setSessionId("123")
+                .setUserId("456");
         
-        SessionOpened sessionOpened = new SessionOpened();
-        sessionOpened.setSession(newSession);
-        sessionService.onSessionOpened(sessionOpened);
+        sessionService.openSession(newSession);
         
         Session session = sessionService.getSessionByUserId("456");
         
@@ -79,13 +67,11 @@ public class SessionServiceIT extends IntegrationTest
     
     @Test
     public void testUpdateSession(){
-        UserSession newSession = sessionFactory.newSession();
-        newSession.setSessionId("123");
-        newSession.setUserId("456");
+        UserSession newSession = sessionFactory.newSession()
+                .setSessionId("123")
+                .setUserId("456");
         
-        SessionOpened sessionOpened = new SessionOpened();
-        sessionOpened.setSession(newSession);
-        sessionService.onSessionOpened(sessionOpened);
+        sessionService.openSession(newSession);
         
         UserSession session = sessionService.getSession("123");
         session.setUserId("789");
