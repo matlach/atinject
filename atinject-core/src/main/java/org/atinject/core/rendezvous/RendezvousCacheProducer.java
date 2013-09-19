@@ -1,12 +1,12 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
 import org.atinject.core.cache.ClusteredCacheManager;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;

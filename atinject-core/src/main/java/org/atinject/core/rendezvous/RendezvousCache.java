@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.tiers.CacheStore;
 
 /**

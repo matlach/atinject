@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous.entity;
+package org.atinject.core.rendezvous.entity;
 
 import java.util.HashSet;
 import java.util.Set;

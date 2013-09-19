@@ -1,10 +1,10 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
-import org.atinject.api.rendezvous.event.SessionJoinedRendezvous;
-import org.atinject.api.rendezvous.event.SessionLeftRendezvous;
+import org.atinject.core.rendezvous.event.SessionJoinedRendezvous;
+import org.atinject.core.rendezvous.event.SessionLeftRendezvous;
 import org.atinject.core.tiers.WebSocketService;
 
 @ApplicationScoped

@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous.dto;
+package org.atinject.core.rendezvous.dto;
 
 import org.atinject.core.websocket.dto.WebSocketNotification;
 

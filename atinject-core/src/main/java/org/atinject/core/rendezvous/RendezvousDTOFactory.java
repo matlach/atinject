@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import javax.enterprise.context.ApplicationScoped;
 

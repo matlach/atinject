@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
-import org.atinject.api.rendezvous.event.SessionJoinedRendezvous;
-import org.atinject.api.rendezvous.event.SessionLeftRendezvous;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
+import org.atinject.core.rendezvous.event.SessionJoinedRendezvous;
+import org.atinject.core.rendezvous.event.SessionLeftRendezvous;
 import org.atinject.core.session.Session;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;

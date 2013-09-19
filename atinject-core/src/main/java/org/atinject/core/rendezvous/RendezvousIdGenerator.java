@@ -1,4 +1,4 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import java.util.UUID;
 
@@ -6,9 +6,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.cache.CacheName;
 import org.atinject.core.concurrent.AsynchronousService;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.infinispan.Cache;
 import org.infinispan.affinity.KeyAffinityService;
 import org.infinispan.affinity.KeyAffinityServiceFactory;

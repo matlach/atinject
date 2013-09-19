@@ -1,9 +1,9 @@
-package org.atinject.api.rendezvous;
+package org.atinject.core.rendezvous;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.entity.EntityFactory;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
 
 @ApplicationScoped
 public class RendezvousEntityFactory extends EntityFactory {

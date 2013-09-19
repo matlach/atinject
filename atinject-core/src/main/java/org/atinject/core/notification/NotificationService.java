@@ -6,8 +6,8 @@ import java.util.concurrent.Future;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.cdi.CDI;
+import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.session.Session;
 import org.atinject.core.session.SessionService;
 import org.atinject.core.topology.TopologyDistributedExecutor;
