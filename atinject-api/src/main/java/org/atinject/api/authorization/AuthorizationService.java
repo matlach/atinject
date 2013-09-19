@@ -22,11 +22,6 @@ public class AuthorizationService extends Service {
     @Inject UserRoleService userRoleService;
     @Inject UserPermissionService userPermissionService;
     
-    // FIXME if enum is "extended",
-    // userRoles.getRoles().contains(Roles.GUEST) is error prone.
-    // as hashcode / equals methods are not overridable in an enum
-    // see maybe : http://stackoverflow.com/questions/3564139/how-to-override-the-final-equals-method-in-java-enums
-    
     public boolean isGuest(UserSession session){
         UserRolesEntity userRoles = userRoleService.getUserRole(session.getUserId());
         return isGuest(userRoles);
