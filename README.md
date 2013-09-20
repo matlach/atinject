@@ -79,6 +79,9 @@ TODO, suggested jvm switches (java7u21)
 * -XX:CompileThreshold=8000 : Number of method invocations/branches before compiling
 http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
 
+TODO, quality : test with these jvm switches
+-XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
+
 ## licence
 
 Copyright 2013 the atinject project
