@@ -1,28 +1,26 @@
-package org.atinject.api.rolepermission.entity;
+package org.atinject.api.userpermission;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.atinject.core.entity.Entity;
+import org.atinject.api.rolepermission.entity.RolePermissions;
 
-public class RolePermissions extends Entity {
+public class UserPermissions {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String role;
+	private String userId;
 	private Set<String> permissions;
 	
-	public RolePermissions() {
+	public UserPermissions() {
 		this.permissions = new HashSet<>();
 	}
 	
-	public String getRole() {
-		return role;
+	public String getUserId() {
+		return userId;
 	}
 	
-	public RolePermissions setRole(String role) {
-		this.role = role;
+	public UserPermissions setUserId(String userId) {
+		this.userId = userId;
 		return this;
 	}
 	
@@ -30,12 +28,12 @@ public class RolePermissions extends Entity {
 		return Collections.unmodifiableSet(permissions);
 	}
 	
-	public RolePermissions addPermission(String permission) {
+	public UserPermissions addPermission(String permission) {
 		this.permissions.add(permission);
 		return this;
 	}
 	
-	public RolePermissions removePermission(String permission) {
+	public UserPermissions removePermission(String permission) {
 		this.permissions.remove(permission);
 		return this;
 	}

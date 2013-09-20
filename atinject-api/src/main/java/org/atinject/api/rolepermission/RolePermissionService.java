@@ -21,6 +21,10 @@ public class RolePermissionService extends Service {
     @Inject Event<PermissionGrantedToRole> permissionGrantedToRoleEvent;
     @Inject Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
     
+    public RolePermissions getRolePermissions(String role){
+    	return rolePermissionCache.getRolePermissions(role);
+    }
+    
     public boolean isPermitted(String role, String permission) {
         if (! roleService.isRole(role)){
         	throw new NullPointerException("role '" + role + "' do not exists");
@@ -28,7 +32,7 @@ public class RolePermissionService extends Service {
         if (! permissionService.isPermission(permission)) {
         	throw new NullPointerException("permission '" + permission + "' do not exists");
         }
-        RolePermissions rolePermissions = rolePermissionCache.getRolePermissions(role);
+        RolePermissions rolePermissions = getRolePermissions(role);
         if (rolePermissions == null) {
         	throw new NullPointerException("role '" + role + "' has no permission");
         }

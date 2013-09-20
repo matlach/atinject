@@ -12,4 +12,8 @@ public class UserPermissionService extends Service {
 
     @Inject private UserService userService;
     @Inject private PermissionService permissionService;
+    
+    public UserPermissions getUserPermissions(String userId){
+    	return null;
+    }
 }

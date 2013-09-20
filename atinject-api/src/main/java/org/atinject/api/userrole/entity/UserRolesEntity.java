@@ -1,5 +1,6 @@
 package org.atinject.api.userrole.entity;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,10 @@ public class UserRolesEntity extends Entity {
     public UserRolesEntity setUserId(String userId) {
         this.userId = userId;
         return this;
+    }
+    
+    public Set<String> getRoles(){
+    	return Collections.unmodifiableSet(roles);
     }
     
     public UserRolesEntity addRole(String role){
