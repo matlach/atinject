@@ -205,6 +205,12 @@
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>jsr250-api</artifactId>
+					<groupId>javax.annotation</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
