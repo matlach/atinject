@@ -20,11 +20,9 @@ public class DTORegistryExtension implements Extension {
         classes = new ArrayList<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-        if (DTO.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            classes.add((Class<DTO>)event.getAnnotatedType().getJavaClass());
-            logger.info("added '{}' to dto registry", event.getAnnotatedType().getJavaClass().getSimpleName());
-        }
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends DTO> event) {
+        classes.add(event.getAnnotatedType().getJavaClass());
+        logger.info("added '{}' to dto registry", event.getAnnotatedType().getJavaClass().getSimpleName());
      }
     
     public List<Class<? extends DTO>> getClasses()

@@ -24,34 +24,31 @@ public class PermissionExtension implements Extension {
 		permissions = new HashMap<>();
 	}
 	
-	<T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-		
-        if (Permissions.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-        	logger.info("merging '{}' to permissions", event.getAnnotatedType().getJavaClass());
-        	Field[] fields = event.getAnnotatedType().getJavaClass().getDeclaredFields();
-        	for (Field field : fields) {
-        		if (! Modifier.isPublic(field.getModifiers())) {
-        			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
-        		}
-        		if (! Modifier.isStatic(field.getModifiers())) {
-        			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
-        		}
-        		if (! Modifier.isFinal(field.getModifiers())) {
-        			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
-        		}
-        		if (! String.class.equals(field.getType())) {
-        			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
-        		}
-        		String value = getFieldValueAsString(field);
-        		if (! field.getName().equals(value)) {
-        			throw new ExceptionInInitializerError("field '" + field.getName() + "' value do not match field name");
-        		}
-        		if (permissions.containsKey(field.getName())) {
-        			throw new ExceptionInInitializerError("duplicate permission '" + field.getName() + "' found");
-        		}
-        		permissions.put(field.getName(), (Class<Permissions>) event.getAnnotatedType().getJavaClass());
-        	}
-        }
+	<T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Permissions> event) {
+    	logger.info("merging '{}' to permissions", event.getAnnotatedType().getJavaClass());
+    	Field[] fields = event.getAnnotatedType().getJavaClass().getDeclaredFields();
+    	for (Field field : fields) {
+    		if (! Modifier.isPublic(field.getModifiers())) {
+    			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
+    		}
+    		if (! Modifier.isStatic(field.getModifiers())) {
+    			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
+    		}
+    		if (! Modifier.isFinal(field.getModifiers())) {
+    			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
+    		}
+    		if (! String.class.equals(field.getType())) {
+    			throw new ExceptionInInitializerError("field '" + field.getName() + "' must be declared public static final String ...");
+    		}
+    		String value = getFieldValueAsString(field);
+    		if (! field.getName().equals(value)) {
+    			throw new ExceptionInInitializerError("field '" + field.getName() + "' value do not match field name");
+    		}
+    		if (permissions.containsKey(field.getName())) {
+    			throw new ExceptionInInitializerError("duplicate permission '" + field.getName() + "' found");
+    		}
+    		permissions.put(field.getName(), (Class<Permissions>) event.getAnnotatedType().getJavaClass());
+    	}
      }
 	
 	private String getFieldValueAsString(Field field){

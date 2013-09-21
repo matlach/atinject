@@ -20,11 +20,9 @@ public class ServiceRegistryExtension implements Extension {
         classes = new ArrayList<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-        if (Service.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            classes.add((Class<Service>)event.getAnnotatedType().getJavaClass());
-            logger.info("added '{}' to service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
-        }
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Service> event) {
+        classes.add(event.getAnnotatedType().getJavaClass());
+        logger.info("added '{}' to service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
      }
     
     public List<Class<? extends Service>> getClasses()

@@ -20,11 +20,9 @@ public class WebSocketServiceRegistryExtension implements Extension {
         classes = new ArrayList<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-        if (WebSocketService.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            classes.add((Class<WebSocketService>)event.getAnnotatedType().getJavaClass());
-            logger.info("added '{}' to web socket service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
-        }
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends WebSocketService> event) {
+        classes.add(event.getAnnotatedType().getJavaClass());
+        logger.info("added '{}' to web socket service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
      }
     
     public List<Class<? extends WebSocketService>> getClasses()

@@ -20,11 +20,9 @@ public class FactoryRegistryExtension implements Extension {
         classes = new ArrayList<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-        if (Factory.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            classes.add((Class<Factory>)event.getAnnotatedType().getJavaClass());
-            logger.info("added '{}' to factory service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
-        }
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Factory> event) {
+        classes.add(event.getAnnotatedType().getJavaClass());
+        logger.info("added '{}' to factory service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
      }
     
     public List<Class<? extends Factory>> getClasses()

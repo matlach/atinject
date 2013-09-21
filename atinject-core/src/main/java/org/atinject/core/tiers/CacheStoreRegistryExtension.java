@@ -20,11 +20,9 @@ public class CacheStoreRegistryExtension implements Extension {
         classes = new ArrayList<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
-        if (CacheStore.class.isAssignableFrom(event.getAnnotatedType().getJavaClass())){
-            classes.add((Class<CacheStore>)event.getAnnotatedType().getJavaClass());
-            logger.info("added '{}' to cache store service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
-        }
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends CacheStore> event) {
+        classes.add(event.getAnnotatedType().getJavaClass());
+        logger.info("added '{}' to cache store service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
      }
     
     public List<Class<? extends CacheStore>> getClasses()
