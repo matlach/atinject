@@ -6,6 +6,7 @@ import org.atinject.core.tiers.exception.HandleWebSocketServiceException;
 import org.atinject.core.transaction.Transactional;
 import org.atinject.core.validation.ValidateRequest;
 
+//TODO use stereotype instead
 @HandleWebSocketServiceException
 @Profile
 @ThreadTracker
