@@ -25,4 +25,7 @@
 		<class>org.atinject.api.usersession.UserSessionService</class>
 	</alternatives>
 
+	<decorators>
+		<class>org.atinject.api.userlockout.UserLockoutAuthenticationServiceDecorator</class>
+	</decorators>
 </beans>

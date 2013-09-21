@@ -1,26 +1,34 @@
 package org.atinject.api.userlockout;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.AuthenticationFailed;
+import org.atinject.api.userlockout.event.UserLocked;
+import org.atinject.api.userlockout.event.UserUnlocked;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class UserLockoutService extends Service {
 
-    // Threshold 5times, duration 30mins, reset duration 5 minutes.
+    // Threshold 5 times, duration 30 minutes, reset duration 5 minutes.
 	
-	public boolean isUserLocked(String userId){
+	@Inject Event<UserLocked> userLockedEvent;
+	
+	@Inject Event<UserUnlocked> userUnlockedEvent;
+	
+	public boolean isUserLocked(String username){
 		return false;
 	}
 	
-	public void lockUser(String userId){
-		
+	public void lockUser(String username){
+		userLockedEvent.fire(new UserLocked());
 	}
 	
-	public void unlockUser(String userId){
-		
+	public void unlockUser(String username){
+		userUnlockedEvent.fire(new UserUnlocked());
 	}
 	
 	public void onAuthenticationFailed(@Observes AuthenticationFailed event){

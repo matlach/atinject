@@ -27,6 +27,7 @@
 	</alternatives>
 
 	<decorators>
+		<class>org.atinject.api.userlockout.UserLockoutAuthenticationServiceDecorator</class>
 		<class>org.atinject.core.cdi.TestServiceDecorator</class>
 	</decorators>
 </beans>

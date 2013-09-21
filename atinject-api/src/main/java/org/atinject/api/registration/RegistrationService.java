@@ -31,7 +31,11 @@ public class RegistrationService extends Service {
     public UserEntity registerAsGuest(){
         String username = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();
-        UserEntity user = userService.addUser(username, password);
+        return registerAsGuest(username, password);
+    }
+    
+    public UserEntity registerAsGuest(String username, String password){
+    	UserEntity user = userService.addUser(username, password);
         UserRegistered userRegistered = registrationEventFactory
             .newUserRegistered()
             .setUser(user);
