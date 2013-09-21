@@ -455,6 +455,11 @@ Registration is performed in two phases :
 
 ![Authentication, Registration and User](http://yuml.me/ecfcb3fd "Authentication, Registration and User")
 
+#### User Lockout Decorator and Services
+User Lockout Service decorates the AuthenticationService, especially the login method.
+If WrongPasswordException is raised, a count is added to the user.
+When the count reach a certain threshold a UserLockedException will raise not allowing user to further proceed with login.
+
 #### Authorization, User, Role and Permission Services
 ![Authorization, User, Role and Permission Services](http://yuml.me/14648e63 "Authorization, User, Role and Permission Services")
 
