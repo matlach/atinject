@@ -3,15 +3,16 @@ this article is in progress
 # atinject
 ##realtime, scalable, cdi enhanced, 3-tier architecture
 
-traditional architecture, web server + app server + database server.
-each component must scale independently.
+traditional architecture is often designed with web server along with an application server and database server.
+each of those components must scale independently.
 how to scale ? a box per component which often leads to inefficient distribution of resources
 
-traditional architecture is suitable for stateless application where with limited interaction between connected clients.
+traditional architecture is suitable for stateless application with limited interaction between the connected clients.
 this is definitely not the case for realtime application where interactions between connected clients is the goal.
-atinject address this issue.
 
-the atinject project feature an integrated pipeline which can deliver static content, run business logic and store data in a distributed fashion.
+atinject framework address this issue.
+
+the atinject project feature an unified pipeline which can deliver static content, run business logic and store data in a distributed fashion.
 just scale when more cpu, ram or storage is needed.
 affinity is the key in distributed architecture ; it require smart server but more importantly smart client
 
@@ -56,7 +57,7 @@ feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 atinject is built with [maven](http://maven.apache.org) and require jdk7 to build and run. the easiest way to checkout, build and start using atinject is to follow the following steps:
 
-1. download [eclipse juno](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/junosr1)
+1. download [eclipse kepler](http://www.eclipse.org/downloads/packages/eclipse-ide-java-ee-developers/keplerr)
 2. install [maven integration for eclipse (m2e)](http://marketplace.eclipse.org/content/maven-integration-eclipse) plugin from eclipse marketplace
 3. install git scm connector from m2e marketplace
 4. checkout maven project from scm
@@ -69,18 +70,6 @@ TODO, null analysis
 TODO, running core 
 * open IntegrationBootstrap run as... java application
 * mvn ... run server.sh / bat
-
-TODO, suggested jvm switches (java7u21)
-* -Xms1g : Specify the initial size, in bytes, of the memory allocation pool.
-* -Xmx1g : Specify the maximum size, in bytes, of the memory allocation pool.
-* -XX:NewRatio=1 : Ratio of new/old generation sizes.
-* -XX:+UseG1GC : Use the Garbage First (G1) Collector
-* -XX:+AggressiveOpts : Turn on point performance compiler optimizations that are expected to be default in upcoming releases. 
-* -XX:CompileThreshold=8000 : Number of method invocations/branches before compiling
-http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
-
-TODO, quality : test with these jvm switches
--XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
 
 ## licence
 
@@ -113,6 +102,44 @@ in other terms, api ```@Specialize```s the core.
 note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection mechanism. 
 
 ### core
+
+How to extends Extension
+alter the META-INF/services/javax.enterprise.inject.spi.Extension file to change the order of the extensions
+right now it is not possible to extends Extension, only to change the order, add or remove them
+
+How to extends WebSocketService and/or Services
+1. extends the Service and add the @Alternative and @Specialize annotations
+2. activate the alternative in the META-INF/beans.xml file
+
+```java
+// TODO
+```
+
+How to extends Caches configuration
+1. extends the CacheProducer and add the @Alternative and @Specialize annotations
+2. active the alternive in the META-INF/beans.xml file
+3. override the @Produces method
+
+```java
+// TODO
+```
+
+How to extends DTO, non versionable Entity, Event and Exception
+1. extends Factory add the @Alternative and @Specialize annotation
+2. activate the alternative in the META-INF/beans.xml file
+3. extends the Pojo
+
+```java
+// TODO
+```
+
+How to extends versionable Entity
+1. do the same as for non versionable Entity
+2. extends the Entity VersionableExternalizer and add the @Alternative and Specialize annotations
+
+```java
+// TODO
+```
 
 #### Weld SE enhancements
 
@@ -556,3 +583,19 @@ UserRegistration -> number of (guest to registered user conversion)
 1. install sonar http://www.sonarsource.org
 2. run ```mvn clean install``` and followed by ```mvn sonar:sonar``` to perform analysis
 3. finally see results at http://localhost:9000
+
+
+## Miscellaneous
+
+TODO, suggested jvm switches (java7u21)
+* -Xms1g : Specify the initial size, in bytes, of the memory allocation pool.
+* -Xmx1g : Specify the maximum size, in bytes, of the memory allocation pool.
+* -XX:NewRatio=1 : Ratio of new/old generation sizes.
+* -XX:+UseG1GC : Use the Garbage First (G1) Collector
+* -XX:+AggressiveOpts : Turn on point performance compiler optimizations that are expected to be default in upcoming releases. 
+* -XX:CompileThreshold=8000 : Number of method invocations/branches before compiling
+http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
+
+TODO, quality : test with these jvm switches
+-XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
+
