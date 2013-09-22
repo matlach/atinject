@@ -14,6 +14,14 @@
 		<name>the atinject project</name>
 		<url>https://github.com/matlach/atinject</url>
 	</organization>
+	
+	<developers>
+		<developer>
+			<id>matlach</id>
+			<name>mathieu lachance</name>
+			<url>https://github.com/matlach</url>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
@@ -29,16 +37,6 @@
 		<developerConnection>scm:git:https://github.com/matlach/atinject.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
-
-	<developers>
-		<developer>
-			<id>org.atinject</id>
-			<name>the atinject project contributors</name>
-			<url>https://github.com/matlach/atinject</url>
-			<organization>the atinject project</organization>
-			<organizationUrl>https://github.com/matlach/atinject</organizationUrl>
-		</developer>
-	</developers>
 
 	<repositories>
 		<repository>
