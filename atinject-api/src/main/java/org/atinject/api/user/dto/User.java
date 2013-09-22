@@ -8,7 +8,6 @@ public class User extends DTO {
 
     private String id;
     private String name;
-    private String password;
 
     public User()
     {
@@ -37,14 +36,4 @@ public class User extends DTO {
         return this;
     }
 
-    public String getPassword()
-    {
-        return password;
-    }
-
-    public User setPassword(String password)
-    {
-        this.password = password;
-        return this;
-    }
 }
