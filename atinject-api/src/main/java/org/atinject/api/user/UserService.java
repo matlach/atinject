@@ -1,11 +1,11 @@
 package org.atinject.api.user;
 
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.api.user.event.UserIdCollided;
 import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
@@ -17,6 +17,10 @@ public class UserService extends Service{
     @Inject UserCacheStore userCacheStore;
     
     @Inject UserEntityFactory userEntityFactory;
+    
+    @Inject UserIdGenerator userIdGenerator;
+    
+    @Inject Event<UserIdCollided> userIdCollidedEvent;
     
     /**
      * get the user by delegating to {@link UserCacheStore#getUser(String)}
@@ -44,12 +48,13 @@ public class UserService extends Service{
      * Note : userId key will be locked
      */
     public UserEntity addUser(String name) {
-        String userId = UUID.randomUUID().toString();
+        String userId = userIdGenerator.generateUserId();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
         if (userCacheStore.getUser(userId) != null){
             // an extraordinary event just happened
             // try again
+        	userIdCollidedEvent.fire(new UserIdCollided().setUserId(userId));
             return addUser(name);
         }
         UserEntity user = userEntityFactory.newUserEntity()
@@ -66,6 +71,16 @@ public class UserService extends Service{
      */
     public void addUser(UserEntity user) {
         userCacheStore.putUser(user);
+    }
+    
+    public void updateUserName(String userId, String name) {
+    	UserEntity user = getUser(userId);
+    	updateUserName(user, name);
+    }
+    
+    public void updateUserName(UserEntity user, String name) {
+    	user.setName(name);
+    	updateUser(user);
     }
     
     /**

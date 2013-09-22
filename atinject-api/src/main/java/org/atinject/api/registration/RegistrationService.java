@@ -1,11 +1,10 @@
 package org.atinject.api.registration;
 
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
+import org.atinject.api.registration.event.GuestRegistered;
 import org.atinject.api.registration.event.UserRegistered;
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
@@ -21,6 +20,9 @@ public class RegistrationService extends Service {
     
     @Inject RegistrationEventFactory registrationEventFactory;
     
+    @Inject GuestUsernamePasswordGenerator guestUsernamePasswordGenerator;
+    
+    @Inject Event<GuestRegistered> guestRegisteredEvent;
     @Inject Event<UserRegistered> userRegisteredEvent;
     
     public boolean isUsernameAvailable(String username){
@@ -32,8 +34,8 @@ public class RegistrationService extends Service {
     }
     
     public UserEntity registerAsGuest(){
-        String username = UUID.randomUUID().toString();
-        String password = UUID.randomUUID().toString();
+        String username = guestUsernamePasswordGenerator.generateUsername();
+        String password = guestUsernamePasswordGenerator.generatePassword();
         return registerAsGuest(username, password);
     }
     
@@ -42,15 +44,24 @@ public class RegistrationService extends Service {
     	UserEntity user = userService.addUser(username);
     	userCredentialService.setUserCredential(user.getId(), username, password);
     	
-        UserRegistered userRegistered = registrationEventFactory
-            .newUserRegistered()
-            .setUser(user);
-        userRegisteredEvent.fire(userRegistered);
+    	GuestRegistered event = registrationEventFactory
+    			.newGuestRegistered()
+    			.setUser(user);
+    	guestRegisteredEvent.fire(event);
         return user;
     }
     
-    public UserEntity register(){
-        throw new RuntimeException("not implemented");
+    public UserEntity register(String userId, String username, String password){
+    	
+    	UserEntity user = userService.getUser(userId);
+    	userCredentialService.setUserCredential(userId, username, password);
+    	
+        UserRegistered event = registrationEventFactory
+                .newUserRegistered()
+                .setUser(user);
+            userRegisteredEvent.fire(event);
+            
+        return user;
     }
     
 }
