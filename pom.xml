@@ -69,6 +69,7 @@
 		<infinispan.version>6.0.0.Beta1</infinispan.version>
 		<jackson.version>2.2.3</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
+		<joda.time.version>2.3</joda.time.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
 		<junit.version>4.11</junit.version>
 	</properties>
@@ -161,6 +162,12 @@
 			</dependency>
 
 			<dependency>
+			    <groupId>joda-time</groupId>
+			    <artifactId>joda-time</artifactId>
+			    <version>${joda.time.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.softee</groupId>
 				<artifactId>pojo-mbean</artifactId>
 				<version>${pojo.mbean.version}</version>
@@ -232,6 +239,7 @@
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
 			<exclusions>
+				<!-- pulled from jgroups... -->
 				<exclusion>
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
@@ -262,6 +270,11 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
 		</dependency>
 
 		<dependency>
