@@ -9,12 +9,15 @@ import javax.inject.Inject;
 import org.atinject.api.registration.event.UserRegistered;
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class RegistrationService extends Service {
 
     @Inject UserService userService;
+    
+    @Inject UserCredentialService userCredentialService;
     
     @Inject RegistrationEventFactory registrationEventFactory;
     
@@ -35,7 +38,10 @@ public class RegistrationService extends Service {
     }
     
     public UserEntity registerAsGuest(String username, String password){
-    	UserEntity user = userService.addUser(username, password);
+    	
+    	UserEntity user = userService.addUser(username);
+    	userCredentialService.setUserCredential(user.getId(), username, password);
+    	
         UserRegistered userRegistered = registrationEventFactory
             .newUserRegistered()
             .setUser(user);

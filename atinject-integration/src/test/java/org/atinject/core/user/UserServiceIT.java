@@ -25,7 +25,7 @@ public class UserServiceIT extends IntegrationTest
     public void testAddGetUpdateGetRemoveUser()
     {
         logger.info("add");
-        UserEntity user = userService.addUser("123", "***");
+        UserEntity user = userService.addUser("123");
         Assert.assertNotNull(user);
 
         logger.info("get");

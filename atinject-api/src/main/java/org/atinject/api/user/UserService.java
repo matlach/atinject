@@ -43,14 +43,14 @@ public class UserService extends Service{
      * create, lock and add new user with random userId and specified name and password
      * Note : userId key will be locked
      */
-    public UserEntity addUser(String name, String password) {
+    public UserEntity addUser(String name) {
         String userId = UUID.randomUUID().toString();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
         if (userCacheStore.getUser(userId) != null){
             // an extraordinary event just happened
             // try again
-            return addUser(name, password);
+            return addUser(name);
         }
         UserEntity user = userEntityFactory.newUserEntity()
                 .setId(userId)
