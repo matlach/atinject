@@ -598,7 +598,7 @@ Notable differences with JavaEE:
 
 Inject:
 - CDI, skip CDI.current()
-- @Named, no default value, value unique restriction is relaxed
+- @Named, no default value, unique value restriction is relaxed, do not bind to expression langage (EL)
 
 EJB:
 - asynchronous, is applied inside the same class
