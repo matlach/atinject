@@ -3,9 +3,9 @@ package org.atinject.core.rendezvous;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
 import org.atinject.core.cache.ClusteredCacheManager;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
@@ -19,7 +19,7 @@ public class RendezvousCacheProducer {
 
     @Inject private ClusteredCacheManager cacheManager;
     
-    @Produces @CacheName("rendezvous")
+    @Produces @Named("rendezvous")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
@@ -34,13 +34,13 @@ public class RendezvousCacheProducer {
                     .build();
     }
     
-    @Produces @CacheName("rendezvous")
+    @Produces @Named("rendezvous")
     public ClusteredCache<String, RendezvousEntity> newClusteredCache(){
         Cache<String, RendezvousEntity> cache = cacheManager.getCache("rendezvous");
         return new ClusteredCache<>(cache);
     }
     
-    @Produces @CacheName("rendezvous") Cache<String, RendezvousEntity> newCache(){
+    @Produces @Named("rendezvous") Cache<String, RendezvousEntity> newCache(){
         return cacheManager.getCache("rendezvous");
     }
     

@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.infinispan.Cache;
@@ -17,7 +17,7 @@ import org.infinispan.affinity.KeyGenerator;
 @ApplicationScoped
 public class RendezvousIdGenerator {
 
-    @Inject @CacheName("rendezvous") private Cache<String, RendezvousEntity> cache;
+    @Inject @Named("rendezvous") private Cache<String, RendezvousEntity> cache;
     
     @Inject private AsynchronousService asynchronousService;
     

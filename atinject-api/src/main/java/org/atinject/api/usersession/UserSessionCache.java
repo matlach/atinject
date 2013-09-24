@@ -5,15 +5,15 @@ import javax.enterprise.inject.Alternative;
 import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.session.SessionCache;
 
 @Alternative @Specializes
 @ApplicationScoped
 public class UserSessionCache extends SessionCache {
 
-    @Inject @CacheName("session") private ClusteredCache<String, UserSession> cache;
+    @Inject @Named("session") private ClusteredCache<String, UserSession> cache;
     
     public UserSession getSessionByUserId(String userId){
         // TODO this is a good candidate for parallel iteration

@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
+import org.atinject.core.cdi.Named;
 import org.infinispan.Cache;
 import org.infinispan.remoting.transport.Address;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
@@ -15,7 +15,7 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class TopologyService
 {
-    @Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
+    @Inject @Named("distributed-executor") private Cache<Object, Object> masterCacheNode;
 
     @Inject private MachineIdUrlMapper urlMapper;
     

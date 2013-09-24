@@ -4,9 +4,9 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.atinject.api.userrole.entity.UserRolesEntity;
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
 import org.atinject.core.cache.ClusteredCacheManager;
+import org.atinject.core.cdi.Named;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
@@ -19,7 +19,7 @@ public class UserRoleCacheProducer {
     
     @Inject private ClusteredCacheManager cacheManager;
     
-    @Produces @CacheName("user-role")
+    @Produces @Named("user-role")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
@@ -38,7 +38,7 @@ public class UserRoleCacheProducer {
                     .build();
     }
     
-    @Produces @CacheName("user-role")
+    @Produces @Named("user-role")
     public ClusteredCache<String, UserRolesEntity> newClusteredCache(){
         Cache<String, UserRolesEntity> cache = cacheManager.getCache("user-role");
         return new ClusteredCache<>(cache);

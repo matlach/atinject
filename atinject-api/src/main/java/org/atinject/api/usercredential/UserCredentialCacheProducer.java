@@ -4,9 +4,9 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
 import org.atinject.core.cache.ClusteredCacheManager;
+import org.atinject.core.cdi.Named;
 import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
@@ -19,7 +19,7 @@ public class UserCredentialCacheProducer {
 
     @Inject private ClusteredCacheManager cacheManager;
     
-    @Produces @CacheName("user-credential")
+    @Produces @Named("user-credential")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
@@ -38,7 +38,7 @@ public class UserCredentialCacheProducer {
                     .build();
     }
     
-    @Produces @CacheName("user-credential")
+    @Produces @Named("user-credential")
     public ClusteredCache<String, UserCredentialEntity> newClusteredCache(){
         Cache<String, UserCredentialEntity> cache = cacheManager.getCache("user-credential");
         return new ClusteredCache<>(cache);

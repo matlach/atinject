@@ -6,8 +6,8 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.tiers.CacheStore;
 
@@ -24,7 +24,7 @@ import org.atinject.core.tiers.CacheStore;
 @ApplicationScoped
 public class RendezvousCache extends CacheStore {
 
-    @Inject @CacheName("rendezvous") private ClusteredCache<String, RendezvousEntity> cache;
+    @Inject @Named("rendezvous") private ClusteredCache<String, RendezvousEntity> cache;
     
     @Inject private RendezvousIdGenerator generator;
     

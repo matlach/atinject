@@ -1,4 +1,4 @@
-package org.atinject.core.cache;
+package org.atinject.core.cdi;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,13 +9,18 @@ import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
 
+/**
+ * provide replacement for {@link javax.inject.Named} annotation
+ * {@link javax.inject.Named} default value is ""
+ * {@link javax.inject.Named} value must be unique across the system even if
+ * the produced type combined with named annotation is unique (bug ??)
+ */
 @Qualifier
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface CacheName
+public @interface Named
 {
-//    @Nonbinding
-    String value();// default BasicCacheContainer.DEFAULT_CACHE_NAME;
+    String value();
 }

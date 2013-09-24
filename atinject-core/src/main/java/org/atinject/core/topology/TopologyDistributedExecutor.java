@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.infinispan.Cache;
 import org.infinispan.distexec.DefaultExecutorService;
@@ -17,7 +17,7 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class TopologyDistributedExecutor
 {
-    @Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
+    @Inject @Named("distributed-executor") private Cache<Object, Object> masterCacheNode;
     
     @Inject
     private AsynchronousService localExecutorService;

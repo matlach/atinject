@@ -4,8 +4,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.rolepermission.entity.RolePermissions;
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.CacheStore;
 
 @ApplicationScoped

@@ -11,8 +11,8 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.event.TransactionPhase;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.CacheName;
 import org.atinject.core.cdi.CDI;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.event.Event;
 import org.atinject.core.startup.Startup;
@@ -23,7 +23,7 @@ import org.infinispan.distexec.DefaultExecutorService;
 @ApplicationScoped
 public class DistributedEventBus
 {
-    @Inject @CacheName("distributed-executor") private Cache<Object, Object> masterCacheNode;
+    @Inject @Named("distributed-executor") private Cache<Object, Object> masterCacheNode;
     
     @Inject
     private AsynchronousService localExecutorService;
