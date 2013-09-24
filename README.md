@@ -206,11 +206,13 @@ usage:
 public class PerformAllWithRetry{...}
 ```
 
-#### Job and Trigger
+#### Timer and Clustered Timer Service
 Provides a way to execute a method at a defined time of the day across the cluster.
 @Schedules
-@Schedule
-second, minute, hour, dayOfWeek, dayOfMonth, month, year
+@Schedule(second, minute, hour, dayOfWeek, dayOfMonth, month, year)
+
+#### Job and Trigger
+Reuse Timer and Clustered Timer Service to define programmatically invoke a Job with given Trigger(schedule)
 
 #### @Profile and Profiling Service
 TODO
