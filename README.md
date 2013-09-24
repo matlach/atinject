@@ -594,6 +594,21 @@ UserRegistration -> number of (guest to registered user conversion)
 
 ## Miscellaneous
 
+Notable differences with JavaEE:
+
+Inject:
+- CDI, skip CDI.current()
+- @Named, no default value, value unique restriction is relaxed
+
+EJB:
+- asynchronous, is applied inside the same class
+- schedule, notation using int instead of String, clustered
+
+JSR-356 (websockets)
+- session, custom implementation
+- endpoint, not used
+
+
 TODO, suggested jvm switches (java7u21)
 * -Xms1g : Specify the initial size, in bytes, of the memory allocation pool.
 * -Xmx1g : Specify the maximum size, in bytes, of the memory allocation pool.
