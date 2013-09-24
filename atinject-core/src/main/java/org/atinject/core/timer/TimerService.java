@@ -52,9 +52,13 @@ public class TimerService
     @PostConstruct
     public void initialize() {
         for (final Method method : timerExtension.getScheduleAnnotatedMethods()) {
-            final Object object = CDI.select(method.getDeclaringClass()).get();
-            
             Schedule schedule = method.getAnnotation(Schedule.class);
+            if (schedule.clustered()){
+                // skip clustered
+                continue;
+            }
+            
+            final Object object = CDI.select(method.getDeclaringClass()).get();
             
             final Timer timer = new Timer(schedule.seconds(), schedule.minutes(), schedule.hours(),
                     schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), schedule.years());
@@ -65,7 +69,6 @@ public class TimerService
                 @Override
                 public void run() {
                     try {
-                        // TODO add clustered feature
                         method.invoke(object);
                         
                         updateTimer(timer);

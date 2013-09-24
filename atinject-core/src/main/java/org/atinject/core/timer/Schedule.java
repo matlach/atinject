@@ -5,6 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * default schedule is 00:00:00 each day, forever, and not clustered
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Schedule
@@ -16,4 +19,6 @@ public @interface Schedule
     int[] daysOfMonth() default {-1};
     int[] months() default {-1};
     int years() default -1;
+    
+    boolean clustered() default false;
 }
