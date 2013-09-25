@@ -390,6 +390,7 @@ public class TimerService extends Service
         }
         else
         {
+            // TODO make sure values are already sorted and perform a binary search instead
             for( int i=0; i<values.length; i++ )
             {
                 if( find == values[i] )
@@ -414,6 +415,7 @@ public class TimerService extends Service
      */
     private static int[] discardValuesOverMax( int[] values, int max )
     {
+        // TODO validate values first, so we don't need to check over and over
         int[] safeValues = null;
         for( int i=0; i<values.length; i++ )
         {

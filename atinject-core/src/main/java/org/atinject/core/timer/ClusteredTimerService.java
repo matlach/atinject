@@ -20,6 +20,9 @@ public class ClusteredTimerService extends Service {
     @Inject
     Logger logger;
     
+//    @Inject
+//    Cache cache;
+    
     @Inject
     TimerExtension timerExtension;
     
