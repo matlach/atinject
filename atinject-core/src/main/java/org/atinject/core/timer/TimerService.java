@@ -10,10 +10,13 @@ import javax.inject.Inject;
 
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.ScheduledService;
+import org.atinject.core.startup.Startup;
+import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
+@Startup
 @ApplicationScoped
-public class TimerService
+public class TimerService extends Service
 {
     
     private static final int[] DEFAULT_SECONDS = {0};
@@ -117,7 +120,7 @@ public class TimerService
      * Checks that alarm is not in the past
      * @exception RuntimeException if the alarm date is in the past
      */
-    private void checkTimer(Timer timer) {
+    public void checkTimer(Timer timer) {
         long delay = timer.alarmTime - System.currentTimeMillis();
         
         if (delay < 0) {
@@ -129,7 +132,7 @@ public class TimerService
     /**
      * Updates this alarm entry to the next valid alarm time, AFTER the current time.
      */
-    private void updateTimer(Timer timer){
+    public void updateTimer(Timer timer){
         
         Calendar now = Calendar.getInstance();
         logger.debug("now: " + now.getTime());
