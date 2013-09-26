@@ -1,6 +1,6 @@
 package org.atinject.api.role.enumeration;
 
-public interface SimpleRoles extends Roles {
+public final class SimpleRoles implements Roles {
 
     // weblogic : admin, operator, deployer, monitor, app tester,anonymous, others
     
@@ -8,4 +8,7 @@ public interface SimpleRoles extends Roles {
     public static final String REGISTERED = "REGISTERED";
     public static final String ADMIN = "ADMIN";
 
+    private SimpleRoles() {
+        
+    }
 }
