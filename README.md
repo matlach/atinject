@@ -208,8 +208,26 @@ public class PerformAllWithRetry{...}
 
 #### Timer and Clustered Timer Service
 Provides a way to execute a method at a defined time of the day across the cluster.
-@Schedules
-@Schedule(second, minute, hour, dayOfWeek, dayOfMonth, month, year)
+@Schedules{@Schedule[]}
+@Schedule(second, minute, hour, dayOfWeek, dayOfMonth, month, year, info, clustered)
+
+usage:
+```java
+@Schedule(seconds={-1}, minutes={-1}, hours={-1})
+public void invokeEachSeconds(){...}
+
+@Schedule
+public void invokeEachMidnightGMT(){...}
+
+@Schedule(timezone="America/New_York")
+public void invokeEachMidnightAmericas_New_York(){...}
+
+@Schedule(daysOfTheMonth={1}, hours={13})
+public void invokeEachFirstDayOfTheMonthAt1300(){...}
+
+@Schedule(daysOfTheWeek={Calendar.MONDAY})
+public void invokeEachMondayAtMidnightGMT(){...}
+```
 
 #### Job and Trigger
 Reuse Timer and Clustered Timer Service to define programmatically invoke a Job with given Trigger(schedule)
