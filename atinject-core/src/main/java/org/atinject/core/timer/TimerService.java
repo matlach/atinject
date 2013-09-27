@@ -64,7 +64,7 @@ public class TimerService extends Service
             final Object object = CDI.select(method.getDeclaringClass()).get();
             
             final Timer timer = new Timer(schedule.seconds(), schedule.minutes(), schedule.hours(),
-                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), schedule.years());
+                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), schedule.years(), schedule.info(), schedule.timezone());
             updateTimer(timer);
             checkTimer(timer);
             

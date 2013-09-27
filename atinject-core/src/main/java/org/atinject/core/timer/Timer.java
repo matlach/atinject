@@ -20,6 +20,8 @@
 
 package org.atinject.core.timer;
 
+import java.util.TimeZone;
+
 
 public class Timer {
     
@@ -33,6 +35,9 @@ public class Timer {
     private int year; // no support for a list of years -- must be * or specified
     
     public long alarmTime;
+    
+    public TimeZone timeZone;
+    public String info;
     
     /**
      * <p>Creates a new AlarmEntry.  Extended cron format - supports lists
@@ -68,7 +73,9 @@ public class Timer {
             int[] daysOfWeek,
             int[] daysOfMonth,
             int[] months,
-            int year) {
+            int year,
+            String info,
+            String timeZone) {
 
         this.seconds = seconds;
         this.minutes = minutes;
@@ -77,6 +84,9 @@ public class Timer {
         this.daysOfWeek = daysOfWeek;
         this.daysOfMonth = daysOfMonth;
         this.year = year;
+        
+        this.info = info;
+        this.timeZone = TimeZone.getTimeZone(timeZone);
     }
 
     public int[] getSeconds()
