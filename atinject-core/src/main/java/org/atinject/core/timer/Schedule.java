@@ -20,5 +20,9 @@ public @interface Schedule
     int[] months() default {-1};
     int years() default -1;
     
+    String timezone() default "GMT";
+    
+    String info() default "";
+    
     boolean clustered() default false;
 }
