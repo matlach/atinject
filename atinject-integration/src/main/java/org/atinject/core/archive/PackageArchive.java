@@ -152,8 +152,16 @@ public class PackageArchive {
     public static final String REMOTE_MANAGEMENT = "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false";
     public static final String REMOTE_DEBUG = "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8787";
     
+    public static final String PREFER_IPV4 = "-Djava.net.preferIPv4Stack=true";
+    
     public String getArguments() {
-        return USE_G1_GC + " " + NEW_RATIO + " " + AGGRESSIVE_OPTS + " " + COMPILE_THRESHOLD + " " + REMOTE_MANAGEMENT + " " + REMOTE_DEBUG;
+        return USE_G1_GC + " "
+                + NEW_RATIO + " "
+                + AGGRESSIVE_OPTS + " "
+                + COMPILE_THRESHOLD + " "
+                + REMOTE_DEBUG + " "
+                + REMOTE_MANAGEMENT + " "
+                + PREFER_IPV4;
     }
     
     public String getAtinjectJarName() {
