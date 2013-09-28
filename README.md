@@ -636,11 +636,15 @@ TODO, suggested jvm switches (java7u21)
 * -XX:CompileThreshold=8000 : Number of method invocations/branches before compiling
 http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html
 
-TODO, visual vm
+remote management (visual vm)
 * -Dcom.sun.management.jmxremote
 * -Dcom.sun.management.jmxremote.port=9000
 * -Dcom.sun.management.jmxremote.ssl=false
 * -Dcom.sun.management.jmxremote.authenticate=false
+
+remote debug
+* -Xdebug
+* -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8787
 
 TODO, quality : test with these jvm switches
 -XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
