@@ -1,4 +1,4 @@
-package org.atinject.integration;
+package org.atinject.core.integration;
 
 import org.atinject.core.cdi.JavaSECDIProvider;
 
