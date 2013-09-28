@@ -144,8 +144,16 @@ public class PackageArchive {
         return "./" + getAtinjectJarName() + ";" + getLibFolderName() + "/*";
     }
     
+    public static final String USE_G1_GC = "+XX:UseG1GC";
+    public static final String NEW_RATIO = "-XX:NewRatio=1";
+    public static final String AGGRESSIVE_OPTS = "XX:+AggressiveOpts";
+    public static final String COMPILE_THRESHOLD = "-XX:CompileThreshold=8000";
+    public static final String PRINT_COMPILATION = "-XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining";
+    public static final String REMOTE_MANAGEMENT = "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9000 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false";
+    public static final String REMOTE_DEBUG = "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8787";
+    
     public String getArguments() {
-        return "";
+        return USE_G1_GC + " " + NEW_RATIO + " " + AGGRESSIVE_OPTS + " " + COMPILE_THRESHOLD + " " + REMOTE_MANAGEMENT + " " + REMOTE_DEBUG;
     }
     
     public String getAtinjectJarName() {
