@@ -1,4 +1,4 @@
-package org.atinject.core.validation;
+package org.atinject.core.cdi;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -12,8 +12,9 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
-public class ValidationIT extends IntegrationTest
+public class TestDecorationIT extends IntegrationTest
 {
+
     @Deployment
     public static JavaArchive createDeployment() {
         
@@ -34,23 +35,10 @@ public class ValidationIT extends IntegrationTest
         return archive;
     }
     
-    @Inject Validator validator;
-    
-    @Inject ValidatedService validatedService;
+    @Inject TestServiceInterface service;
     
     @Test
-    public void testValidation(){
-        validator.validate(new String());
-    }
-    
-    @Test(expected=RuntimeException.class)
-    public void testValidatedService(){
-        try {
-            validatedService.validateNotNull(null);
-        }
-        catch (RuntimeException e){
-            throw e;
-        }
-        
+    public void testDecoration(){
+        System.out.println(service.getString());
     }
 }

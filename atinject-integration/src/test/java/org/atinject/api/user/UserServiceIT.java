@@ -1,19 +1,22 @@
-package org.atinject.core.validation;
+package org.atinject.api.user;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
+import org.atinject.api.user.entity.UserEntity;
 import org.atinject.integration.ArquillianIT;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
 
-public class ValidationIT extends IntegrationTest
-{
+public class UserServiceIT extends IntegrationTest {
+
     @Deployment
     public static JavaArchive createDeployment() {
         
@@ -24,6 +27,8 @@ public class ValidationIT extends IntegrationTest
         
         JavaArchive archive = createArchive(ArquillianIT.class);
         addAtinjectCore(archive);
+        addUser(archive);
+        
         archive
                 //.addAsManifestResource(beansXmlFile, "beans.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -34,23 +39,35 @@ public class ValidationIT extends IntegrationTest
         return archive;
     }
     
-    @Inject Validator validator;
-    
-    @Inject ValidatedService validatedService;
+    @Inject
+    private Logger logger;
+
+    @Inject
+    private UserService userService;
     
     @Test
-    public void testValidation(){
-        validator.validate(new String());
-    }
-    
-    @Test(expected=RuntimeException.class)
-    public void testValidatedService(){
-        try {
-            validatedService.validateNotNull(null);
-        }
-        catch (RuntimeException e){
-            throw e;
-        }
+    public void testAddGetUpdateGetRemoveUser()
+    {
+        logger.info("add");
+        UserEntity user = userService.addUser("123");
+        Assert.assertNotNull(user);
+
+        logger.info("get");
+        user = userService.getUser(user.getId());
+        Assert.assertNotNull(user);
+
+        logger.info("update");
+        user.setName("456");
+        userService.updateUser(user);
         
+        logger.info("get updated");
+        user = userService.getUser(user.getId());
+        
+        logger.info("remove");
+        userService.removeUser(user);
+        
+        user = userService.getUser(user.getId());
+        
+        Assert.assertNull(user);
     }
 }

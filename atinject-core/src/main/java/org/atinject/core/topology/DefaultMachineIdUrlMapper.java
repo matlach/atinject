@@ -1,12 +1,10 @@
-package org.atinject.integration;
+package org.atinject.core.topology;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-
-import org.atinject.core.topology.MachineIdUrlMapper;
 
 @ApplicationScoped
 public class DefaultMachineIdUrlMapper implements MachineIdUrlMapper{

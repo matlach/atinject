@@ -1,19 +1,26 @@
-package org.atinject.core.validation;
+package org.atinject.integration;
+
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 import javax.inject.Inject;
+import javax.transaction.UserTransaction;
 
-import org.atinject.integration.ArquillianIT;
-import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
-public class ValidationIT extends IntegrationTest
+public class ArquillianIT extends IntegrationTest
 {
+
+    @Inject UserTransaction ut;
+    
     @Deployment
     public static JavaArchive createDeployment() {
         
@@ -34,23 +41,9 @@ public class ValidationIT extends IntegrationTest
         return archive;
     }
     
-    @Inject Validator validator;
-    
-    @Inject ValidatedService validatedService;
-    
     @Test
-    public void testValidation(){
-        validator.validate(new String());
+    public void testArquillianBootstrap() {
+        assertThat(ut, is(not(equalTo(null))));
     }
     
-    @Test(expected=RuntimeException.class)
-    public void testValidatedService(){
-        try {
-            validatedService.validateNotNull(null);
-        }
-        catch (RuntimeException e){
-            throw e;
-        }
-        
-    }
 }

@@ -10,31 +10,70 @@
 	<artifactId>atinject-integration</artifactId>
 	<packaging>jar</packaging>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>1.1.1.Final</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>atinject-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-  	<dependency>
-  		<groupId>${project.groupId}</groupId>
-  		<artifactId>atinject-api</artifactId>
-  		<version>${project.version}</version>
-  	</dependency>
-  	
-  	<dependency>
-    <groupId>org.jboss.shrinkwrap.resolver</groupId>
-    <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-    <version>2.0.0</version>
-    <scope>provided</scope>
-</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
-<dependency>
-       <groupId>org.jboss.shrinkwrap</groupId>
-       <artifactId>shrinkwrap-impl-base</artifactId>
-       <version>1.2.0</version>
-       <scope>provided</scope>
-     </dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.shrinkwrap</groupId>
+			<artifactId>shrinkwrap-impl-base</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+				<dependency>
+			<groupId>org.jboss.arquillian.container</groupId>
+			<artifactId>arquillian-weld-se-embedded-1.1</artifactId>
+			<version>1.0.0.CR7</version>
+			<scope>test</scope>
+		</dependency>
+		
+<!-- 		<dependency>
+			<artifactId>weld-core-jsf</artifactId>
+			<groupId>org.jboss.weld</groupId>
+			<version>${weld.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<artifactId>jsr250-api</artifactId>
+			<groupId>javax.annotation</groupId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency> -->
+		
+		
 	</dependencies>
 
 </project>
