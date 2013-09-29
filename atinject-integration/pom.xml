@@ -51,29 +51,14 @@
 			<artifactId>arquillian-junit-container</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-				<dependency>
+
+		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-weld-se-embedded-1.1</artifactId>
 			<version>1.0.0.CR7</version>
 			<scope>test</scope>
 		</dependency>
-		
-<!-- 		<dependency>
-			<artifactId>weld-core-jsf</artifactId>
-			<groupId>org.jboss.weld</groupId>
-			<version>${weld.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<artifactId>jsr250-api</artifactId>
-			<groupId>javax.annotation</groupId>
-			<version>1.0</version>
-			<scope>test</scope>
-		</dependency> -->
-		
-		
+
 	</dependencies>
 
 </project>
