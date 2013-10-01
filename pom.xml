@@ -59,6 +59,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+  <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+  <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+  <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<weld.version>2.1.0.Beta2</weld.version>
@@ -291,19 +295,21 @@
 				<!-- keep surefire and failsafe in sync -->
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.14</version>
+					<version>2.16</version>
 				</plugin>
 				<!-- keep surefire and failsafe in sync -->
 				<plugin>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.14</version>
+					<version>2.16</version>
 				</plugin>
 
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>2.0</version>
+				    <groupId>org.codehaus.sonar</groupId>
+				    <artifactId>sonar-maven-plugin</artifactId>
+				    <version>3.7.2</version>
 				</plugin>
+
+
 
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
@@ -330,7 +336,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>3.1</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
 						<compilerVersion>1.7</compilerVersion>
@@ -354,21 +360,48 @@
 			</plugins>
 		</pluginManagement>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-failsafe-plugin</artifactId>
+			<configuration>
+				<!-- property set by jacoco-maven-plugin -->
+				<argLine>${itCoverageAgent}</argLine>
+			</configuration>
+			<executions>
+				<execution>
+					<id>integration-test</id>
+					<goals>
+						<goal>integration-test</goal>
+						<!-- <goal>verify</goal> -->
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
+		<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.6.2.201302030002</version>
+			<executions>
+				<execution>
+					<id>prepare-integration-tests</id>
+					<goals>
+						<goal>prepare-agent</goal>
+					</goals>
+					<phase>pre-integration-test</phase>
+					<configuration>
+						<destFile>${sonar.jacoco.itReportPath}</destFile>
+						<propertyName>itCoverageAgent</propertyName>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
+	</plugins>
 
 	</build>
+
+
 
 </project>
