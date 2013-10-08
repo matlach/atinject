@@ -59,15 +59,15 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-  <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-  <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-  <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
 
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<weld.version>2.1.0.CR1</weld.version>
 		<deltaspike.version>0.3-incubating</deltaspike.version>
-		<netty.version>4.0.9.Final</netty.version>
+		<netty.version>4.0.10.Final</netty.version>
 		<infinispan.version>6.0.0.Beta2</infinispan.version>
 		<jackson.version>2.2.3</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
@@ -308,8 +308,6 @@
 				    <artifactId>sonar-maven-plugin</artifactId>
 				    <version>3.7.2</version>
 				</plugin>
-
-
 
 				<plugin>
 					<artifactId>maven-enforcer-plugin</artifactId>
