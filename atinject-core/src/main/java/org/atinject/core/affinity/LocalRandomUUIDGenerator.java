@@ -1,4 +1,4 @@
-package org.atinject.core.rendezvous;
+package org.atinject.core.affinity;
 
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import org.infinispan.affinity.KeyAffinityServiceFactory;
 import org.infinispan.affinity.KeyGenerator;
 
 @ApplicationScoped
-public class RendezvousIdGenerator {
+public class LocalRandomUUIDGenerator {
 
     @Inject @Named("rendezvous") private Cache<String, RendezvousEntity> cache;
     
