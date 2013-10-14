@@ -26,6 +26,7 @@ public class TimeLoggedAnalyticService {
 	public void onUserLogged(@Observes UserLoggedIn event) {
 		// generate local event id
 		String key = idGenerator.getKey();
+		
 		long t = System.currentTimeMillis();
 		raw.put(key, t);
 	}
@@ -49,7 +50,7 @@ public class TimeLoggedAnalyticService {
 		return null;
 	}
 	
-	public Object predictTheBestTimeToShutdownServerUsingDataBetween(Date day0, Date day1) {
+	public Date predictTheBestTimeToShutdownServerUsingDataBetween(Date day0, Date day1) {
 		return null;
 	}
 }
