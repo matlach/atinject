@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.user.event.UserIdCollided;
+import org.atinject.api.user.event.UserRelocated;
 import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
@@ -63,6 +64,21 @@ public class UserService extends Service{
         lockUser(userId);
         addUser(user);
         return user;
+    }
+    
+    // TODO relocate, is this the correct word / concept ??
+    @Inject Event<UserRelocated> userRelocatedEvent;
+    
+    public void relocateUser(String userId) {
+    	UserEntity user = userCacheStore.getUser(userId);
+    	userCacheStore.removeUser(user);
+    	
+    	// TODO generate another id
+    	String newUserId = userId;
+    	user.setId(userId);
+    	userCacheStore.putUser(user);
+    	
+    	userRelocatedEvent.fire(new UserRelocated().setOldUserId(userId).setNewUserId(newUserId));
     }
     
     /**
