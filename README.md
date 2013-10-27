@@ -101,13 +101,19 @@ in other terms, api ```@Specialize```s the core.
 
 note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection mechanism. 
 
-### core
+### "spi"
 
-How to extends Extension
-alter the META-INF/services/javax.enterprise.inject.spi.Extension file to change the order of the extensions
-right now it is not possible to extends Extension, only to change the order, add or remove them
+as stated earlier, there is no org.atinject.spi package. here is how to customize atinject to fit all your needs.
 
-How to extends WebSocketService and/or Services
+#### How to extends Extension
+alter the META-INF/services/javax.enterprise.inject.spi.Extension file to add your own extension, remove extension or to change the order of the extensions.
+all extension define an interface so you can rewrite your own implementation
+
+```java
+// TODO
+```
+
+#### How to extends WebSocketService and/or Services
 1. extends the Service and add the @Alternative and @Specialize annotations
 2. activate the alternative in the META-INF/beans.xml file
 
@@ -115,7 +121,7 @@ How to extends WebSocketService and/or Services
 // TODO
 ```
 
-How to extends Caches configuration
+#### How to extends Caches configuration
 1. extends the CacheProducer and add the @Alternative and @Specialize annotations
 2. active the alternive in the META-INF/beans.xml file
 3. override the @Produces method
@@ -124,7 +130,7 @@ How to extends Caches configuration
 // TODO
 ```
 
-How to extends DTO, non versionable Entity, Event and Exception
+#### How to extends DTO, non versionable Entity, Event and Exception
 1. extends Factory add the @Alternative and @Specialize annotation
 2. activate the alternative in the META-INF/beans.xml file
 3. extends the Pojo
@@ -133,13 +139,15 @@ How to extends DTO, non versionable Entity, Event and Exception
 // TODO
 ```
 
-How to extends versionable Entity
+#### How to extends versionable Entity
 1. do the same as for non versionable Entity
 2. extends the Entity VersionableExternalizer and add the @Alternative and Specialize annotations
 
 ```java
 // TODO
 ```
+
+### core
 
 #### Weld SE enhancements
 
