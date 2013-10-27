@@ -45,6 +45,11 @@ public class TimeLoggedAnalyticService {
 		// store this day result
 	}
 	
+	public boolean isCrunchingNow() {
+		// look if hardcoded id is actually locked
+		return true;
+	}
+	
 	public Object getCrunchedDataForAParticularDay(Date day) {
 		// retrieve previously stored crunched result for that day
 		return null;
