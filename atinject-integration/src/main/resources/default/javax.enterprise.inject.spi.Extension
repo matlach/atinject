@@ -1,8 +1,8 @@
 org.atinject.api.systemproperty.SystemPropertyExtension
-org.atinject.api.role.RoleExtension
-org.atinject.api.permission.PermissionExtension
-org.atinject.core.dto.DTORegistryExtension
-org.atinject.core.entity.EntityRegistryExtension
+org.atinject.api.role.DefaultRoleExtension
+org.atinject.api.permission.DefaultPermissionExtension
+org.atinject.core.dto.DefaultDTORegistryExtension
+org.atinject.core.entity.DefaultEntityRegistryExtension
 org.atinject.core.tiers.WebSocketServiceRegistryExtension
 org.atinject.core.tiers.ServiceRegistryExtension
 org.atinject.core.tiers.CacheStoreRegistryExtension

@@ -13,7 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.dto.DTO;
-import org.atinject.core.dto.DTORegistryExtension;
+import org.atinject.core.dto.DefaultDTORegistryExtension;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.dto.WebSocketResponse;
@@ -28,7 +28,7 @@ public class DTOToJavascript
     private Logger logger;
     
     @Inject
-    private DTORegistryExtension dtoRegistryExtension;
+    private DefaultDTORegistryExtension dtoRegistryExtension;
     
     private String javascript;
     
