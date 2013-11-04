@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.affinity.LocalRandomUUIDGenerator;
-import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.tiers.CacheStore;
@@ -25,7 +25,7 @@ import org.atinject.core.tiers.CacheStore;
 @ApplicationScoped
 public class RendezvousCache extends CacheStore {
 
-    @Inject @Named("rendezvous") private ClusteredCache<String, RendezvousEntity> cache;
+    @Inject @Named("rendezvous") private ReplicatedCache<String, RendezvousEntity> cache;
     
     @Inject private LocalRandomUUIDGenerator generator;
     

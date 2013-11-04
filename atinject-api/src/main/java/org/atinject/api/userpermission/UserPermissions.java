@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.atinject.api.rolepermission.entity.RolePermissions;
-
 public class UserPermissions {
 
 	private String userId;

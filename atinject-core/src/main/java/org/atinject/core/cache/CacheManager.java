@@ -17,11 +17,11 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 
 @ApplicationScoped
-public class ClusteredCacheManager
+public class CacheManager
 {
 
     @Inject
-    private ClusteredCacheExtension infinispanExtension;
+    private CacheExtension cacheExtension;
     
     private EmbeddedCacheManager cacheManager;
     
@@ -32,16 +32,14 @@ public class ClusteredCacheManager
         cacheManager.addListener(new ClusteredCacheManagerListener());
 
         // define all cache configuration
-        for (Entry<String, Configuration> entry : infinispanExtension.getConfigurations().entrySet())
-        {
+        for (Entry<String, Configuration> entry : cacheExtension.getConfigurations().entrySet()) {
             cacheManager.defineConfiguration(entry.getKey(), entry.getValue());
         }
 
         // start all cache in parallel to prevent asymmetric cluster
-        Set<String> cacheNames = infinispanExtension.getConfigurations().keySet();
+        Set<String> cacheNames = cacheExtension.getConfigurations().keySet();
         cacheManager.startCaches(cacheNames.toArray(new String[cacheNames.size()]));
-        for (String cacheName : cacheNames)
-        {
+        for (String cacheName : cacheNames) {
             Cache<?, ?> cache = cacheManager.getCache(cacheName);
             cache.addListener(new ClusteredCacheListener<>());
         }
@@ -59,7 +57,7 @@ public class ClusteredCacheManager
             .build();
     }
     
-    protected Configuration newDefaultCacheConfiguration(){
+    protected Configuration newDefaultCacheConfiguration() {
         return new ConfigurationBuilder().build();
     }
     

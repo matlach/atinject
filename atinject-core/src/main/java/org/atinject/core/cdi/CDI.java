@@ -3,6 +3,7 @@ package org.atinject.core.cdi;
 import java.lang.annotation.Annotation;
 import java.util.Iterator;
 
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.TypeLiteral;
@@ -82,4 +83,7 @@ public class CDI {
         cdi.destroy(instance);
     }
     
+    public static CreationalContext createUnboundCreationalContext() {
+        return getBeanManager().createCreationalContext(null);
+    }
 }

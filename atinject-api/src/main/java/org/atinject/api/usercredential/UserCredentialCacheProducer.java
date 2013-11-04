@@ -1,13 +1,8 @@
 package org.atinject.api.usercredential;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
-import org.atinject.api.usercredential.entity.UserCredentialEntity;
-import org.atinject.core.cache.ClusteredCache;
-import org.atinject.core.cache.ClusteredCacheManager;
 import org.atinject.core.cdi.Named;
-import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -17,8 +12,6 @@ import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
 public class UserCredentialCacheProducer {
 
-    @Inject private ClusteredCacheManager cacheManager;
-    
     @Produces @Named("user-credential")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
@@ -38,9 +31,4 @@ public class UserCredentialCacheProducer {
                     .build();
     }
     
-    @Produces @Named("user-credential")
-    public ClusteredCache<String, UserCredentialEntity> newClusteredCache(){
-        Cache<String, UserCredentialEntity> cache = cacheManager.getCache("user-credential");
-        return new ClusteredCache<>(cache);
-    }
 }

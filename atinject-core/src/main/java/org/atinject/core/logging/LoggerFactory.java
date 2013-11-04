@@ -9,11 +9,15 @@ public class LoggerFactory
         
     }
     
-    public static Logger getLogger(Class<?> clazz){
+    public static Logger getRootLogger() {
+        return org.slf4j.LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+    }
+    
+    public static Logger getLogger(Class<?> clazz) {
         return org.slf4j.LoggerFactory.getLogger(clazz);
     }
     
-    public static Logger getLogger(String name){
+    public static Logger getLogger(String name) {
         return org.slf4j.LoggerFactory.getLogger(name);
     }
 }

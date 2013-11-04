@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.CacheStore;
 
@@ -18,7 +18,7 @@ import org.atinject.core.tiers.CacheStore;
 @ApplicationScoped
 public class SessionCache extends CacheStore {
     
-    @Inject @Named("session") private ClusteredCache<String, Session> cache;
+    @Inject @Named("session") private ReplicatedCache<String, Session> cache;
     
     public Session getSession(String sessionId){
         return cache.get(sessionId);

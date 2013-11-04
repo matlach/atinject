@@ -1,12 +1,8 @@
 package org.atinject.core.session;
 
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
-import org.atinject.core.cache.ClusteredCache;
-import org.atinject.core.cache.ClusteredCacheManager;
 import org.atinject.core.cdi.Named;
-import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -16,8 +12,6 @@ import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
 public class SessionCacheProducer
 {
-    @Inject private ClusteredCacheManager cacheManager;
-    
     @Produces @Named("session")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
@@ -29,12 +23,6 @@ public class SessionCacheProducer
                         .useSynchronization(true)
                         .transactionManagerLookup(new DummyTransactionManagerLookup())
                     .build();
-    }
-    
-    @Produces @Named("session")
-    public ClusteredCache<String, Session> newClusteredCache(){
-        Cache<String, Session> cache = cacheManager.getCache("session");
-        return new ClusteredCache<>(cache);
     }
     
 }

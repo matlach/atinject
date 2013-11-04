@@ -12,22 +12,22 @@
 		<class>org.atinject.core.tiers.exception.HandleServiceExceptionInterceptor</class>
 		<class>org.atinject.core.tiers.exception.HandleCacheStoreExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
-		<class>org.atinject.api.authorization.RequiresUserInterceptor</class>
+<!-- 		<class>org.atinject.api.authorization.RequiresUserInterceptor</class>
 		<class>org.atinject.api.authorization.RequiresGuestInterceptor</class>
 		<class>org.atinject.api.authorization.RequiresRolesInterceptor</class>
-		<class>org.atinject.api.authorization.RequiresPermissionsInterceptor</class>
+		<class>org.atinject.api.authorization.RequiresPermissionsInterceptor</class> -->
 		<!-- test should use hibernate-validator-cdi ? -->
 		<class>org.atinject.core.validation.ValidateMethodInterceptor</class>
 	</interceptors>
 	
- 	<alternatives>
+<!--  	<alternatives>
  		<class>org.atinject.api.usersession.UserSessionCache</class>
  		<class>org.atinject.api.usersession.UserSessionFactory</class>
 		<class>org.atinject.api.usersession.UserSessionService</class>
-	</alternatives>
+	</alternatives> -->
 
-	<decorators>
+<!-- 	<decorators>
 		<class>org.atinject.api.userlockout.UserLockoutAuthenticationServiceDecorator</class>
 		<class>org.atinject.core.cdi.TestServiceDecorator</class>
-	</decorators>
+	</decorators> -->
 </beans>

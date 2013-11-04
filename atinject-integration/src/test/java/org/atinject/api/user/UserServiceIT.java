@@ -9,7 +9,6 @@ import org.atinject.api.user.entity.UserEntity;
 import org.atinject.integration.ArquillianIT;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,8 +29,8 @@ public class UserServiceIT extends IntegrationTest {
         addUser(archive);
         
         archive
-                //.addAsManifestResource(beansXmlFile, "beans.xml")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsManifestResource(beansXmlFile, "beans.xml")
+            //.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsManifestResource(validationXmlFile, "validation.xml")
                 .addAsManifestResource(javaxEnterpriseInjectSpiExtensionFile, "services/javax.enterprise.inject.spi.Extension")
                 .addAsResource(logbackXmlFile, "/logback.xml");

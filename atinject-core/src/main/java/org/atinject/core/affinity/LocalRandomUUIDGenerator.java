@@ -6,10 +6,9 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.concurrent.AsynchronousService;
-import org.atinject.core.rendezvous.entity.RendezvousEntity;
-import org.infinispan.Cache;
 import org.infinispan.affinity.KeyAffinityService;
 import org.infinispan.affinity.KeyAffinityServiceFactory;
 import org.infinispan.affinity.KeyGenerator;
@@ -17,7 +16,7 @@ import org.infinispan.affinity.KeyGenerator;
 @ApplicationScoped
 public class LocalRandomUUIDGenerator {
 
-    @Inject @Named("rendezvous") private Cache<String, RendezvousEntity> cache;
+    @Inject @Named("distributed-executor") private DistributedCache<String, Object> cache;
     
     @Inject private AsynchronousService asynchronousService;
     
@@ -25,11 +24,11 @@ public class LocalRandomUUIDGenerator {
     
     @PostConstruct
     public void initialize(){
-        keyAffinityService = KeyAffinityServiceFactory.newLocalKeyAffinityService(cache, new RendezvousIdKeyGenerator(), asynchronousService, 100);
+        keyAffinityService = KeyAffinityServiceFactory.newLocalKeyAffinityService(cache.unwrap(), new RendezvousIdKeyGenerator(), asynchronousService, 100);
     }
     
     public String getKey(){
-        return keyAffinityService.getKeyForAddress(cache.getAdvancedCache().getRpcManager().getAddress());
+        return keyAffinityService.getKeyForAddress(cache.getRpcManager().getAddress());
     }
     
     public static class RendezvousIdKeyGenerator implements KeyGenerator<String> {

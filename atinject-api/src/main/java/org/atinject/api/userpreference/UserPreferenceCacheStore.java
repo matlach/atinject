@@ -4,14 +4,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.userpreference.entity.UserPreferencesEntity;
-import org.atinject.core.cache.ClusteredCache;
+import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.CacheStore;
 
 @ApplicationScoped
 public class UserPreferenceCacheStore extends CacheStore {
 
-    @Inject @Named("user-preferences") private ClusteredCache<String, UserPreferencesEntity> cache;
+    @Inject @Named("user-preferences") private DistributedCache<String, UserPreferencesEntity> cache;
     
     public UserPreferencesEntity getUserPreferences(String userId){
         return cache.get(userId);

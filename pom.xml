@@ -131,12 +131,6 @@
 				<artifactId>infinispan-core</artifactId>
 				<version>${infinispan.version}</version>
 			</dependency>
-			
-			<dependency>
-				<groupId>org.infinispan</groupId>
-				<artifactId>infinispan-jcache</artifactId>
-				<version>${infinispan.version}</version>
-			</dependency>
 
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -241,11 +235,6 @@
 					<groupId>log4j</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-jcache</artifactId>
 		</dependency>
 
 		<dependency>

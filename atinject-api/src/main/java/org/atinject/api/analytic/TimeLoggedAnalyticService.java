@@ -8,8 +8,8 @@ import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.UserLoggedIn;
 import org.atinject.core.affinity.LocalRandomUUIDGenerator;
+import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.timer.Schedule;
-import org.infinispan.Cache;
 
 @ApplicationScoped
 public class TimeLoggedAnalyticService {
@@ -18,10 +18,10 @@ public class TimeLoggedAnalyticService {
 	
 	// distributed cache to store raw data
 	// elements will expire each day as they are crunched each day
-	Cache raw;
+	DistributedCache raw;
 	
 	// distributed cache to store crunched data
-	Cache crunched;
+	DistributedCache crunched;
 	
 	public void onUserLogged(@Observes UserLoggedIn event) {
 		// generate local event id

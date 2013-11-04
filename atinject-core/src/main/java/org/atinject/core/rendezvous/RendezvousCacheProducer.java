@@ -3,11 +3,8 @@ package org.atinject.core.rendezvous;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.atinject.core.cache.ClusteredCache;
-import org.atinject.core.cache.ClusteredCacheManager;
+import org.atinject.core.cache.CacheManager;
 import org.atinject.core.cdi.Named;
-import org.atinject.core.rendezvous.entity.RendezvousEntity;
-import org.infinispan.Cache;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -17,7 +14,7 @@ import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
 public class RendezvousCacheProducer {
 
-    @Inject private ClusteredCacheManager cacheManager;
+    @Inject private CacheManager cacheManager;
     
     @Produces @Named("rendezvous")
     public Configuration newCacheConfiguration() {
@@ -32,16 +29,6 @@ public class RendezvousCacheProducer {
                         .useSynchronization(true)
                         .transactionManagerLookup(new DummyTransactionManagerLookup())
                     .build();
-    }
-    
-    @Produces @Named("rendezvous")
-    public ClusteredCache<String, RendezvousEntity> newClusteredCache(){
-        Cache<String, RendezvousEntity> cache = cacheManager.getCache("rendezvous");
-        return new ClusteredCache<>(cache);
-    }
-    
-    @Produces @Named("rendezvous") Cache<String, RendezvousEntity> newCache(){
-        return cacheManager.getCache("rendezvous");
     }
     
 }
