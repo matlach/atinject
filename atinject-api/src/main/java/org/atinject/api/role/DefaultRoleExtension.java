@@ -18,13 +18,13 @@ public class DefaultRoleExtension implements RoleExtension {
 
 	private Logger logger = LoggerFactory.getLogger(DefaultDTORegistryExtension.class);
 	
-	private Map<String, Class<Roles>> roles;
+	private Map<String, Class<? extends Roles>> roles;
 	
-	public DefaultRoleExtension(){
+	public DefaultRoleExtension() {
 		roles = new HashMap<>();
 	}
 	
-	<T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Roles> event) {
+	<T extends Roles> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Roles> event) {
 		
     	logger.info("merging '{}' to roles", event.getAnnotatedType().getJavaClass());
     	Field[] fields = event.getAnnotatedType().getJavaClass().getDeclaredFields();
@@ -48,7 +48,7 @@ public class DefaultRoleExtension implements RoleExtension {
     		if (roles.containsKey(field.getName())) {
     			throw new ExceptionInInitializerError("duplicate role '" + field.getName() + "' found");
     		}
-    		roles.put(field.getName(), (Class<Roles>) event.getAnnotatedType().getJavaClass());
+    		roles.put(field.getName(), event.getAnnotatedType().getJavaClass());
     	}
      }
 	
