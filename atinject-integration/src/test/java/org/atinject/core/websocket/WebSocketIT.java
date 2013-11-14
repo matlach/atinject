@@ -29,7 +29,7 @@ public class WebSocketIT extends IntegrationTest
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
         
         JavaArchive archive = createArchive(ArquillianIT.class);
-        addAtinjectCore(archive);
+        addPackageAndItIsDependencies(archive, core);
         archive
                 //.addAsManifestResource(beansXmlFile, "beans.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")

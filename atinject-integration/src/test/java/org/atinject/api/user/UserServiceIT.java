@@ -25,8 +25,7 @@ public class UserServiceIT extends IntegrationTest {
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
         
         JavaArchive archive = createArchive(ArquillianIT.class);
-        addAtinjectCore(archive);
-        addUser(archive);
+        addPackageAndItIsDependencies(archive, api_user);
         
         archive
                 .addAsManifestResource(beansXmlFile, "beans.xml")

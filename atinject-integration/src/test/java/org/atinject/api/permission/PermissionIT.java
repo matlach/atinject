@@ -24,8 +24,7 @@ public class PermissionIT extends IntegrationTest {
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
         
         JavaArchive archive = createArchive(ArquillianIT.class);
-        addAtinjectCore(archive);
-        addPermission(archive);
+        addPackageAndItIsDependencies(archive, api_permission);
         archive
                 //.addAsManifestResource(beansXmlFile, "beans.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")

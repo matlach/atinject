@@ -25,8 +25,7 @@ public class RoleIT extends IntegrationTest
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
         
         JavaArchive archive = createArchive(ArquillianIT.class);
-        addAtinjectCore(archive);
-        addRole(archive);
+        addPackageAndItIsDependencies(archive, api_role);
         archive
                 //.addAsManifestResource(beansXmlFile, "beans.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")

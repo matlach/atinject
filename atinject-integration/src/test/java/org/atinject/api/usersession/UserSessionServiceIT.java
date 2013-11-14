@@ -26,8 +26,7 @@ public class UserSessionServiceIT extends IntegrationTest {
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
         
         JavaArchive archive = createArchive(ArquillianIT.class);
-        addAtinjectCore(archive);
-        addUserSession(archive);
+        addPackageAndItIsDependencies(archive, api_user_session);
         
         archive
                 //.addAsManifestResource(beansXmlFile, "beans.xml")
