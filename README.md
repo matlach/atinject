@@ -49,8 +49,8 @@ atinject frontend is build on 2 key components :
 ####open source java technology enthuisiast
 video game industry grown up, worked 4 years as lead r&d backend for [frimastudio](http://www.frimastudio.com)
 along with a small intercourse at [funcom](http://www.funcom.com) as java developer.
-last year i have been working on some serious business project at [myca health inc.](http://www.myca.com) as a software engineer.
-i recently just began a new career at [oracle](http://www.oracle.com) as senior software developer.
+then i have been working for 2 years on some serious business project at [myca health inc.](http://www.myca.com) as a software engineer.
+and at [oracle](http://www.oracle.com) as senior application developer.
 feel free to contact me, [matlach](http://ca.linkedin.com/in/lachancemathieu/)
 
 ##installation
@@ -101,51 +101,11 @@ in other terms, api ```@Specialize```s the core.
 
 note : there is no such ```org.atinject.spi``` package as everything has been designed to be fully overridable with defacto standard java injection mechanism. 
 
-### "spi"
-
-as stated earlier, there is no org.atinject.spi package. here is how to customize atinject to fit all your needs.
-
-#### How to extends Extension
-alter the META-INF/services/javax.enterprise.inject.spi.Extension file to add your own extension, remove extension or to change the order of the extensions.
-all extension define an interface so you can rewrite your own implementation
-
-```java
-// TODO
-```
-
-#### How to extends WebSocketService and/or Services
-1. extends the Service and add the @Alternative and @Specialize annotations
-2. activate the alternative in the META-INF/beans.xml file
-
-```java
-// TODO
-```
-
-#### How to extends Caches configuration
-1. extends the CacheProducer and add the @Alternative and @Specialize annotations
-2. active the alternive in the META-INF/beans.xml file
-3. override the @Produces method
-
-```java
-// TODO
-```
-
-#### How to extends DTO, non versionable Entity, Event and Exception
-1. extends Factory add the @Alternative and @Specialize annotation
-2. activate the alternative in the META-INF/beans.xml file
-3. extends the Pojo
-
-```java
-// TODO
-```
-
-#### How to extends versionable Entity
-1. do the same as for non versionable Entity
-2. extends the Entity VersionableExternalizer and add the @Alternative and Specialize annotations
-
-```java
-// TODO
-```
+atinject framework is bundled in 4 maven project :
+1. atinject, the parent project
+2. atinject-core, which contains the org.atinject.core package
+3. atinject-api, which contains the org.atinject.api package
+4. atinject-integration, which contains all the integration tests as well as all the packaging tools
 
 ### core
 
@@ -516,6 +476,52 @@ All [UserPreference][] are grouped by an [UserPreferences][].
 [UserPreferences]: /
 [UserPreference]: /
 [SimpleUserPreference]: /
+
+### "spi"
+
+as stated earlier, there is no org.atinject.spi package. here is how to customize atinject to fit all your needs.
+
+#### How to extends Extension
+alter the META-INF/services/javax.enterprise.inject.spi.Extension file to add your own extension, remove extension or to change the order of the extensions.
+all extension define an interface so you can rewrite your own implementation
+
+```java
+// TODO
+```
+
+#### How to extends WebSocketService and/or Services
+1. extends the Service and add the @Alternative and @Specialize annotations
+2. activate the alternative in the META-INF/beans.xml file
+
+```java
+// TODO
+```
+
+#### How to extends Caches configuration
+1. extends the CacheProducer and add the @Alternative and @Specialize annotations
+2. active the alternive in the META-INF/beans.xml file
+3. override the @Produces method
+
+```java
+// TODO
+```
+
+#### How to extends DTO, non versionable Entity, Event and Exception
+1. extends Factory add the @Alternative and @Specialize annotation
+2. activate the alternative in the META-INF/beans.xml file
+3. extends the Pojo
+
+```java
+// TODO
+```
+
+#### How to extends versionable Entity
+1. do the same as for non versionable Entity
+2. extends the Entity VersionableExternalizer and add the @Alternative and Specialize annotations
+
+```java
+// TODO
+```
 
 ### Efficient data structure
 
