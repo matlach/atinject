@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Assume;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -18,25 +20,45 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RunWith(Arquillian.class)
-public abstract class IntegrationTest
-{
-    Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
+public abstract class IntegrationTest {
+    
+    private Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
+
+    private static Map<String, Integer> inSequenceCounter = new HashMap<>();
     
     @Rule public TestRule watchman = new TestWatcher() {
 
         @Override
         protected void starting(Description description) {
             logger.info("starting {}", description.getMethodName());
+            
+            InSequence inSequence = description.getAnnotation(InSequence.class);
+            if (inSequence != null) {
+                int expectedSequenceValue = inSequence.value();
+                if (! inSequenceCounter.containsKey(description.getClassName())) {
+                    inSequenceCounter.put(description.getClassName(), Integer.valueOf(1));
+                }
+                int actualSequenceValue = inSequenceCounter.get(description.getClassName()).intValue();
+                Assume.assumeTrue(actualSequenceValue == expectedSequenceValue);
+            }
         }
 
         @Override
         protected void finished(Description description) {
+            InSequence inSequence = description.getAnnotation(InSequence.class);
+            if (inSequence != null) {
+                int actualSequenceValue = inSequenceCounter.get(description.getClassName()).intValue();
+                int nextSequenceValue = actualSequenceValue + 1;
+                inSequenceCounter.put(description.getClassName(), Integer.valueOf(nextSequenceValue));
+            }
+            
             logger.info("finished {}", description.getMethodName());
         }
     };
     
+    public static final String framework = "org.atinject";
     public static final String core = "org.atinject.core";
-    public static final String api = "org.atinject.api"; 
+    public static final String api = "org.atinject.api";
     public static final String api_analytic = "org.atinject.api.analytic";
     public static final String api_authentication = "org.atinject.api.authentication";
     public static final String api_authorization = "org.atinject.api.authorization";
@@ -57,8 +79,9 @@ public abstract class IntegrationTest
     public static final String api_user_topology = "org.atinject.api.usertopology";
     public static final String api_websocket = "org.atinject.api.websocket";
     
-    static Map<String, List<String>> dependencies = new HashMap<>();
+    static Map<String, List<String>> dependencies;
     static {
+        dependencies = new HashMap<>();
         dependencies.put(core, Collections.<String>emptyList());
         dependencies.put(api, Arrays.asList(core));
         dependencies.put(api_analytic, Arrays.asList(core));
@@ -81,9 +104,9 @@ public abstract class IntegrationTest
         dependencies.put(api_user_topology, Arrays.asList(api_user));
         dependencies.put(api_websocket, Arrays.asList(api_user));
     }
-    
-    public static JavaArchive createArchive(Class<? extends IntegrationTest> testClass) {
-        return ShrinkWrap.create(JavaArchive.class, testClass.getSimpleName() + ".jar") ;
+
+    public static JavaArchive createArchive(Class<? extends IntegrationTest> integrationTestClass) {
+        return ShrinkWrap.create(JavaArchive.class, integrationTestClass.getSimpleName() + ".jar") ;
     }
     
     public static void addPackageAndItIsDependencies(JavaArchive archive, String pack) {
