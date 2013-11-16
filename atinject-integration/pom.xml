@@ -46,6 +46,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>  
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>  
+            <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>  
+            <scope>provided</scope>  
+        </dependency> 
+
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
