@@ -36,6 +36,10 @@ public class AuthenticationServiceImpl extends Service implements Authentication
     
     @Inject @Distributed private Event<UserLoggedOut> userLoggerOutEvent;
     
+    /**
+     * @throws WrongUsernameException
+     * @throws WrongPasswordException
+     */
     @Override
     public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password){
         if (session.getUserId() != null){

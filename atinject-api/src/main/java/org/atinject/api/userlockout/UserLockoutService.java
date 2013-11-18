@@ -6,6 +6,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.AuthenticationFailed;
+import org.atinject.api.user.UserService;
 import org.atinject.api.userlockout.event.UserLocked;
 import org.atinject.api.userlockout.event.UserUnlocked;
 import org.atinject.core.tiers.Service;
@@ -15,6 +16,8 @@ public class UserLockoutService extends Service {
 
     // Threshold 5 times, duration 30 minutes, reset duration 5 minutes.
 	
+	@Inject UserService userService;
+	
 	@Inject Event<UserLocked> userLockedEvent;
 	
 	@Inject Event<UserUnlocked> userUnlockedEvent;
@@ -23,11 +26,12 @@ public class UserLockoutService extends Service {
 		return false;
 	}
 	
-	public void lockUser(String username){
+	public void lockUser(String username) {
+		userService.getUserByName(username);
 		userLockedEvent.fire(new UserLocked());
 	}
 	
-	public void unlockUser(String username){
+	public void unlockUser(String username) {
 		userUnlockedEvent.fire(new UserUnlocked());
 	}
 	

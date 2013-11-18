@@ -20,8 +20,7 @@ public abstract class UserLockoutAuthenticationServiceDecorator implements Authe
 	
 	@Override
 	public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password) {
-		if (userLockoutService.isUserLocked(username))
-		{
+		if (userLockoutService.isUserLocked(username)) {
 			throw new UserLockedException();
 		}
 		return authenticationService.login(session, username, password);
