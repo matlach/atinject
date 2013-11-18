@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
+import org.atinject.api.registration.GuestUsernamePasswordGenerator;
 import org.atinject.api.registration.RegistrationService;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.security.PasswordDigester;
@@ -13,11 +14,9 @@ import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jgroups.util.UUID;
 import org.junit.Test;
 
-public class AuthenticationServiceIT extends IntegrationTest
-{
+public class AuthenticationServiceIT extends IntegrationTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -41,13 +40,14 @@ public class AuthenticationServiceIT extends IntegrationTest
     }
     
     @Inject RegistrationService registrationService;
+    @Inject GuestUsernamePasswordGenerator guestUsernamePasswordGenerator;
     @Inject AuthenticationService authenticationService;
     @Inject PasswordDigester passwordDigester;
     
     @Test
-    public void testAuthentication(){
-        String username = UUID.randomUUID().toString();
-        String password = UUID.randomUUID().toString();
+    public void testAuthentication() {
+        String username = guestUsernamePasswordGenerator.generateUsername();
+        String password = guestUsernamePasswordGenerator.generatePassword();
         
         registrationService.registerAsGuest(username, password);
         
