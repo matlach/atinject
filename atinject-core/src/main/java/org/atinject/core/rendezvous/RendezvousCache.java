@@ -2,6 +2,7 @@ package org.atinject.core.rendezvous;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,19 +26,19 @@ import org.atinject.core.tiers.CacheStore;
 @ApplicationScoped
 public class RendezvousCache extends CacheStore {
 
-    @Inject @Named("rendezvous") private ReplicatedCache<String, RendezvousEntity> cache;
+    @Inject @Named("rendezvous") private ReplicatedCache<UUID, RendezvousEntity> cache;
     
     @Inject private LocalRandomUUIDGenerator generator;
     
-    public String getId(){
+    public UUID getId(){
         return generator.getKey();
     }
     
-    public RendezvousEntity getRendezvous(String rendezvousId){
+    public RendezvousEntity getRendezvous(UUID rendezvousId){
         return cache.get(rendezvousId);
     }
     
-    public void lockRendezvous(String rendezvousId){
+    public void lockRendezvous(UUID rendezvousId){
         cache.lock(rendezvousId);
     }
     

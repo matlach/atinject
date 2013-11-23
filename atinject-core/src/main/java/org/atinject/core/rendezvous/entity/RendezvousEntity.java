@@ -2,6 +2,7 @@ package org.atinject.core.rendezvous.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.atinject.core.entity.Entity;
 
@@ -9,7 +10,7 @@ public class RendezvousEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private UUID id;
     
     private Set<String> sessionIds;
 
@@ -17,11 +18,11 @@ public class RendezvousEntity extends Entity {
         sessionIds = new HashSet<>();
     }
     
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public RendezvousEntity setId(String id) {
+    public RendezvousEntity setId(UUID id) {
         this.id = id;
         return this;
     }

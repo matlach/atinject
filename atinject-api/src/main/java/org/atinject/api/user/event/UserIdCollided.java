@@ -1,14 +1,16 @@
 package org.atinject.api.user.event;
 
+import java.util.UUID;
+
 public class UserIdCollided {
 
-	private String userId;
+	private UUID userId;
 
-	public String getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 
-	public UserIdCollided setUserId(String userId) {
+	public UserIdCollided setUserId(UUID userId) {
 		this.userId = userId;
 		return this;
 	}

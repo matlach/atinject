@@ -1,5 +1,6 @@
 package org.atinject.core.distexec;
 
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -16,7 +17,7 @@ import org.infinispan.distexec.DistributedExecutorService;
 @ApplicationScoped
 public class UserRequestDistributedExecutor {
 
-	@Inject @Named("distributed-executor") private DistributedCache<Object, Object> masterCacheNode;
+	@Inject @Named("distributed-executor") private DistributedCache<UUID, Object> masterCacheNode;
 	
 	@Inject
 	private AsynchronousService localExecutorService;
@@ -28,7 +29,7 @@ public class UserRequestDistributedExecutor {
 		distributedExecutorService = new DefaultExecutorService(masterCacheNode.unwrap(), localExecutorService);
 	}
 	
-	public <T> Future<T> submit(Callable<T> task, String input){
+	public <T> Future<T> submit(Callable<T> task, UUID input){
 		return distributedExecutorService.submit(task, input);
 	}
 	

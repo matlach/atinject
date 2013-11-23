@@ -3,6 +3,7 @@ package org.atinject.api.user.entity;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.UUID;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
 import org.atinject.core.cdi.CDI;
@@ -14,18 +15,18 @@ import org.infinispan.commons.marshall.SerializeWith;
 public class UserEntity extends VersionableEntity {
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private UUID id;
     private String name;
 
     public UserEntity() {
         super();
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public UserEntity setId(String id) {
+    public UserEntity setId(UUID id) {
         this.id = id;
         return this;
     }

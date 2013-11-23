@@ -2,6 +2,7 @@ package org.atinject.core.rendezvous;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -26,20 +27,20 @@ public class RendezvousService extends Service {
     @Inject Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
     
     public RendezvousEntity newRendezvous(){
-        String rendezvousId = rendezvousCache.getId();
+        UUID rendezvousId = rendezvousCache.getId();
         RendezvousEntity rendezvous = entityFactory.newRendezvous()
             .setId(rendezvousId);
         return rendezvous;
     }
     
     public void onSessionClosed(@Observes SessionClosed event) {
-        List<String> rendezvousIds = new ArrayList<>();
+        List<UUID> rendezvousIds = new ArrayList<>();
         for (RendezvousEntity rendezvous : rendezvousCache.getAllRendezvous()){
             if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())){
                 rendezvousIds.add(event.getSession().getSessionId());
             }
         }
-        for (String rendezvousId : rendezvousIds){
+        for (UUID rendezvousId : rendezvousIds){
             leave(rendezvousId, event.getSession());
         }
     }
@@ -56,7 +57,7 @@ public class RendezvousService extends Service {
         return rendezvous;
     }
     
-    public RendezvousEntity join(String rendezvousId, Session session){
+    public RendezvousEntity join(UUID rendezvousId, Session session){
         rendezvousCache.lockRendezvous(rendezvousId);
         RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
         if (rendezvous == null){
@@ -74,7 +75,7 @@ public class RendezvousService extends Service {
         return rendezvous;
     }
     
-    public RendezvousEntity leave(String rendezvousId, Session session){
+    public RendezvousEntity leave(UUID rendezvousId, Session session){
         rendezvousCache.lockRendezvous(rendezvousId);
         RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
         if (rendezvous == null){

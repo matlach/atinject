@@ -1,21 +1,20 @@
 package org.atinject.api.user.dto;
 
+import java.util.UUID;
+
 import org.atinject.core.websocket.dto.WebSocketRequest;
 
-public class GetUserRequest extends WebSocketRequest
-{
+public class GetUserRequest extends WebSocketRequest {
 
     private static final long serialVersionUID = 1L;
     
-    private String userId;
+    private UUID userId;
 
-    public String getUserId()
-    {
+    public UUID getUserId() {
         return userId;
     }
 
-    public GetUserRequest setUserId(String userId)
-    {
+    public GetUserRequest setUserId(UUID userId) {
         this.userId = userId;
         return this;
     }

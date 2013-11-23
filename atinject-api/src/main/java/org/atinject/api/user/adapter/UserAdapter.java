@@ -9,8 +9,7 @@ import org.atinject.api.user.dto.User;
 import org.atinject.api.user.entity.UserEntity;
 
 @ApplicationScoped
-public class UserAdapter
-{
+public class UserAdapter {
 
     @Inject
     private UserDTOFactory userDTOFactory;

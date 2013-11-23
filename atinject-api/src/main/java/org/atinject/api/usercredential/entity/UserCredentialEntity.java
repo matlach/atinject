@@ -1,5 +1,7 @@
 package org.atinject.api.usercredential.entity;
 
+import java.util.UUID;
+
 import org.atinject.core.entity.VersionableEntity;
 
 public class UserCredentialEntity extends VersionableEntity {
@@ -8,7 +10,7 @@ public class UserCredentialEntity extends VersionableEntity {
     
     private String username;
     private String passwordHash;
-    private String userId;
+    private UUID userId;
     
     public UserCredentialEntity(){
         super();
@@ -32,11 +34,11 @@ public class UserCredentialEntity extends VersionableEntity {
         return this;
     }
 
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public UserCredentialEntity setUserId(String userId) {
+    public UserCredentialEntity setUserId(UUID userId) {
         this.userId = userId;
         return this;
     }

@@ -16,25 +16,25 @@ import org.infinispan.affinity.KeyGenerator;
 @ApplicationScoped
 public class LocalRandomUUIDGenerator {
 
-    @Inject @Named("distributed-executor") private DistributedCache<String, Object> cache;
+    @Inject @Named("distributed-executor") private DistributedCache<UUID, Object> cache;
     
     @Inject private AsynchronousService asynchronousService;
     
-    private KeyAffinityService<String> keyAffinityService;
+    private KeyAffinityService<UUID> keyAffinityService;
     
     @PostConstruct
     public void initialize(){
         keyAffinityService = KeyAffinityServiceFactory.newLocalKeyAffinityService(cache.unwrap(), new RendezvousIdKeyGenerator(), asynchronousService, 100);
     }
     
-    public String getKey(){
+    public UUID getKey(){
         return keyAffinityService.getKeyForAddress(cache.getRpcManager().getAddress());
     }
     
-    public static class RendezvousIdKeyGenerator implements KeyGenerator<String> {
+    public static class RendezvousIdKeyGenerator implements KeyGenerator<UUID> {
         @Override
-        public String getKey() {
-            return UUID.randomUUID().toString();
+        public UUID getKey() {
+            return UUID.randomUUID();
         }
         
     }

@@ -2,6 +2,7 @@ package org.atinject.api.authorization;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -28,7 +29,7 @@ public class AuthorizationService extends Service {
     
     @Inject RolePermissionService rolePermissionService;
     
-    public boolean isPermitted(String userId, String permission){
+    public boolean isPermitted(UUID userId, String permission){
     	Set<String> permissions = new HashSet<>();
     	// get user roles
     	UserRolesEntity userRoles = userRoleService.getUserRole(userId);

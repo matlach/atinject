@@ -1,5 +1,7 @@
 package org.atinject.api.userrole;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -16,7 +18,7 @@ public class UserRoleService extends Service {
     @Inject UserRoleEntityFactory factory;
     @Inject UserRoleCacheStore userRoleCache;
     
-    public UserRolesEntity getUserRole(String userId){
+    public UserRolesEntity getUserRole(UUID userId){
         UserRolesEntity userRoles = userRoleCache.getUserRole(userId);
         if (userRoles != null) {
             return userRoles;
@@ -26,7 +28,7 @@ public class UserRoleService extends Service {
         return userRoles;
     }
     
-    public void grantUserRole(String userId, String role){
+    public void grantUserRole(UUID userId, String role){
         UserRolesEntity userRoles = getUserRole(userId);
         if (userRoles.containsRole(role)){
         	// throw
@@ -35,7 +37,7 @@ public class UserRoleService extends Service {
         userRoleCache.putUserRoles(userRoles);
     }
     
-    public void revokeUserRole(String userId, String role){
+    public void revokeUserRole(UUID userId, String role){
         UserRolesEntity userRoles = getUserRole(userId);
         if (! userRoles.containsRole(role)){
         	// throw

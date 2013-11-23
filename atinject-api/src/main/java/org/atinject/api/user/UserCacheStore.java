@@ -1,5 +1,7 @@
 package org.atinject.api.user;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -12,9 +14,9 @@ import org.atinject.core.tiers.CacheStore;
 public class UserCacheStore extends CacheStore
 {
 
-    @Inject @Named("user") private DistributedCache<String, UserEntity> cache;
+    @Inject @Named("user") private DistributedCache<UUID, UserEntity> cache;
     
-    public UserEntity getUser(String userId){
+    public UserEntity getUser(UUID userId){
         return cache.get(userId);
     }
     
@@ -25,17 +27,15 @@ public class UserCacheStore extends CacheStore
         return null;
     }
 
-    public void lockUser(String userId)
-    {
+    public void lockUser(UUID userId) {
         cache.lock(userId);
     }
     
-    public void putUser(UserEntity user)
-    {
+    public void putUser(UserEntity user) {
         cache.put(user.getId(), user);
     }
     
-    public void removeUser(UserEntity user){
+    public void removeUser(UserEntity user) {
         cache.remove(user.getId());
     }
 

@@ -2,6 +2,7 @@ package org.atinject.api.usersession;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -76,30 +77,33 @@ public class UserSessionServiceIT extends IntegrationTest {
     
     @Test
     public void testGetSessionByUserId(){
+        UUID userId = UUID.randomUUID();
         UserSession newSession = sessionFactory.newSession()
                 .setSessionId("123")
-                .setUserId("456");
+                .setUserId(userId);
         
         sessionService.openSession(newSession);
         
-        Session session = sessionService.getSessionByUserId("456");
+        Session session = sessionService.getSessionByUserId(userId);
         
         Assert.assertEquals(newSession, session);
     }
     
     @Test
     public void testUpdateSession(){
+        UUID userId = UUID.randomUUID();
         UserSession newSession = sessionFactory.newSession()
                 .setSessionId("123")
-                .setUserId("456");
+                .setUserId(userId);
         
         sessionService.openSession(newSession);
         
+        userId = UUID.randomUUID();
         UserSession session = sessionService.getSession("123");
-        session.setUserId("789");
+        session.setUserId(userId);
         
         session = sessionService.getSession("123");
         
-        Assert.assertEquals("789", session.getUserId());
+        Assert.assertEquals(userId, session.getUserId());
     }
 }

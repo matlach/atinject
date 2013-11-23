@@ -1,12 +1,14 @@
 package org.atinject.core.websocket.dto;
 
+import java.util.UUID;
+
 import org.atinject.core.dto.DTO;
 
 public abstract class WebSocketResponse extends DTO
 {
     private static final long serialVersionUID = 1L;
 
-    private String requestId;
+    private UUID requestId;
     
     private WebSocketResponseException exception;
     
@@ -14,12 +16,12 @@ public abstract class WebSocketResponse extends DTO
         super();
     }
 
-    public String getRequestId()
+    public UUID getRequestId()
     {
         return requestId;
     }
 
-    public WebSocketResponse setRequestId(String requestId)
+    public WebSocketResponse setRequestId(UUID requestId)
     {
         this.requestId = requestId;
         return this;

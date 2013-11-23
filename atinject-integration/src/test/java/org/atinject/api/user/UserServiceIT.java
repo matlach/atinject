@@ -2,6 +2,7 @@ package org.atinject.api.user;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -60,7 +61,7 @@ public class UserServiceIT extends IntegrationTest {
     @Inject
     private UserService userService;
     
-    private static String userId;
+    private static UUID userId;
     
     @Test
     @InSequence(1)

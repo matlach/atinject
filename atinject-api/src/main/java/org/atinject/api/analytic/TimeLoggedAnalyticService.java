@@ -1,6 +1,7 @@
 package org.atinject.api.analytic;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
@@ -25,7 +26,7 @@ public class TimeLoggedAnalyticService {
 	
 	public void onUserLogged(@Observes UserLoggedIn event) {
 		// generate local event id
-		String key = idGenerator.getKey();
+		UUID key = idGenerator.getKey();
 		
 		long t = System.currentTimeMillis();
 		raw.put(key, t);

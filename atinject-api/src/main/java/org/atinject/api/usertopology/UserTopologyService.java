@@ -1,5 +1,7 @@
 package org.atinject.api.usertopology;
 
+import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -27,7 +29,7 @@ public class UserTopologyService
         }
     }
     
-    public TopologyAwareAddress getUserKeyPrimaryLocation(String userId){
+    public TopologyAwareAddress getUserKeyPrimaryLocation(UUID userId){
         return (TopologyAwareAddress) userCache.getDistributionManager().getPrimaryLocation(userId);
     }
     

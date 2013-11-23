@@ -2,9 +2,11 @@ package org.atinject.core.json;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.atinject.core.dto.DTO;
 import org.atinject.core.dto.DTOObjectMapper;
 import org.atinject.core.session.dto.SessionOpenedNotification;
 import org.atinject.integration.ArquillianIT;
@@ -59,4 +61,18 @@ public class DTOObjectMapperIT extends IntegrationTest {
         logger.info(json);
     }
     
+    
+    private static class DTOWithUUID extends DTO {
+        public UUID uuid;
+    }
+    
+    @Test
+    public void serializeDeserializeRandomUUID() {
+        DTOWithUUID newDTOWithUUID = new DTOWithUUID();
+        newDTOWithUUID.uuid = UUID.randomUUID();
+        String json = dtoObjectMapper.writeValueAsString(newDTOWithUUID);
+        DTOWithUUID unserialized = dtoObjectMapper.readValue(json);
+        
+        logger.info(json);
+    }
 }

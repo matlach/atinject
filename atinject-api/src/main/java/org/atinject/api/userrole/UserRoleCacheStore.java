@@ -1,5 +1,7 @@
 package org.atinject.api.userrole;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -11,9 +13,9 @@ import org.atinject.core.tiers.CacheStore;
 @ApplicationScoped
 public class UserRoleCacheStore extends CacheStore {
 
-    @Inject @Named("user-role") private DistributedCache<String, UserRolesEntity> cache;
+    @Inject @Named("user-role") private DistributedCache<UUID, UserRolesEntity> cache;
     
-    public UserRolesEntity getUserRole(String userId){
+    public UserRolesEntity getUserRole(UUID userId){
         return cache.get(userId);
     }
     

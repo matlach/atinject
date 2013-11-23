@@ -3,6 +3,7 @@ package org.atinject.api.userrole.entity;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.atinject.core.entity.Entity;
 
@@ -10,7 +11,7 @@ public class UserRolesEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
 
-    private String userId;
+    private UUID userId;
     
     private Set<String> roles;
     
@@ -18,11 +19,11 @@ public class UserRolesEntity extends Entity {
         this.roles = new HashSet<>();
     }
     
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public UserRolesEntity setUserId(String userId) {
+    public UserRolesEntity setUserId(UUID userId) {
         this.userId = userId;
         return this;
     }

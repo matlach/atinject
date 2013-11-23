@@ -1,5 +1,7 @@
 package org.atinject.api.userpermission;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -13,7 +15,7 @@ public class UserPermissionService extends Service {
     @Inject private UserService userService;
     @Inject private PermissionService permissionService;
     
-    public UserPermissions getUserPermissions(String userId){
+    public UserPermissions getUserPermissions(UUID userId){
     	return null;
     }
 }

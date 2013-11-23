@@ -1,37 +1,34 @@
 package org.atinject.api.user.dto;
 
+import java.util.UUID;
+
 import org.atinject.core.dto.DTO;
 
 public class User extends DTO {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private UUID id;
     private String name;
 
-    public User()
-    {
+    public User() {
         super();
     }
 
-    public String getId()
-    {
+    public UUID getId() {
         return id;
     }
 
-    public User setId(String id)
-    {
+    public User setId(UUID id) {
         this.id = id;
         return this;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public User setName(String name)
-    {
+    public User setName(String name) {
         this.name = name;
         return this;
     }

@@ -1,5 +1,7 @@
 package org.atinject.api.usercredential;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -18,7 +20,7 @@ public class UserCredentialService extends Service {
         return userCredentialCacheStore.getUserCredential(username);
     }
     
-    public UserCredentialEntity setUserCredential(String userId, String username, String password){
+    public UserCredentialEntity setUserCredential(UUID userId, String username, String password){
         userCredentialCacheStore.lock(username);
         UserCredentialEntity userCredential = new UserCredentialEntity()
             .setUserId(userId)

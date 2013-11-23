@@ -1,5 +1,7 @@
 package org.atinject.api.registration;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -51,7 +53,7 @@ public class RegistrationService extends Service {
         return user;
     }
     
-    public UserEntity register(String userId, String username, String password){
+    public UserEntity register(UUID userId, String username, String password){
     	
     	UserEntity user = userService.getUser(userId);
     	userCredentialService.setUserCredential(userId, username, password);
