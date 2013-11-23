@@ -2,6 +2,7 @@
 .project
 .classpath
 .settings
+.metadata
 /target
 */target
 */infinispan*
