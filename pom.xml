@@ -68,7 +68,7 @@
 		<weld.version>2.1.0.Final</weld.version>
 		<deltaspike.version>0.3-incubating</deltaspike.version>
 		<netty.version>4.0.12.Final</netty.version>
-		<infinispan.version>6.0.0.CR1</infinispan.version>
+		<infinispan.version>6.0.0.Final</infinispan.version>
 		<jackson.version>2.3.0</jackson.version>
 		<hibernate.validator.version>5.0.1.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
@@ -384,6 +384,39 @@
 				</execution>
 			</executions>
 		</plugin>
+
+<!-- 		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-eclipse-plugin</artifactId>
+			<version>2.9</version>
+			<configuration>
+			checkstyle
+			<additionalBuildcommands>
+              <buildcommand>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</buildcommand>
+            </additionalBuildcommands>
+            <additionalProjectnatures>
+              <projectnature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</projectnature>
+            </additionalProjectnatures>
+            <additionalConfig>
+              <file>
+                <name>.checkstyle</name>
+                <content>
+                  <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.2.0" simple-config="true">
+    <fileset name="all" enabled="true" check-config-name="<YOUR CHECKSTYLE CONFIG NAME HERE>" local="false">
+        <file-match-pattern match-pattern="." include-pattern="true"/>
+    </fileset>
+    <filter name="NonSrcDirs" enabled="true"/>
+</fileset-config>
+]]>
+                </content>
+              </file>
+            </additionalConfig>
+			code style
+				<workspace>${basedir}</workspace>
+				<workspaceCodeStylesURL>http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin/src/optional/eclipse-config/maven-styles.xml</workspaceCodeStylesURL>
+			</configuration>
+		</plugin> -->
 
 	</plugins>
 
