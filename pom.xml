@@ -385,12 +385,14 @@
 			</executions>
 		</plugin>
 
-<!-- 		<plugin>
+ 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-eclipse-plugin</artifactId>
 			<version>2.9</version>
 			<configuration>
-			checkstyle
+			<downloadSources>true</downloadSources>
+			<downloadJavadocs>true</downloadJavadocs>
+			<!-- checkstyle -->
 			<additionalBuildcommands>
               <buildcommand>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</buildcommand>
             </additionalBuildcommands>
@@ -401,22 +403,33 @@
               <file>
                 <name>.checkstyle</name>
                 <content>
-                  <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!--                   <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <fileset-config file-format-version="1.2.0" simple-config="true">
     <fileset name="all" enabled="true" check-config-name="<YOUR CHECKSTYLE CONFIG NAME HERE>" local="false">
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
     <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>
+]]> -->
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+ <fileset-config file-format-version="1.2.0" simple-config="true">
+ <local-check-config name="foo" location="/the-sonar-way-checkstyle.xml" type="project" description="">
+ <additional-data name="protect-config-file" value="true"/>
+ </local-check-config>
+ <fileset name="all" enabled="true" check-config-name="foo" local="true">
+ <file-match-pattern match-pattern="." include-pattern="true"/>
+ </fileset>
+ </fileset-config>
 ]]>
                 </content>
               </file>
             </additionalConfig>
-			code style
-				<workspace>${basedir}</workspace>
-				<workspaceCodeStylesURL>http://svn.apache.org/repos/asf/maven/plugins/trunk/maven-eclipse-plugin/src/optional/eclipse-config/maven-styles.xml</workspaceCodeStylesURL>
-			</configuration>
-		</plugin> -->
+			<!-- code style -->
+ 				<workspace>${basedir}</workspace>
+				<workspaceCodeStylesURL>atinject-codestyle.xml</workspaceCodeStylesURL>
+ 			</configuration>
+		</plugin>
 
 	</plugins>
 
