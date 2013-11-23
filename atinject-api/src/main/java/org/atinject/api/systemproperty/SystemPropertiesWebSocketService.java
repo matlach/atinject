@@ -11,15 +11,15 @@ import org.atinject.api.systemproperty.dto.SystemProperty;
 import org.atinject.core.tiers.WebSocketService;
 
 @ApplicationScoped
-public class SystemPropertiesWebSocketService extends WebSocketService{
+public class SystemPropertiesWebSocketService extends WebSocketService {
 
-	@RequiresPermissions(SystemPropertyPermissions.READ_SYSTEM_PROPERTIES)
-	public GetSystemPropertiesResponse getSystemProperties(GetSystemPropertiesRequest request){
-		for (Entry<Object, Object> entry : System.getProperties().entrySet()){
-			SystemProperty systemProperty = new SystemProperty()
-				.withKey(entry.getKey().toString())
-				.withValue(entry.getValue().toString());
-		}
-		return new GetSystemPropertiesResponse();
-	}
+    @RequiresPermissions(SystemPropertyPermissions.READ_SYSTEM_PROPERTIES)
+    public GetSystemPropertiesResponse getSystemProperties(GetSystemPropertiesRequest request) {
+        for (Entry<Object, Object> entry : System.getProperties().entrySet()) {
+            SystemProperty systemProperty = new SystemProperty()
+                    .withKey(entry.getKey().toString())
+                    .withValue(entry.getValue().toString());
+        }
+        return new GetSystemPropertiesResponse();
+    }
 }

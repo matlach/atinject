@@ -19,36 +19,40 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class RendezvousService extends Service {
 
-    @Inject RendezvousEntityFactory entityFactory;
-    
-    @Inject RendezvousCache rendezvousCache;
-    
-    @Inject Event<SessionJoinedRendezvous> sessionJoinedRendezvousEvent;
-    @Inject Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
-    
-    public RendezvousEntity newRendezvous(){
+    @Inject
+    RendezvousEntityFactory entityFactory;
+
+    @Inject
+    RendezvousCache rendezvousCache;
+
+    @Inject
+    Event<SessionJoinedRendezvous> sessionJoinedRendezvousEvent;
+    @Inject
+    Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
+
+    public RendezvousEntity newRendezvous() {
         UUID rendezvousId = rendezvousCache.getId();
         RendezvousEntity rendezvous = entityFactory.newRendezvous()
-            .setId(rendezvousId);
+                .setId(rendezvousId);
         return rendezvous;
     }
-    
+
     public void onSessionClosed(@Observes SessionClosed event) {
         List<UUID> rendezvousIds = new ArrayList<>();
-        for (RendezvousEntity rendezvous : rendezvousCache.getAllRendezvous()){
-            if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())){
-                rendezvousIds.add(event.getSession().getSessionId());
+        for (RendezvousEntity rendezvous : rendezvousCache.getAllRendezvous()) {
+            if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())) {
+                rendezvousIds.add(rendezvous.getId());
             }
         }
-        for (UUID rendezvousId : rendezvousIds){
+        for (UUID rendezvousId : rendezvousIds) {
             leave(rendezvousId, event.getSession());
         }
     }
-    
-    public void addRendezvous(RendezvousEntity rendezvous){
+
+    public void addRendezvous(RendezvousEntity rendezvous) {
         rendezvousCache.putRendezvous(rendezvous);
     }
-    
+
     public RendezvousEntity addAndJoin(Session session) {
         RendezvousEntity rendezvous = newRendezvous();
         rendezvousCache.lockRendezvous(rendezvous.getId());
@@ -56,36 +60,36 @@ public class RendezvousService extends Service {
         addRendezvous(rendezvous);
         return rendezvous;
     }
-    
-    public RendezvousEntity join(UUID rendezvousId, Session session){
+
+    public RendezvousEntity join(UUID rendezvousId, Session session) {
         rendezvousCache.lockRendezvous(rendezvousId);
         RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
-        if (rendezvous == null){
+        if (rendezvous == null) {
             throw new NullPointerException("rendezvous does not exists");
         }
         return join(rendezvous, session);
     }
-    
-    public RendezvousEntity join(RendezvousEntity rendezvous, Session session){
-        if (rendezvous.getSessionIds().contains(session.getSessionId())){
+
+    public RendezvousEntity join(RendezvousEntity rendezvous, Session session) {
+        if (rendezvous.getSessionIds().contains(session.getSessionId())) {
             throw new RuntimeException("already joined");
         }
         rendezvous.getSessionIds().add(session.getSessionId());
         sessionJoinedRendezvousEvent.fire(null);
         return rendezvous;
     }
-    
-    public RendezvousEntity leave(UUID rendezvousId, Session session){
+
+    public RendezvousEntity leave(UUID rendezvousId, Session session) {
         rendezvousCache.lockRendezvous(rendezvousId);
         RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
-        if (rendezvous == null){
+        if (rendezvous == null) {
             throw new NullPointerException("rendezvous does not exists");
         }
         return leave(rendezvous, session);
     }
-    
-    public RendezvousEntity leave(RendezvousEntity rendezvous, Session session){
-        if (! rendezvous.getSessionIds().contains(session.getSessionId())){
+
+    public RendezvousEntity leave(RendezvousEntity rendezvous, Session session) {
+        if (!rendezvous.getSessionIds().contains(session.getSessionId())) {
             throw new RuntimeException("already left");
         }
         rendezvous.getSessionIds().remove(session.getSessionId());

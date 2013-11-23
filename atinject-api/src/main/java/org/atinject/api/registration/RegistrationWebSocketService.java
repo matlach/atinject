@@ -9,7 +9,7 @@ import org.atinject.api.registration.dto.RegisterAsGuestResponse;
 import org.atinject.api.registration.dto.RegisterRequest;
 import org.atinject.api.registration.dto.RegisterResponse;
 import org.atinject.api.role.enumeration.SimpleRoles;
-import org.atinject.api.user.adapter.UserAdapter;
+import org.atinject.api.user.UserAdapter;
 import org.atinject.api.user.dto.User;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usersession.UserSession;

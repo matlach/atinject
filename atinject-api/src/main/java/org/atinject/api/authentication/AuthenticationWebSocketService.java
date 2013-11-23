@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.authentication.dto.LoginRequest;
 import org.atinject.api.authentication.dto.LoginResponse;
-import org.atinject.api.user.adapter.UserAdapter;
+import org.atinject.api.user.UserAdapter;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.nullanalysis.NonNull;

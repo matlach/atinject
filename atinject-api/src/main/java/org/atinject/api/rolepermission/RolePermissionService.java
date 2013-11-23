@@ -14,39 +14,44 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class RolePermissionService extends Service {
 
-    @Inject RoleService roleService;
-    @Inject PermissionService permissionService;
-    @Inject RolePermissionCache rolePermissionCache;
-    
-    @Inject Event<PermissionGrantedToRole> permissionGrantedToRoleEvent;
-    @Inject Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
-    
-    public RolePermissions getRolePermissions(String role){
-    	return rolePermissionCache.getRolePermissions(role);
+    @Inject
+    RoleService roleService;
+    @Inject
+    PermissionService permissionService;
+    @Inject
+    RolePermissionCache rolePermissionCache;
+
+    @Inject
+    Event<PermissionGrantedToRole> permissionGrantedToRoleEvent;
+    @Inject
+    Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
+
+    public RolePermissions getRolePermissions(String role) {
+        return rolePermissionCache.getRolePermissions(role);
     }
-    
+
     public boolean isPermitted(String role, String permission) {
-        if (! roleService.isRole(role)){
-        	throw new NullPointerException("role '" + role + "' do not exists");
+        if (!roleService.isRole(role)) {
+            throw new NullPointerException("role '" + role + "' do not exists");
         }
-        if (! permissionService.isPermission(permission)) {
-        	throw new NullPointerException("permission '" + permission + "' do not exists");
+        if (!permissionService.isPermission(permission)) {
+            throw new NullPointerException("permission '" + permission + "' do not exists");
         }
         RolePermissions rolePermissions = getRolePermissions(role);
         if (rolePermissions == null) {
-        	throw new NullPointerException("role '" + role + "' has no permission");
+            throw new NullPointerException("role '" + role + "' has no permission");
         }
-    	return rolePermissions.hasPermission(permission);
+        return rolePermissions.hasPermission(permission);
     }
-    
+
     public void grantPermissionToRole(String role, String permission) {
-    	
-    	// lock, get, grant, put
-    	permissionGrantedToRoleEvent.fire(new PermissionGrantedToRole());
+
+        // lock, get, grant, put
+        permissionGrantedToRoleEvent.fire(new PermissionGrantedToRole());
     }
-    
+
     public void revokePermissionToRole(String role, String permission) {
-    	// lock, get, revoke, put
-    	permissionRevokedToRoleEvent.fire(new PermissionRevokedToRole());
+        // lock, get, revoke, put
+        permissionRevokedToRoleEvent.fire(new PermissionRevokedToRole());
     }
 }

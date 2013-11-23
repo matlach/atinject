@@ -16,9 +16,10 @@ import javax.interceptor.InterceptorBinding;
 @InterceptorBinding
 @Inherited
 @Documented
-@Target( { ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiresRoles {
 
-	@Nonbinding String value() default "";
+    @Nonbinding
+    String value() default "";
 }

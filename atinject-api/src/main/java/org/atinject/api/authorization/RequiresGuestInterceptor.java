@@ -10,14 +10,14 @@ import org.atinject.core.session.SessionContext;
 @RequiresGuest
 @Interceptor
 public class RequiresGuestInterceptor {
-    
+
     @AroundInvoke
-    public Object authorize(InvocationContext invocationContext) throws Exception{
+    public Object authorize(InvocationContext invocationContext) throws Exception {
         Session session = SessionContext.getCurrentSession();
-        if (session == null){
+        if (session == null) {
             throw new IllegalStateException();
         }
-        
+
         return invocationContext.proceed();
     }
 }

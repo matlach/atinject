@@ -23,72 +23,75 @@ import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class AuthorizationService extends Service {
-    @Inject UserService userService;
-    @Inject UserRoleService userRoleService;
-    @Inject UserPermissionService userPermissionService;
-    
-    @Inject RolePermissionService rolePermissionService;
-    
-    public boolean isPermitted(UUID userId, String permission){
-    	Set<String> permissions = new HashSet<>();
-    	// get user roles
-    	UserRolesEntity userRoles = userRoleService.getUserRole(userId);
-    	
-    	// get user roles permissions
-    	for (String role : userRoles.getRoles()) {
-    		// TODO batch
-    		RolePermissions rolePermissions = rolePermissionService.getRolePermissions(role);
-    		permissions.addAll(rolePermissions.getPermissions());
-    	}
-    	
-    	// get user permissions
-    	UserPermissions userPermissions = userPermissionService.getUserPermissions(userId);
-    	if (userPermissions != null)
-    	{
-    		permissions.addAll(userPermissions.getPermissions());
-    	}
-    	
-    	// TODO result should be cached to avoid performance impact
-    	return permissions.contains(permission);
+    @Inject
+    UserService userService;
+    @Inject
+    UserRoleService userRoleService;
+    @Inject
+    UserPermissionService userPermissionService;
+
+    @Inject
+    RolePermissionService rolePermissionService;
+
+    public boolean isPermitted(UUID userId, String permission) {
+        Set<String> permissions = new HashSet<>();
+        // get user roles
+        UserRolesEntity userRoles = userRoleService.getUserRole(userId);
+
+        // get user roles permissions
+        for (String role : userRoles.getRoles()) {
+            // TODO batch
+            RolePermissions rolePermissions = rolePermissionService.getRolePermissions(role);
+            permissions.addAll(rolePermissions.getPermissions());
+        }
+
+        // get user permissions
+        UserPermissions userPermissions = userPermissionService.getUserPermissions(userId);
+        if (userPermissions != null) {
+            permissions.addAll(userPermissions.getPermissions());
+        }
+
+        // TODO result should be cached to avoid performance impact
+        return permissions.contains(permission);
     }
-    
-    public boolean isGuest(UserSession session){
+
+    public boolean isGuest(UserSession session) {
         UserRolesEntity userRoles = userRoleService.getUserRole(session.getUserId());
         return isGuest(userRoles);
     }
-    
-    public boolean isGuest(UserRolesEntity userRoles){
+
+    public boolean isGuest(UserRolesEntity userRoles) {
         return userRoles.containsRole(SimpleRoles.GUEST);
     }
-    
-    public boolean isRegistered(UserSession session){
+
+    public boolean isRegistered(UserSession session) {
         UserRolesEntity userRoles = userRoleService.getUserRole(session.getUserId());
         return isRegistered(userRoles);
     }
-    
-    public boolean isRegistered(UserRolesEntity userRoles){
+
+    public boolean isRegistered(UserRolesEntity userRoles) {
         return userRoles.containsRole(SimpleRoles.REGISTERED);
     }
-    
-    public boolean isAdmin(UserSession session){
+
+    public boolean isAdmin(UserSession session) {
         UserRolesEntity userRoles = userRoleService.getUserRole(session.getUserId());
         return isAdmin(userRoles);
     }
-    
-    public boolean isAdmin(UserRolesEntity userRoles){
+
+    public boolean isAdmin(UserRolesEntity userRoles) {
         return userRoles.containsRole(SimpleRoles.ADMIN);
     }
-    
-    public void onGuest(@Observes GuestRegistered event){
+
+    public void onGuest(@Observes GuestRegistered event) {
         // add guest role
         userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.GUEST);
     }
-    
-    public void onUserRegistered(@Observes UserRegistered event){
-    	// TODO optimize here: lock, get, remove, add, put
+
+    public void onUserRegistered(@Observes UserRegistered event) {
+        // TODO optimize here: lock, get, remove, add, put
         // remove guest role
         userRoleService.revokeUserRole(event.getUser().getId(), SimpleRoles.GUEST);
-        
+
         // add registered role
         userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.REGISTERED);
     }

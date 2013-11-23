@@ -6,7 +6,7 @@ import org.atinject.core.nullanalysis.NonNull;
 
 public interface AuthenticationService {
 
-	UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password);
-	
-	void logout(UserSession session);
+    UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password);
+
+    void logout(UserSession session);
 }

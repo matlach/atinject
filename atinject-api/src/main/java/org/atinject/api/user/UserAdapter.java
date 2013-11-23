@@ -1,10 +1,8 @@
-package org.atinject.api.user.adapter;
+package org.atinject.api.user;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.atinject.api.user.UserDTOFactory;
-import org.atinject.api.user.UserEntityFactory;
 import org.atinject.api.user.dto.User;
 import org.atinject.api.user.entity.UserEntity;
 

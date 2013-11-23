@@ -10,16 +10,16 @@ import java.lang.annotation.Target;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
-
 /**
  * requires user identified by current session user id to be permitted
  */
 @InterceptorBinding
 @Inherited
 @Documented
-@Target( { ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiresPermissions {
 
-	@Nonbinding String[] value() default {};
+    @Nonbinding
+    String[] value() default {};
 }

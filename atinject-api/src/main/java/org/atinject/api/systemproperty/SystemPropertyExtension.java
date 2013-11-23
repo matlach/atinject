@@ -9,7 +9,7 @@ import javax.enterprise.inject.spi.Extension;
  */
 public class SystemPropertyExtension implements Extension {
 
-	void onBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd){
-		
-	}
+    void onBeforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd) {
+
+    }
 }
