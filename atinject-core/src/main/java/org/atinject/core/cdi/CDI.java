@@ -11,7 +11,7 @@ import javax.enterprise.util.TypeLiteral;
 /**
  * offer delegates on {@link javax.enterprise.inject.spi.CDI#current()}
  */
-public class CDI {
+public final class CDI {
 
     private static javax.enterprise.inject.spi.CDI<Object> cdi =
             javax.enterprise.inject.spi.CDI.current();
