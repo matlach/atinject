@@ -18,24 +18,24 @@ import org.atinject.core.websocket.dto.WebSocketResponse;
 @ApplicationScoped
 public class WebSocketServerHandler extends org.atinject.core.websocket.server.WebSocketServerHandler {
 
-	@Inject
+    @Inject
     private SessionService sessionService;
-	
-	@Inject
+    
+    @Inject
     private AsynchronousService asynchronousService;
-	
-	@Inject
+    
+    @Inject
     private UserRequestDistributedExecutor distributedExecutor;
-	
-	// TODO we need an easy hook to know when someone has logged in
-	// that way, we can take the session and priorize it is io when
-	// feature will be available in netty
-	// logged user = first class citizen
-	// non logged user = second class citizen
-	// https://github.com/netty/netty/issues/1847
-	
+    
+    // TODO we need an easy hook to know when someone has logged in
+    // that way, we can take the session and priorize it is io when
+    // feature will be available in netty
+    // logged user = first class citizen
+    // non logged user = second class citizen
+    // https://github.com/netty/netty/issues/1847
+    
     // this class distinguish the public and authoritive web socket server handler
-	@Override
+    @Override
     public WebSocketResponse performRequest(String sessionId, WebSocketRequest request){
         // build task
         WebSocketMessageTask task = new WebSocketMessageTask()

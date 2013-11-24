@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface UserIdGenerator {
 
-	UUID generateUserId();
+    UUID generateUserId();
 }

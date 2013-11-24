@@ -29,20 +29,20 @@ public class UserRolesEntity extends Entity {
     }
     
     public Set<String> getRoles(){
-    	return Collections.unmodifiableSet(roles);
+        return Collections.unmodifiableSet(roles);
     }
     
     public UserRolesEntity addRole(String role){
-    	roles.add(role);
+        roles.add(role);
         return this;
     }
     
     public UserRolesEntity removeRole(String role){
-    	roles.remove(role);
+        roles.remove(role);
         return this;
     }
     
     public boolean containsRole(String role){
-    	return roles.contains(role);
+        return roles.contains(role);
     }
 }

@@ -24,7 +24,7 @@ public class CacheExtension implements Extension
     }
     
     public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event, BeanManager beanManager) {
-    	Named named = event.getAnnotatedMember().getAnnotation(Named.class);
+        Named named = event.getAnnotatedMember().getAnnotation(Named.class);
         if (named == null) {
             throw new NullPointerException("@Named must be defined");
         }

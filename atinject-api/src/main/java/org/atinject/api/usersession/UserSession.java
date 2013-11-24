@@ -12,14 +12,14 @@ public class UserSession extends SimpleSession {
     
     @Override
     public UserSession setSessionId(String sessionId) {
-    	super.setSessionId(sessionId);
-    	return this;
+        super.setSessionId(sessionId);
+        return this;
     }
     
     @Override
     public UserSession setMachineId(String machineId) {
-    	super.setMachineId(machineId);
-    	return this;
+        super.setMachineId(machineId);
+        return this;
     }
     
     public UUID getUserId() {

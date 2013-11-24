@@ -4,16 +4,16 @@ import java.util.UUID;
 
 public class UserIdCollided {
 
-	private UUID userId;
+    private UUID userId;
 
-	public UUID getUserId() {
-		return userId;
-	}
+    public UUID getUserId() {
+        return userId;
+    }
 
-	public UserIdCollided setUserId(UUID userId) {
-		this.userId = userId;
-		return this;
-	}
-	
-	
+    public UserIdCollided setUserId(UUID userId) {
+        this.userId = userId;
+        return this;
+    }
+    
+    
 }

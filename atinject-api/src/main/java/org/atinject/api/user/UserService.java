@@ -51,13 +51,13 @@ public class UserService extends Service{
      * Note : userId key will be locked
      */
     public UserEntity addUser(String name) {
-    	UUID userId = userIdGenerator.generateUserId();
+        UUID userId = userIdGenerator.generateUserId();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
         if (userCacheStore.getUser(userId) != null){
             // an extraordinary event just happened
             // try again
-        	userIdCollidedEvent.fire(new UserIdCollided().setUserId(userId));
+            userIdCollidedEvent.fire(new UserIdCollided().setUserId(userId));
             return addUser(name);
         }
         UserEntity user = userEntityFactory.newUserEntity()
@@ -72,15 +72,15 @@ public class UserService extends Service{
     @Inject Event<UserRelocated> userRelocatedEvent;
     
     public void relocateUser(UUID userId) {
-    	UserEntity user = userCacheStore.getUser(userId);
-    	userCacheStore.removeUser(user);
-    	
-    	// TODO generate another id
-    	UUID newUserId = userId;
-    	user.setId(userId);
-    	userCacheStore.putUser(user);
-    	
-    	userRelocatedEvent.fire(new UserRelocated().setOldUserId(userId).setNewUserId(newUserId));
+        UserEntity user = userCacheStore.getUser(userId);
+        userCacheStore.removeUser(user);
+        
+        // TODO generate another id
+        UUID newUserId = userId;
+        user.setId(userId);
+        userCacheStore.putUser(user);
+        
+        userRelocatedEvent.fire(new UserRelocated().setOldUserId(userId).setNewUserId(newUserId));
     }
     
     /**
@@ -92,13 +92,13 @@ public class UserService extends Service{
     }
     
     public void updateUserName(UUID userId, String name) {
-    	UserEntity user = getUser(userId);
-    	updateUserName(user, name);
+        UserEntity user = getUser(userId);
+        updateUserName(user, name);
     }
     
     public void updateUserName(UserEntity user, String name) {
-    	user.setName(name);
-    	updateUser(user);
+        user.setName(name);
+        updateUser(user);
     }
     
     /**

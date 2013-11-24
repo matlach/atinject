@@ -11,20 +11,21 @@ import org.atinject.core.tiers.Service;
 @ApplicationScoped
 public class PermissionService extends Service {
 
-	@Inject PermissionExtension permissionExtension;
-	
-	private Set<String> permissions;
-	
-	@PostConstruct
-	public void initialize() {
-		permissions = permissionExtension.getAllPermission();
-	}
-	
-    public Set<String> getAllPermission() {
-    	return permissions;
+    @Inject
+    PermissionExtension permissionExtension;
+
+    private Set<String> permissions;
+
+    @PostConstruct
+    public void initialize() {
+        permissions = permissionExtension.getAllPermission();
     }
-    
+
+    public Set<String> getAllPermission() {
+        return permissions;
+    }
+
     public boolean isPermission(String permission) {
-    	return permission.contains(permission);
+        return permission.contains(permission);
     }
 }

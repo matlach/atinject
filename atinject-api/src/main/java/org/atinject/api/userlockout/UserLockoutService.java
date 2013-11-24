@@ -15,27 +15,27 @@ import org.atinject.core.tiers.Service;
 public class UserLockoutService extends Service {
 
     // Threshold 5 times, duration 30 minutes, reset duration 5 minutes.
-	
-	@Inject UserService userService;
-	
-	@Inject Event<UserLocked> userLockedEvent;
-	
-	@Inject Event<UserUnlocked> userUnlockedEvent;
-	
-	public boolean isUserLocked(String username){
-		return false;
-	}
-	
-	public void lockUser(String username) {
-		userService.getUserByName(username);
-		userLockedEvent.fire(new UserLocked());
-	}
-	
-	public void unlockUser(String username) {
-		userUnlockedEvent.fire(new UserUnlocked());
-	}
-	
-	public void onAuthenticationFailed(@Observes AuthenticationFailed event){
-		// increment authentication failed count
-	}
+    
+    @Inject UserService userService;
+    
+    @Inject Event<UserLocked> userLockedEvent;
+    
+    @Inject Event<UserUnlocked> userUnlockedEvent;
+    
+    public boolean isUserLocked(String username){
+        return false;
+    }
+    
+    public void lockUser(String username) {
+        userService.getUserByName(username);
+        userLockedEvent.fire(new UserLocked());
+    }
+    
+    public void unlockUser(String username) {
+        userUnlockedEvent.fire(new UserUnlocked());
+    }
+    
+    public void onAuthenticationFailed(@Observes AuthenticationFailed event){
+        // increment authentication failed count
+    }
 }

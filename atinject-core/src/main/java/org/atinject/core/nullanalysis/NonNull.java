@@ -46,5 +46,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ METHOD, PARAMETER, LOCAL_VARIABLE })
 public @interface NonNull {
-	// marker annotation with no members
+    // marker annotation with no members
 }

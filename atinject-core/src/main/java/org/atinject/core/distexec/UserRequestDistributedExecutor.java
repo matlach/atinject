@@ -17,20 +17,20 @@ import org.infinispan.distexec.DistributedExecutorService;
 @ApplicationScoped
 public class UserRequestDistributedExecutor {
 
-	@Inject @Named("distributed-executor") private DistributedCache<UUID, Object> masterCacheNode;
-	
-	@Inject
-	private AsynchronousService localExecutorService;
+    @Inject @Named("distributed-executor") private DistributedCache<UUID, Object> masterCacheNode;
+    
+    @Inject
+    private AsynchronousService localExecutorService;
 
-	private DistributedExecutorService distributedExecutorService;
-	
-	@PostConstruct
-	public void initialize(){
-		distributedExecutorService = new DefaultExecutorService(masterCacheNode.unwrap(), localExecutorService);
-	}
-	
-	public <T> Future<T> submit(Callable<T> task, UUID input){
-		return distributedExecutorService.submit(task, input);
-	}
-	
+    private DistributedExecutorService distributedExecutorService;
+    
+    @PostConstruct
+    public void initialize(){
+        distributedExecutorService = new DefaultExecutorService(masterCacheNode.unwrap(), localExecutorService);
+    }
+    
+    public <T> Future<T> submit(Callable<T> task, UUID input){
+        return distributedExecutorService.submit(task, input);
+    }
+    
 }

@@ -14,15 +14,15 @@ import org.atinject.core.nullanalysis.NonNull;
 @Decorator
 public abstract class UserLockoutAuthenticationServiceDecorator implements AuthenticationService {
 
-	@Inject @Any @Delegate AuthenticationService authenticationService;
-	
-	@Inject UserLockoutService userLockoutService;
-	
-	@Override
-	public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password) {
-		if (userLockoutService.isUserLocked(username)) {
-			throw new UserLockedException();
-		}
-		return authenticationService.login(session, username, password);
-	}
+    @Inject @Any @Delegate AuthenticationService authenticationService;
+    
+    @Inject UserLockoutService userLockoutService;
+    
+    @Override
+    public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password) {
+        if (userLockoutService.isUserLocked(username)) {
+            throw new UserLockedException();
+        }
+        return authenticationService.login(session, username, password);
+    }
 }

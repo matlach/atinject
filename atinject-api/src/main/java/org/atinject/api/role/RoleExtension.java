@@ -6,5 +6,5 @@ import javax.enterprise.inject.spi.Extension;
 
 public interface RoleExtension extends Extension {
 
-	Set<String> getAllRole();
+    Set<String> getAllRole();
 }

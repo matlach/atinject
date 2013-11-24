@@ -8,7 +8,7 @@ import org.atinject.core.entity.EntityFactory;
 @ApplicationScoped
 public class UserRoleEntityFactory extends EntityFactory {
 
-	public UserRolesEntity newUserRoles(){
-		return new UserRolesEntity();
-	}
+    public UserRolesEntity newUserRoles(){
+        return new UserRolesEntity();
+    }
 }

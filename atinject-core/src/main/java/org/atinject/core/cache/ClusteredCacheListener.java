@@ -38,65 +38,66 @@ import org.slf4j.Logger;
 public class ClusteredCacheListener<K, V>
 {
     private Logger logger = LoggerFactory.getLogger(ClusteredCacheListener.class);
-    
+
     private ConcurrentMap<GlobalTransaction, Queue<Event<K, V>>> transactions = new ConcurrentHashMap<>();
-    
+
     @TransactionRegistered
-    public void onTransactionRegisteredEvent(TransactionRegisteredEvent<K, V> event){
+    public void onTransactionRegisteredEvent(TransactionRegisteredEvent<K, V> event) {
         logger.info("transaction '{}' registered", event.getGlobalTransaction().getId());
         transactions.put(event.getGlobalTransaction(), new ConcurrentLinkedQueue<Event<K, V>>());
     }
-    
+
     @CacheEntryModified
-    public void onCacheEntryModifiedEvent(CacheEntryModifiedEvent<K, V> event){
-        if (event.isOriginLocal())
-        logger.info("entry '{}' modified", event.getKey());
+    public void onCacheEntryModifiedEvent(CacheEntryModifiedEvent<K, V> event) {
+        if (event.isOriginLocal()) {
+            logger.info("entry '{}' modified", event.getKey());
+        }
     }
-    
+
     @CacheEntryCreated
-    public void onCacheEntryCreatedEvent(CacheEntryCreatedEvent<K, V> event){
+    public void onCacheEntryCreatedEvent(CacheEntryCreatedEvent<K, V> event) {
         logger.info("entry '{}' created", event.getKey());
     }
-    
+
     @CacheEntryRemoved
-    public void onCacheEntryRemovedEvent(CacheEntryRemovedEvent<K, V> event){
+    public void onCacheEntryRemovedEvent(CacheEntryRemovedEvent<K, V> event) {
         logger.info("entry '{}' removed", event.getKey());
     }
-    
+
     @CacheEntryVisited
-    public void onCacheEntryVisitedEvent(CacheEntryVisitedEvent<K, V> event){
+    public void onCacheEntryVisitedEvent(CacheEntryVisitedEvent<K, V> event) {
         logger.info("entry '{}' visited", event.getKey());
     }
-    
+
     @CacheEntryLoaded
-    public void onCacheEntryLoadedEvent(CacheEntryLoadedEvent<K, V> event){
+    public void onCacheEntryLoadedEvent(CacheEntryLoadedEvent<K, V> event) {
         logger.info("entry '{}' loaded", event.getKey());
     }
-    
+
     @CacheEntryActivated
-    public void onCacheEntryActivatedEvent(CacheEntryActivatedEvent<K, V> event){
+    public void onCacheEntryActivatedEvent(CacheEntryActivatedEvent<K, V> event) {
         logger.info("entry '{}' activated", event.getKey());
     }
-    
+
     @CacheEntryPassivated
-    public void onCacheEntryPassivatedEvent(CacheEntryPassivatedEvent<K, V> event){
+    public void onCacheEntryPassivatedEvent(CacheEntryPassivatedEvent<K, V> event) {
         logger.info("entry '{}' passivated", event.getKey());
     }
 
     @CacheEntryInvalidated
-    public void onCacheEntryInvalidatedEvent(CacheEntryInvalidatedEvent<K, V> event){
+    public void onCacheEntryInvalidatedEvent(CacheEntryInvalidatedEvent<K, V> event) {
         logger.info("entry '{}' invalidated", event.getKey());
     }
-    
+
     @TransactionCompleted
-    public void onTransactionCompletedEvent(TransactionCompletedEvent<K, V> event){
+    public void onTransactionCompletedEvent(TransactionCompletedEvent<K, V> event) {
         logger.info("transaction '{}' completed", event.getGlobalTransaction().getId());
         transactions.remove(event.getGlobalTransaction());
     }
-    
-    @CacheEntriesEvicted 
-    public void onCacheEntriesEvictedEvent(CacheEntriesEvictedEvent<K, V> event){
-        for (Entry<K, V> entry : event.getEntries().entrySet()){
+
+    @CacheEntriesEvicted
+    public void onCacheEntriesEvictedEvent(CacheEntriesEvictedEvent<K, V> event) {
+        for (Entry<K, V> entry : event.getEntries().entrySet()) {
             logger.info("entry '{}' evicted", entry.getKey());
         }
     }

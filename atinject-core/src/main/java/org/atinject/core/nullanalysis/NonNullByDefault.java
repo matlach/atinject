@@ -50,9 +50,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target({ PACKAGE, TYPE, METHOD, CONSTRUCTOR })
 public @interface NonNullByDefault {
-	/**
-	 * When parameterized with <code>false</code>, the annotation specifies that the current element should not apply
-	 * any default to un-annotated types.
-	 */
-	boolean value() default true;
+    /**
+     * When parameterized with <code>false</code>, the annotation specifies that the current element should not apply
+     * any default to un-annotated types.
+     */
+    boolean value() default true;
 }

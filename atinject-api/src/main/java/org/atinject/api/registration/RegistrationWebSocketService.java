@@ -19,21 +19,24 @@ import org.atinject.core.websocket.WebSocketMessage;
 @ApplicationScoped
 public class RegistrationWebSocketService extends WebSocketService {
 
-	@Inject RegistrationService registrationService;
-	@Inject UserAdapter userAdapter;
-	
-	@WebSocketMessage
-	public RegisterAsGuestResponse onRegisterAsGuest(RegisterAsGuestRequest request, UserSession session){
-		UserEntity userEntity = registrationService.registerAsGuest();
-		User user = userAdapter.userEntityToUser(userEntity);
-		return new RegisterAsGuestResponse().setUser(user);
-	}
-	
-	@RequiresRoles(SimpleRoles.GUEST)
-	@WebSocketMessage
-	public RegisterResponse onRegister(RegisterRequest request, UserSession session) {
-		registrationService.register(session.getUserId(), request.getUsername(), request.getPassword());
-		
-		return new RegisterResponse();
-	}
+    @Inject
+    RegistrationService registrationService;
+    
+    @Inject
+    UserAdapter userAdapter;
+
+    @WebSocketMessage
+    public RegisterAsGuestResponse onRegisterAsGuest(RegisterAsGuestRequest request, UserSession session) {
+        UserEntity userEntity = registrationService.registerAsGuest();
+        User user = userAdapter.userEntityToUser(userEntity);
+        return new RegisterAsGuestResponse().setUser(user);
+    }
+
+    @RequiresRoles(SimpleRoles.GUEST)
+    @WebSocketMessage
+    public RegisterResponse onRegister(RegisterRequest request, UserSession session) {
+        registrationService.register(session.getUserId(), request.getUsername(), request.getPassword());
+
+        return new RegisterResponse();
+    }
 }

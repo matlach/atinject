@@ -6,5 +6,5 @@ import javax.enterprise.inject.spi.Extension;
 
 public interface PermissionExtension extends Extension {
 
-	Set<String> getAllPermission();
+    Set<String> getAllPermission();
 }
