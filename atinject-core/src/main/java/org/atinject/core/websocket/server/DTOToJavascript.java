@@ -73,8 +73,7 @@ public class DTOToJavascript
     }
     
     private static void saveJavascript(String path, String javascript){
-        try {
-            PrintWriter writer = new PrintWriter(path);
+        try (PrintWriter writer = new PrintWriter(path);) {
             writer.write(javascript);
             writer.close();
         }

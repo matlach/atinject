@@ -14,7 +14,7 @@ import javax.interceptor.InvocationContext;
 @Interceptor
 public class RetryInterceptor {
 
-    private static ThreadLocal<Object> hack = new ThreadLocal<Object>();
+    private static ThreadLocal<Object> hack = new ThreadLocal<>();
     
     @Inject
     private ScheduledService scheduledService;

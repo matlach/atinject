@@ -63,6 +63,7 @@ public class DTOObjectMapperIT extends IntegrationTest {
     
     
     private static class DTOWithUUID extends DTO {
+        private static final long serialVersionUID = 1L;
         public UUID uuid;
     }
     

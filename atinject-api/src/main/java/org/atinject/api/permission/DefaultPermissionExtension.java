@@ -44,7 +44,8 @@ public class DefaultPermissionExtension extends AbstractEnumerationExtension imp
     	}
      }
 	
-	public Set<String> getAllPermission() {
+	@Override
+    public Set<String> getAllPermission() {
 		return permissions.keySet();
 	}
 }

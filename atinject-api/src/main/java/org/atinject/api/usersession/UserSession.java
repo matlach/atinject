@@ -2,10 +2,9 @@ package org.atinject.api.usersession;
 
 import java.util.UUID;
 
-import org.atinject.core.session.Session;
 import org.atinject.core.session.SimpleSession;
 
-public class UserSession extends SimpleSession implements Session {
+public class UserSession extends SimpleSession {
 
     private static final long serialVersionUID = 1L;
 

@@ -85,8 +85,8 @@ public class WebSocketServerHandler {
     
     private String WEBSOCKET_PATH = "/websocket";
 
-    private static final AttributeKey<String> SESSION_ID_ATTRIBUTE_KEY = new AttributeKey<>("session");
-    private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = new AttributeKey<>("handshaker");
+    private static final AttributeKey<String> SESSION_ID_ATTRIBUTE_KEY = AttributeKey.valueOf("session");
+    private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = AttributeKey.valueOf("handshaker");
     
     // TODO we must pass the executor from the initializer to here 
     private Map<String, Channel> channelGroup = new ConcurrentHashMap<>();
@@ -260,33 +260,30 @@ public class WebSocketServerHandler {
                 }
     
                 // TODO use mapped byte buffer here ? 
-                RandomAccessFile raf;
-                try {
-                    raf = new RandomAccessFile(file, "r");
+                try (RandomAccessFile raf = new RandomAccessFile(file, "r");) {
+                    long fileLength = raf.length();
+                    FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                    HttpHeaders.setContentLength(response, fileLength);
+                    setContentTypeHeader(response, file);
+                    setDateAndCacheHeaders(response, file);
+                    if (HttpHeaders.isKeepAlive(request)) {
+                        response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+                    }
+        
+                    // Write the initial line and the header.
+                    ctx.write(response);
+        
+                    // Write the content.
+                    ChannelFuture writeFuture = ctx.write(new ChunkedFile(raf, 0, fileLength, 8192));
+        
+                    // Decide whether to close the connection or not.
+                    if (!HttpHeaders.isKeepAlive(request)) {
+                        // Close the connection when the whole content is written out.
+                        writeFuture.addListener(ChannelFutureListener.CLOSE);
+                    }
                 } catch (FileNotFoundException fnfe) {
                     sendError(ctx, HttpResponseStatus.NOT_FOUND);
                     return;
-                }
-                long fileLength = raf.length();
-    
-                FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-                HttpHeaders.setContentLength(response, fileLength);
-                setContentTypeHeader(response, file);
-                setDateAndCacheHeaders(response, file);
-                if (HttpHeaders.isKeepAlive(request)) {
-                    response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-                }
-    
-                // Write the initial line and the header.
-                ctx.write(response);
-    
-                // Write the content.
-                ChannelFuture writeFuture = ctx.write(new ChunkedFile(raf, 0, fileLength, 8192));
-    
-                // Decide whether to close the connection or not.
-                if (!HttpHeaders.isKeepAlive(request)) {
-                    // Close the connection when the whole content is written out.
-                    writeFuture.addListener(ChannelFutureListener.CLOSE);
                 }
             }
             catch (Exception e){
@@ -295,30 +292,31 @@ public class WebSocketServerHandler {
         }
         
         public String sanitizeUri(String uri) {
+            String sanitizedURI = uri;
             // Decode the path.
             try {
-                uri = URLDecoder.decode(uri, "UTF-8");
+                sanitizedURI = URLDecoder.decode(uri, "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 try {
-                    uri = URLDecoder.decode(uri, "ISO-8859-1");
+                    sanitizedURI = URLDecoder.decode(uri, "ISO-8859-1");
                 } catch (UnsupportedEncodingException e1) {
-                    throw new Error();
+                    throw new Error(e1);
                 }
             }
 
-            if (!uri.startsWith("/")) {
+            if (!sanitizedURI.startsWith("/")) {
                 return null;
             }
 
             // Convert file separators.
-            uri = uri.replace('/', File.separatorChar);
+            sanitizedURI = sanitizedURI.replace('/', File.separatorChar);
 
             // Simplistic dumb security check.
             // You will have to do something serious in the production environment.
-            if (uri.contains(File.separator + '.') ||
-                uri.contains('.' + File.separator) ||
-                uri.startsWith(".") || uri.endsWith(".") ||
-                uri.contains("../")) {
+            if (sanitizedURI.contains(File.separator + '.') ||
+                sanitizedURI.contains('.' + File.separator) ||
+                sanitizedURI.startsWith(".") || sanitizedURI.endsWith(".") ||
+                sanitizedURI.contains("../")) {
                 return null;
             }
 

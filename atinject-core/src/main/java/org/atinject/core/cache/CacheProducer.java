@@ -14,21 +14,21 @@ public class CacheProducer {
     public <K, V> LocalCache<K, V> newLocalCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
-        return new LocalCache<K, V>(cache);
+        return new LocalCache<>(cache);
     }
     
     @Produces
     public <K, V> DistributedCache<K, V> newDistributedCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
-        return new DistributedCache<K, V>(cache);
+        return new DistributedCache<>(cache);
     }
     
     @Produces
     public <K, V> ReplicatedCache<K, V> newReplicatedCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
-        return new ReplicatedCache<K, V>(cache);
+        return new ReplicatedCache<>(cache);
     }
     
 }

@@ -327,7 +327,7 @@ public class WeldStartup {
         }
 
         // we need to know which BDAs are physical so that we fire ProcessModule for their archives only
-        Set<BeanDeployment> physicalBeanDeploymentArchives = new HashSet<BeanDeployment>(getBeanDeployments());
+        Set<BeanDeployment> physicalBeanDeploymentArchives = new HashSet<>(getBeanDeployments());
 
         ExtensionBeanDeployer extensionBeanDeployer = new ExtensionBeanDeployer(deploymentManager, deployment, bdaMapping, contexts);
         extensionBeanDeployer.addExtensions(extensions);
@@ -471,20 +471,20 @@ public class WeldStartup {
     }
 
     protected Collection<ContextHolder<? extends Context>> createContexts(ServiceRegistry services) {
-        List<ContextHolder<? extends Context>> contexts = new ArrayList<ContextHolder<? extends Context>>();
+        List<ContextHolder<? extends Context>> contexts = new ArrayList<>();
 
         /*
         * Register a full set of bound and unbound contexts. Although we may not use all of
         * these (e.g. if we are running in a servlet environment) they may be
         * useful for an application.
         */
-        contexts.add(new ContextHolder<ApplicationContext>(new ApplicationContextImpl(contextId), ApplicationContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<SingletonContext>(new SingletonContextImpl(contextId), SingletonContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<BoundSessionContext>(new BoundSessionContextImpl(contextId), BoundSessionContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<BoundConversationContext>(new BoundConversationContextImpl(contextId), BoundConversationContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<BoundRequestContext>(new BoundRequestContextImpl(contextId), BoundRequestContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<RequestContext>(new RequestContextImpl(contextId), RequestContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<DependentContext>(new DependentContextImpl(services.get(ContextualStore.class)), DependentContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new ApplicationContextImpl(contextId), ApplicationContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new SingletonContextImpl(contextId), SingletonContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new BoundSessionContextImpl(contextId), BoundSessionContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new BoundConversationContextImpl(contextId), BoundConversationContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new BoundRequestContextImpl(contextId), BoundRequestContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new RequestContextImpl(contextId), RequestContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<>(new DependentContextImpl(services.get(ContextualStore.class)), DependentContext.class, UnboundLiteral.INSTANCE));
 
 //        if (Reflections.isClassLoadable(ServletApi.SERVLET_CONTEXT_CLASS_NAME, WeldClassLoaderResourceLoader.INSTANCE)) {
 //            // Register the Http contexts if not in
@@ -496,7 +496,7 @@ public class WeldStartup {
 
         if (deployment.getServices().contains(EjbServices.class)) {
             // Register the EJB Request context if EjbServices are available
-            contexts.add(new ContextHolder<EjbRequestContext>(new EjbRequestContextImpl(contextId), EjbRequestContext.class, EjbLiteral.INSTANCE));
+            contexts.add(new ContextHolder<>(new EjbRequestContextImpl(contextId), EjbRequestContext.class, EjbLiteral.INSTANCE));
         }
 
         /*

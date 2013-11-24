@@ -12,7 +12,7 @@ import javax.interceptor.InvocationContext;
 public class AsynchronousInterceptor
 {
 
-    private static ThreadLocal<Object> hack = new ThreadLocal<Object>();
+    private static ThreadLocal<Object> hack = new ThreadLocal<>();
     
     @Inject
     private AsynchronousService asynchronousService;

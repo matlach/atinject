@@ -154,11 +154,9 @@ public class WebSocketClient {
             ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(request));
             return ch.write(new BinaryWebSocketFrame(byteBuf));
         }
-        else{
-            // write json as text
-            byteBuf.writeBytes(dtoObjectMapper.writeValueAsBytes(request));
-            return ch.write(new BinaryWebSocketFrame(byteBuf));
-        }
+        // else write json as text
+        byteBuf.writeBytes(dtoObjectMapper.writeValueAsBytes(request));
+        return ch.write(new BinaryWebSocketFrame(byteBuf));
     }
     
     public void sendPing()

@@ -90,27 +90,27 @@ public class TimerService extends Service
     public void schedule(int[] seconds, int[] minutes, int[] hours,
             int[] daysOfWeek, int[] daysOfMonth, int[] months, int years) {
         
-        if (seconds == null){
-            seconds = DEFAULT_SECONDS;
-        }
-        if (minutes == null){
-            minutes = DEFAULT_MINUTES;
-        }
-        if (hours == null){
-            hours = DEFAULT_HOURS;
-        }
-        if (daysOfWeek == null){
-            daysOfWeek = DEFAULT_DAYS_OF_WEEK;
-        }
-        if (daysOfMonth == null){
-            daysOfMonth = DEFAULT_DAYS_OF_MONTH;
-        }
-        if (months == null){
-            months = DEFAULT_MONTHS;
-        }
-        if (years == 0) {
-            years = DEFAULT_YEARS;
-        }
+//        if (seconds == null){
+//            seconds = DEFAULT_SECONDS;
+//        }
+//        if (minutes == null){
+//            minutes = DEFAULT_MINUTES;
+//        }
+//        if (hours == null){
+//            hours = DEFAULT_HOURS;
+//        }
+//        if (daysOfWeek == null){
+//            daysOfWeek = DEFAULT_DAYS_OF_WEEK;
+//        }
+//        if (daysOfMonth == null){
+//            daysOfMonth = DEFAULT_DAYS_OF_MONTH;
+//        }
+//        if (months == null){
+//            months = DEFAULT_MONTHS;
+//        }
+//        if (years == 0) {
+//            years = DEFAULT_YEARS;
+//        }
         
         // TODO
 
@@ -388,16 +388,13 @@ public class TimerService extends Service
         {
             return true;
         }
-        else
+        // TODO make sure values are already sorted and perform a binary search instead
+        for( int i=0; i<values.length; i++ )
         {
-            // TODO make sure values are already sorted and perform a binary search instead
-            for( int i=0; i<values.length; i++ )
-            {
-                if( find == values[i] )
-                    return true;
-            }
-            return false;
+            if( find == values[i] )
+                return true;
         }
+        return false;
     }
     
     /**

@@ -38,6 +38,6 @@ public class RetryIT extends IntegrationTest {
     
     @Test(expected=Exception.class)
     public void testThisShouldGetRetry(){
-        serviceWithRetry.retry();;
+        serviceWithRetry.retry();
     }
 }

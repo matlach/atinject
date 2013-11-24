@@ -13,7 +13,7 @@ import javax.enterprise.inject.spi.ProcessBean;
 
 public class StartupExtension implements Extension
 {
-    private final Set<Bean<?>> startupBeans = new LinkedHashSet<Bean<?>>();
+    private final Set<Bean<?>> startupBeans = new LinkedHashSet<>();
 
     <X> void processBean(@Observes ProcessBean<X> event)
     {
