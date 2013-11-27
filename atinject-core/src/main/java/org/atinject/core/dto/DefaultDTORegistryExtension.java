@@ -1,33 +1,14 @@
 package org.atinject.core.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
-import org.atinject.core.logging.LoggerFactory;
-import org.slf4j.Logger;
+import org.atinject.core.marshallable.AbstractRegistryExtension;
 
-public class DefaultDTORegistryExtension implements DTORegistryExtension {
-    
-    private Logger logger = LoggerFactory.getLogger(DefaultDTORegistryExtension.class);
-    
-    private List<Class<? extends DTO>> classes;
-    
-    public DefaultDTORegistryExtension(){
-        classes = new ArrayList<>();
-    }
+public class DefaultDTORegistryExtension extends AbstractRegistryExtension<DTO> implements DTORegistryExtension {
     
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends DTO> event) {
-        classes.add(event.getAnnotatedType().getJavaClass());
-        logger.info("added '{}' to dto registry", event.getAnnotatedType().getJavaClass().getSimpleName());
+        addClass(event.getAnnotatedType().getJavaClass());
      }
-    
-    @Override
-    public List<Class<? extends DTO>> getClasses()
-    {
-        return classes;
-    }
 
 }

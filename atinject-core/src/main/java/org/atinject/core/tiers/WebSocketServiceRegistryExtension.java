@@ -1,33 +1,15 @@
 package org.atinject.core.tiers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
-import org.atinject.core.logging.LoggerFactory;
-import org.slf4j.Logger;
+import org.atinject.core.marshallable.AbstractRegistryExtension;
 
-public class WebSocketServiceRegistryExtension implements Extension {
-    
-    private Logger logger = LoggerFactory.getLogger(WebSocketServiceRegistryExtension.class);
-    
-    private List<Class<? extends WebSocketService>> classes;
-    
-    public WebSocketServiceRegistryExtension(){
-        classes = new ArrayList<>();
-    }
+public class WebSocketServiceRegistryExtension extends AbstractRegistryExtension<WebSocketService> implements Extension {
     
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends WebSocketService> event) {
-        classes.add(event.getAnnotatedType().getJavaClass());
-        logger.info("added '{}' to web socket service registry", event.getAnnotatedType().getJavaClass().getSimpleName());
+        addClass(event.getAnnotatedType().getJavaClass());
      }
-    
-    public List<Class<? extends WebSocketService>> getClasses()
-    {
-        return classes;
-    }
 
 }
