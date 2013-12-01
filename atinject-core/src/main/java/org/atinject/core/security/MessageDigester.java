@@ -3,31 +3,19 @@ package org.atinject.core.security;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class SimplePasswordDigester implements PasswordDigester {
+public class MessageDigester {
     
-    public static final String ALGORITHM = "SHA-1";
+    private static Charset UTF8_CHARSET = Charset.forName("UTF-8");
     
-    @Override
-    public String getAlgorithm(){
-        return ALGORITHM;
-    }
-    
-    @Override
-    public String digest(String input){
-        
+    protected String digest(String input, String algorithm) {
         try {
-            MessageDigest sha1 = MessageDigest.getInstance(ALGORITHM);
-            byte[] inputBytes = input.getBytes(Charset.forName("UTF-8"));
-            byte[] digestedBytes = sha1.digest(inputBytes);
+            MessageDigest digester = MessageDigest.getInstance(algorithm);
+            byte[] inputBytes = input.getBytes(UTF8_CHARSET);
+            byte[] digestedBytes = digester.digest(inputBytes);
             return new String(encodeHex(digestedBytes));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
     }
     
     // taken from apache commons codec

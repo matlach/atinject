@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 import javax.inject.Inject;
 
 import org.atinject.api.registration.GuestUsernamePasswordGenerator;
+import org.atinject.api.registration.PasswordDigester;
 import org.atinject.api.registration.RegistrationService;
 import org.atinject.api.usersession.UserSession;
-import org.atinject.core.security.PasswordDigester;
 import org.atinject.integration.ArquillianIT;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;

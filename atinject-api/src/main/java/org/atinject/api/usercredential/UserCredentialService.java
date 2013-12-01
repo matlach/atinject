@@ -5,8 +5,8 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.atinject.api.registration.PasswordDigester;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
-import org.atinject.core.security.PasswordDigester;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped

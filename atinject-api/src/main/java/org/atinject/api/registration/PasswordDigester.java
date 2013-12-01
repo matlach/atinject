@@ -1,8 +1,7 @@
-package org.atinject.core.security;
+package org.atinject.api.registration;
 
 public interface PasswordDigester {
 
-    String getAlgorithm();
-    
     String digest(String input);
+    
 }
