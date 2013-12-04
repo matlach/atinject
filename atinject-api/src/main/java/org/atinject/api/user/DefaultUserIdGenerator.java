@@ -3,15 +3,20 @@ package org.atinject.api.user;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.atinject.core.uuid.Version4UUIDGenerator;
 
 @ApplicationScoped
 public class DefaultUserIdGenerator implements UserIdGenerator {
 
+    // TODO version1 instead ?
+    @Inject
+    private Version4UUIDGenerator uuidGenerator;
+    
     @Override
     public UUID generateUserId() {
-        // TODO replace random uuid with version 1 uuid
-        // cassandra uses(?) http://johannburkard.de/software/uuid/#maven
-        return UUID.randomUUID();
+        return uuidGenerator.get();
     }
 
 }
