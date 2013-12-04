@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessProducer;
 import javax.enterprise.inject.spi.Producer;
@@ -14,8 +13,7 @@ import org.atinject.core.cdi.CDI;
 import org.atinject.core.cdi.Named;
 import org.infinispan.configuration.cache.Configuration;
 
-public class CacheExtension implements Extension
-{
+public class CacheExtension implements Extension {
 
     private Map<String, Producer<Configuration>> configurationProducers;
 
@@ -23,7 +21,7 @@ public class CacheExtension implements Extension
         configurationProducers = new LinkedHashMap<>();
     }
     
-    public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event, BeanManager beanManager) {
+    public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event) {
         Named named = event.getAnnotatedMember().getAnnotation(Named.class);
         if (named == null) {
             throw new NullPointerException("@Named must be defined");
