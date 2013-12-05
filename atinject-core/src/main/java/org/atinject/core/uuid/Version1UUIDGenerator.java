@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 // this class has been taken from http://johannburkard.de/software/uuid/
@@ -14,14 +15,17 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class Version1UUIDGenerator extends AbstractUUIDGenerator {
 
-    private static AtomicLong lastTime = new AtomicLong(Long.MIN_VALUE);
+    private AtomicLong lastTime;
 
-    private static String macAddress = null;
+    private String macAddress;
 
-    private static long clockSeqAndNode = 0x8000000000000000L;
+    private long clockSeqAndNode;
 
-    static {
+    @PostConstruct
+    public void initialize() {
+        lastTime = new AtomicLong(Long.MIN_VALUE);
         macAddress = new HardwareAddressLookup().toString();
+        clockSeqAndNode = 0x8000000000000000L;
         clockSeqAndNode |= Hex.parseLong(macAddress);
         clockSeqAndNode |= (long) (Math.random() * 0x3FFF) << 48;
     }
@@ -31,11 +35,11 @@ public class Version1UUIDGenerator extends AbstractUUIDGenerator {
         return new UUID(newTime(), clockSeqAndNode);
     }
     
-    private static long newTime() {
+    private long newTime() {
         return createTime(System.currentTimeMillis());
     }
 
-    private static long createTime(long currentTimeMillis) {
+    private long createTime(long currentTimeMillis) {
         // UTC time
         long timeMillis = (currentTimeMillis * 10000) + 0x01B21DD213814000L;
 
@@ -70,7 +74,7 @@ public class Version1UUIDGenerator extends AbstractUUIDGenerator {
     /**
      * Scans MAC addresses for good ones.
      */
-    static class HardwareAddressLookup {
+    private static class HardwareAddressLookup {
 
         @Override
         public String toString() {
