@@ -25,7 +25,7 @@ public class WebSocketServerInitializer {
     public void initChannel(SocketChannel ch) throws Exception
     {
         ChannelPipeline pipeline = ch.pipeline();
-        pipeline.addLast("decoder", new HttpRequestDecoder());
+        pipeline.addLast("decoder", new HttpRequestDecoder(4096, 8192, 8192, false)); // disable header validation
         pipeline.addLast("aggregator", new HttpObjectAggregator(65536));
         pipeline.addLast("encoder", new HttpResponseEncoder());
         pipeline.addLast(executor, "handler", delegableWebSocketServerHandler);
