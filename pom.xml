@@ -66,7 +66,6 @@
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<weld.version>2.1.0.Final</weld.version>
-		<deltaspike.version>0.3-incubating</deltaspike.version>
 		<netty.version>4.0.13.Final</netty.version>
 		<infinispan.version>6.0.0.Final</infinispan.version>
 		<jackson.version>2.3.0</jackson.version>
@@ -106,18 +105,6 @@
 				<groupId>org.jboss.weld.se</groupId>
 				<artifactId>weld-se-core</artifactId>
 				<version>${weld.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.deltaspike.core</groupId>
-				<artifactId>deltaspike-core-api</artifactId>
-				<version>${deltaspike.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.deltaspike.core</groupId>
-				<artifactId>deltaspike-core-impl</artifactId>
-				<version>${deltaspike.version}</version>
 			</dependency>
 
 			<dependency>
@@ -208,16 +195,6 @@
 					<groupId>javax.annotation</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.deltaspike.core</groupId>
-			<artifactId>deltaspike-core-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.deltaspike.core</groupId>
-			<artifactId>deltaspike-core-impl</artifactId>
 		</dependency>
 
 		<dependency>

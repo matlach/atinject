@@ -10,8 +10,7 @@ import javax.validation.Validation;
 import javax.validation.executable.ExecutableValidator;
 
 @ApplicationScoped
-public class Validator
-{
+public class Validator {
 
     // XXX find why injection is not working anymore ?
     private javax.validation.Validator validator;

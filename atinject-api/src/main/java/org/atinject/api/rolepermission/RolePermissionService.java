@@ -9,6 +9,8 @@ import org.atinject.api.role.RoleService;
 import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.rolepermission.event.PermissionGrantedToRole;
 import org.atinject.api.rolepermission.event.PermissionRevokedToRole;
+import org.atinject.core.cache.DistributedCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
@@ -18,8 +20,8 @@ public class RolePermissionService extends Service {
     RoleService roleService;
     @Inject
     PermissionService permissionService;
-    @Inject
-    RolePermissionCache rolePermissionCache;
+    @Inject @Named("rolepermission")
+    DistributedCache<String, RolePermissions> rolePermissionCache;
 
     @Inject
     Event<PermissionGrantedToRole> permissionGrantedToRoleEvent;
@@ -27,7 +29,7 @@ public class RolePermissionService extends Service {
     Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
 
     public RolePermissions getRolePermissions(String role) {
-        return rolePermissionCache.getRolePermissions(role);
+        return rolePermissionCache.get(role);
     }
 
     public boolean isPermitted(String role, String permission) {

@@ -69,9 +69,14 @@ public class WebSocketClient {
     private boolean binary = false;
     
     @PostConstruct
-    public void initialize() throws Exception
+    public void initialize()
     {
-        uri = new URI("ws://localhost:8080/websocket");
+        try {
+            uri = new URI("ws://localhost:8080/websocket");
+        }
+        catch (Exception e) {
+           throw new RuntimeException(e);
+        }
     }
     
     @PreDestroy

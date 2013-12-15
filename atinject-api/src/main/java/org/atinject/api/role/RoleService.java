@@ -14,6 +14,7 @@ public class RoleService extends Service {
     @Inject
     RoleExtension roleExtension;
 
+    // TODO we should allow dynamic roles
     private Set<String> roles;
 
     @PostConstruct

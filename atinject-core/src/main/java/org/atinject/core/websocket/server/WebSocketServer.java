@@ -36,7 +36,7 @@ public class WebSocketServer
     private Channel ch;
     
     @PostConstruct
-    public void initialize() throws Exception
+    public void initialize()
     {
         // manage these features
         // Start servicing all request, vs. admin only,

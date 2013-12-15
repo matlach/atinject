@@ -24,14 +24,14 @@ public class LocalRandomUUIDGenerator {
     
     @PostConstruct
     public void initialize(){
-        keyAffinityService = KeyAffinityServiceFactory.newLocalKeyAffinityService(cache.unwrap(), new RendezvousIdKeyGenerator(), asynchronousService, 100);
+        keyAffinityService = KeyAffinityServiceFactory.newLocalKeyAffinityService(cache.unwrap(), new LocalRandomUUIDKeyGenerator(), asynchronousService, 100);
     }
     
     public UUID getKey(){
         return keyAffinityService.getKeyForAddress(cache.getRpcManager().getAddress());
     }
     
-    public static class RendezvousIdKeyGenerator implements KeyGenerator<UUID> {
+    public static class LocalRandomUUIDKeyGenerator implements KeyGenerator<UUID> {
         @Override
         public UUID getKey() {
             return UUID.randomUUID();

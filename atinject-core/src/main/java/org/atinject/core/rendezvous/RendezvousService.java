@@ -9,6 +9,9 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import org.atinject.core.affinity.LocalRandomUUIDGenerator;
+import org.atinject.core.cache.DistributedCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.rendezvous.event.SessionJoinedRendezvous;
 import org.atinject.core.rendezvous.event.SessionLeftRendezvous;
@@ -22,16 +25,17 @@ public class RendezvousService extends Service {
     @Inject
     RendezvousEntityFactory entityFactory;
 
-    @Inject
-    RendezvousCache rendezvousCache;
+    @Inject @Named("rendezvous") private DistributedCache<UUID, RendezvousEntity> rendezvousCache;
 
+    @Inject private LocalRandomUUIDGenerator generator;
+    
     @Inject
     Event<SessionJoinedRendezvous> sessionJoinedRendezvousEvent;
     @Inject
     Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
 
     public RendezvousEntity newRendezvous() {
-        UUID rendezvousId = rendezvousCache.getId();
+        UUID rendezvousId = generator.getKey();
         RendezvousEntity rendezvous = entityFactory.newRendezvous()
                 .setId(rendezvousId);
         return rendezvous;
@@ -39,7 +43,7 @@ public class RendezvousService extends Service {
 
     public void onSessionClosed(@Observes SessionClosed event) {
         List<UUID> rendezvousIds = new ArrayList<>();
-        for (RendezvousEntity rendezvous : rendezvousCache.getAllRendezvous()) {
+        for (RendezvousEntity rendezvous : rendezvousCache.getAll().values()) {
             if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())) {
                 rendezvousIds.add(rendezvous.getId());
             }
@@ -50,20 +54,20 @@ public class RendezvousService extends Service {
     }
 
     public void addRendezvous(RendezvousEntity rendezvous) {
-        rendezvousCache.putRendezvous(rendezvous);
+        rendezvousCache.put(rendezvous.getId(), rendezvous);
     }
 
     public RendezvousEntity addAndJoin(Session session) {
         RendezvousEntity rendezvous = newRendezvous();
-        rendezvousCache.lockRendezvous(rendezvous.getId());
+        rendezvousCache.lock(rendezvous.getId());
         rendezvous.getSessionIds().add(session.getSessionId());
         addRendezvous(rendezvous);
         return rendezvous;
     }
 
     public RendezvousEntity join(UUID rendezvousId, Session session) {
-        rendezvousCache.lockRendezvous(rendezvousId);
-        RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
+        rendezvousCache.lock(rendezvousId);
+        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId);
         if (rendezvous == null) {
             throw new NullPointerException("rendezvous does not exists");
         }
@@ -80,8 +84,8 @@ public class RendezvousService extends Service {
     }
 
     public RendezvousEntity leave(UUID rendezvousId, Session session) {
-        rendezvousCache.lockRendezvous(rendezvousId);
-        RendezvousEntity rendezvous = rendezvousCache.getRendezvous(rendezvousId);
+        rendezvousCache.lock(rendezvousId);
+        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId);
         if (rendezvous == null) {
             throw new NullPointerException("rendezvous does not exists");
         }

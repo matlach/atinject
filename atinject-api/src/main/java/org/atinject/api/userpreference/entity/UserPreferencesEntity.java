@@ -2,6 +2,7 @@ package org.atinject.api.userpreference.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.atinject.core.entity.VersionableEntity;
 
@@ -9,7 +10,7 @@ public class UserPreferencesEntity extends VersionableEntity {
 
     private static final long serialVersionUID = 1L;
 
-    private String userId;
+    private UUID userId;
     
     private Map<String, UserPreferenceEntity> preferences;
 
@@ -17,11 +18,11 @@ public class UserPreferencesEntity extends VersionableEntity {
         preferences = new HashMap<>();
     }
     
-    public String getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public UserPreferencesEntity setUserId(String userId) {
+    public UserPreferencesEntity setUserId(UUID userId) {
         this.userId = userId;
         return this;
     }

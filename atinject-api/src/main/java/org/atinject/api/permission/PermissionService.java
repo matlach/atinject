@@ -14,6 +14,7 @@ public class PermissionService extends Service {
     @Inject
     PermissionExtension permissionExtension;
 
+    // TODO we should allow dynamic permissions
     private Set<String> permissions;
 
     @PostConstruct

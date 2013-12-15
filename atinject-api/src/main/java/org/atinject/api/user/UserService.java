@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.user.event.UserIdCollided;
 import org.atinject.api.user.event.UserRelocated;
+import org.atinject.core.cache.DistributedCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
@@ -17,7 +19,7 @@ public class UserService extends Service{
     
     @Inject Logger logger;
     
-    @Inject UserCacheStore userCacheStore;
+    @Inject @Named("user") private DistributedCache<UUID, UserEntity> userCacheStore;
     
     @Inject UserEntityFactory userEntityFactory;
     
@@ -25,25 +27,17 @@ public class UserService extends Service{
     
     @Inject Event<UserIdCollided> userIdCollidedEvent;
     
-    /**
-     * get the user by delegating to {@link UserCacheStore#getUser(String)}
-     */
     public UserEntity getUser(UUID userId){
-        return userCacheStore.getUser(userId);
+        return userCacheStore.get(userId);
     }
     
-    /**
-     * get the user by delegating to {@link UserCacheStore#getUserByName(String)}
-     */
     public UserEntity getUserByName(String name){
-        return userCacheStore.getUserByName(name);
+        // TODO
+        return null;
     }
     
-    /**
-     * lock the user by delegating to {@link UserCacheStore#lockUser(String)}
-     */
     public void lockUser(UUID userId){
-        userCacheStore.lockUser(userId);
+        userCacheStore.lock(userId);
     }
     
     /**
@@ -54,7 +48,7 @@ public class UserService extends Service{
         UUID userId = userIdGenerator.generateUserId();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
-        if (userCacheStore.getUser(userId) != null){
+        if (userCacheStore.get(userId) != null){
             // an extraordinary event just happened
             // try again
             userIdCollidedEvent.fire(new UserIdCollided().setUserId(userId));
@@ -72,13 +66,13 @@ public class UserService extends Service{
     @Inject Event<UserRelocated> userRelocatedEvent;
     
     public void relocateUser(UUID userId) {
-        UserEntity user = userCacheStore.getUser(userId);
-        userCacheStore.removeUser(user);
+        UserEntity user = userCacheStore.get(userId);
+        userCacheStore.remove(userId);
         
         // TODO generate another id
         UUID newUserId = userId;
         user.setId(userId);
-        userCacheStore.putUser(user);
+        userCacheStore.put(newUserId, user);
         
         userRelocatedEvent.fire(new UserRelocated().setOldUserId(userId).setNewUserId(newUserId));
     }
@@ -88,7 +82,7 @@ public class UserService extends Service{
      * Note : it is assumed that userId has been locked before
      */
     public void addUser(UserEntity user) {
-        userCacheStore.putUser(user);
+        userCacheStore.put(user.getId(), user);
     }
     
     public void updateUserName(UUID userId, String name) {
@@ -106,7 +100,7 @@ public class UserService extends Service{
      * Note : it is assumed that userId has been locked before
      */
     public void updateUser(UserEntity user) {
-        userCacheStore.putUser(user);
+        userCacheStore.put(user.getId(), user);
     }
 
     /**
@@ -114,7 +108,7 @@ public class UserService extends Service{
      */
     public UserEntity removeUser(UUID userId) {
         lockUser(userId);
-        UserEntity user = userCacheStore.getUser(userId);
+        UserEntity user = userCacheStore.get(userId);
         removeUser(user);
         return user;
     }
@@ -126,6 +120,6 @@ public class UserService extends Service{
         if (user == null) {
             throw new NullPointerException("user");
         }
-        userCacheStore.removeUser(user);
+        userCacheStore.remove(user.getId());
     }
 }

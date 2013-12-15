@@ -1,4 +1,4 @@
-package org.atinject.core.validation;
+package org.atinject.core.tiers.exception;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -14,6 +14,7 @@ import javax.interceptor.InterceptorBinding;
 @Documented
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidateMethod {
+public @interface HandleCacheException
+{
 
 }

@@ -1,36 +1,40 @@
 package org.atinject.api.userpreference;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.userpreference.entity.UserPreferencesEntity;
+import org.atinject.core.cache.DistributedCache;
+import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class UserPreferenceService extends Service {
 
-    @Inject private UserPreferenceCacheStore userPreferenceCacheStore;
+    @Inject @Named("user-preferences") private DistributedCache<UUID, UserPreferencesEntity> userPreferenceCacheStore;
     
-    public UserPreferencesEntity getUserPreferences(String userId){
-        UserPreferencesEntity userPreferences = userPreferenceCacheStore.getUserPreferences(userId);
+    public UserPreferencesEntity getUserPreferences(UUID userId){
+        UserPreferencesEntity userPreferences = userPreferenceCacheStore.get(userId);
         if (userPreferences != null){
             return userPreferences;
         }
         
-        userPreferenceCacheStore.lockUserPreferences(userId);
-        userPreferences = userPreferenceCacheStore.getUserPreferences(userId);
+        userPreferenceCacheStore.lock(userId);
+        userPreferences = userPreferenceCacheStore.get(userId);
         if (userPreferences != null){
             return userPreferences;
         }
         
         userPreferences = new UserPreferencesEntity()
             .setUserId(userId);
-        userPreferenceCacheStore.putUserPreferences(userPreferences);
+        userPreferenceCacheStore.put(userId, userPreferences);
         
         return userPreferences;
     }
     
     public void updateUserPreferences(UserPreferencesEntity userPreferences){
-        userPreferenceCacheStore.putUserPreferences(userPreferences);
+        userPreferenceCacheStore.put(userPreferences.getUserId(), userPreferences);
     }
 }

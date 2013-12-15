@@ -7,18 +7,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+
 /**
  * provide replacement for {@link javax.inject.Named} annotation
  * {@link javax.inject.Named} default value is ""
  * {@link javax.inject.Named} value must be unique across the system even if
  * the produced type combined with named annotation is unique (bug ??)
  */
-//@Qualifier
+@Qualifier
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 public @interface Named
 {
-    String value() default "";
+    @Nonbinding String value() default "";
 }

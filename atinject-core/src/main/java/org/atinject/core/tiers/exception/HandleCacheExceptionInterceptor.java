@@ -7,12 +7,12 @@ import javax.interceptor.InvocationContext;
 
 import org.slf4j.Logger;
 
-@HandleCacheStoreException
+@HandleCacheException
 @Interceptor
-public class HandleCacheStoreExceptionInterceptor {
+public class HandleCacheExceptionInterceptor {
     
     @Inject private Logger logger;
-    @Inject private CacheStoreExceptionSanitizer cacheStoreExceptionSanitizer;
+    @Inject private CacheExceptionSanitizer cacheStoreExceptionSanitizer;
     
     private boolean sanitize = true;
     private boolean log = true;

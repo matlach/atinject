@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class CacheStoreExceptionSanitizer {
+public class CacheExceptionSanitizer {
 
     List<String> keywords = new ArrayList<>();
     

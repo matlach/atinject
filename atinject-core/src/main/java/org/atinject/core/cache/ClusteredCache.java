@@ -15,10 +15,6 @@ import org.infinispan.util.concurrent.NotifyingFuture;
 
 public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
     
-    public ClusteredCache(org.infinispan.Cache<K, V> cache) {
-        super(cache);
-    }
-
     @Override
     public Map<K, V> getAll(Collection<K> keys) {
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
