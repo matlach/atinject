@@ -10,7 +10,7 @@ public class LoginRequest extends WebSocketRequest {
     private static final long serialVersionUID = 1L;
 
     @NotNull private String username;
-    @NotNull private String passwordHash;
+    @NotNull private String password;
     
     @NonNull
     public String getUsername() {
@@ -23,12 +23,12 @@ public class LoginRequest extends WebSocketRequest {
     }
     
     @NonNull
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
     
-    public LoginRequest setPasswordHash(@NonNull String passwordHash) {
-        this.passwordHash = passwordHash;
+    public LoginRequest setPassword(@NonNull String password) {
+        this.password = password;
         return this;
     }
     

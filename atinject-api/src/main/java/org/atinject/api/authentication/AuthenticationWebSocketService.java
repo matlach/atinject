@@ -24,7 +24,7 @@ public class AuthenticationWebSocketService extends WebSocketService {
     
     @WebSocketMessage
     public LoginResponse onLoginRequest(@NonNull LoginRequest request, @NonNull UserSession session){
-        UserEntity userEntity = authenticationService.login(session, request.getUsername(), request.getPasswordHash());
+        UserEntity userEntity = authenticationService.login(session, request.getUsername(), request.getPassword());
         userAdapter.userEntityToUser(userEntity);
         return authenticationDTOFactory.newLoginResponse();
     }

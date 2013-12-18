@@ -1,4 +1,4 @@
-package org.atinject.api.registration;
+package org.atinject.api.usercredential;
 
 public interface PasswordDigester {
 

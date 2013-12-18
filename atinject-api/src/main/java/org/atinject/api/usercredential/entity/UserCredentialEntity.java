@@ -9,7 +9,8 @@ public class UserCredentialEntity extends VersionableEntity {
     private static final long serialVersionUID = 1L;
     
     private String username;
-    private String passwordHash;
+    private String salt;
+    private String hash;
     private UUID userId;
     
     public UserCredentialEntity(){
@@ -24,13 +25,22 @@ public class UserCredentialEntity extends VersionableEntity {
         this.username = username;
         return this;
     }
-
-    public String getPasswordHash() {
-        return passwordHash;
+    
+    public String getSalt() {
+        return salt;
     }
 
-    public UserCredentialEntity setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public UserCredentialEntity setSalt(String salt) {
+        this.salt = salt;
+        return this;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public UserCredentialEntity setHash(String hash) {
+        this.hash = hash;
         return this;
     }
 

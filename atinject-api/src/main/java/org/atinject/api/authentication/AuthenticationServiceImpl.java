@@ -11,6 +11,7 @@ import org.atinject.api.authentication.exception.WrongPasswordException;
 import org.atinject.api.authentication.exception.WrongUsernameException;
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.api.usercredential.PasswordDigester;
 import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.api.usersession.UserSession;
@@ -38,6 +39,9 @@ public class AuthenticationServiceImpl extends Service implements Authentication
     private Event<AuthenticationFailed> authenticationFailedEvent;
 
     @Inject
+    private PasswordDigester passwordDigester;
+    
+    @Inject
     @Distributed
     private Event<UserLoggedIn> userLoggedInEvent;
 
@@ -58,7 +62,9 @@ public class AuthenticationServiceImpl extends Service implements Authentication
         if (userCredential == null) {
             throw new WrongUsernameException();
         }
-        if (!userCredential.getPasswordHash().equals(password)) {
+        
+        String saltedHash = passwordDigester.digest(userCredential.getSalt() + password);
+        if (!userCredential.getHash().equals(saltedHash)) {
             AuthenticationFailed event = authenticationEventFactory.newAuthenticationFailed()
                     .setUserSession(session)
                     .setUserCredential(userCredential);
