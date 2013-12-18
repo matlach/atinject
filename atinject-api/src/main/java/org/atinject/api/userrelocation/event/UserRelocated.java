@@ -1,16 +1,17 @@
-package org.atinject.api.user.event;
+package org.atinject.api.userrelocation.event;
 
 import java.util.UUID;
 
+import org.atinject.api.user.entity.UserEntity;
 import org.atinject.core.event.Event;
 
 public class UserRelocated extends Event {
 
     private static final long serialVersionUID = 1L;
 
+    private UserEntity user;
+
     private UUID oldUserId;
-    
-    private UUID newUserId;
 
     public UUID getOldUserId() {
         return oldUserId;
@@ -21,12 +22,12 @@ public class UserRelocated extends Event {
         return this;
     }
 
-    public UUID getNewUserId() {
-        return newUserId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public UserRelocated setNewUserId(UUID newUserId) {
-        this.newUserId = newUserId;
+    public UserRelocated setUser(UserEntity user) {
+        this.user = user;
         return this;
     }
     
