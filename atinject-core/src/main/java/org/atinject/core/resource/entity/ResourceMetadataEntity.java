@@ -1,7 +1,7 @@
 package org.atinject.core.resource.entity;
 
 
-public class ResourceMetadata {
+public class ResourceMetadataEntity {
 
     String resourceId;
     

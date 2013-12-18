@@ -1,9 +1,9 @@
-package org.atinject.core.resource.enumeration;
+package org.atinject.core.locale.enumeration;
 
-import org.atinject.core.enumeration.Enumeration;
 
-public interface Locales extends Enumeration {
+public interface Locales {
 
+    // TODO convert to real enum as values are dictated by an ISO standard
     // http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html
     
     public static final String ENGLISH = "en";
