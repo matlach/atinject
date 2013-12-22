@@ -11,6 +11,7 @@ import org.atinject.api.registration.event.UserRegistered;
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usercredential.UserCredentialService;
+import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
@@ -30,12 +31,13 @@ public class RegistrationService extends Service {
 
     @Inject
     Event<GuestRegistered> guestRegisteredEvent;
+    
     @Inject
     Event<UserRegistered> userRegisteredEvent;
 
     public boolean isUsernameAvailable(String username) {
-        UserEntity user = userService.getUserByName(username);
-        if (user == null) {
+        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
+        if (userCredential == null) {
             return true;
         }
         return false;
