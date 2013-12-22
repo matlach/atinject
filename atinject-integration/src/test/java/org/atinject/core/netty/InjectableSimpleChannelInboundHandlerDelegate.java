@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class InjectableSimpleChannelInboundHandlerDelegate
 {
 
-    public void channelRead0(ChannelHandlerContext ctx, Object messages) throws Exception {
+    public void messageReceived(ChannelHandlerContext ctx, Object messages) throws Exception {
         
     }
 }

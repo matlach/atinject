@@ -19,8 +19,8 @@ public class NonInjectableSimpleChannelInboundHandler extends SimpleChannelInbou
     }
     
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Object messages) throws Exception {
-        delegate.channelRead0(ctx, messages);
+    public void messageReceived(ChannelHandlerContext ctx, Object messages) throws Exception {
+        delegate.messageReceived(ctx, messages);
     }
 
 }

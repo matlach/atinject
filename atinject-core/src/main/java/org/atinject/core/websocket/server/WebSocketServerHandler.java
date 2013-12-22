@@ -133,7 +133,7 @@ public class WebSocketServerHandler {
             logger.info("channel active");
         }
         
-        public void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        public void messageReceived(ChannelHandlerContext ctx, Object msg) {
             if (msg instanceof FullHttpRequest) {
                 handleHttpRequest(ctx, (FullHttpRequest) msg);
                 return;
@@ -653,10 +653,6 @@ public class WebSocketServerHandler {
             channelGroup.remove(ctx.channel());
         }
         
-        public void channelUnregistered(ChannelHandlerContext ctx) {
-            logger.info("channel unregistered");
-        }
-
         private String getWebSocketLocation(FullHttpRequest req) {
             return "ws://" + req.headers().get(HttpHeaders.Names.HOST) + WEBSOCKET_PATH;
         }

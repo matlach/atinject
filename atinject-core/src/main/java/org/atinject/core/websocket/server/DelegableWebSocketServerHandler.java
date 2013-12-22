@@ -28,8 +28,8 @@ public class DelegableWebSocketServerHandler extends SimpleChannelInboundHandler
     }
     
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Object msg) {
-        delegate.channelRead0(ctx, msg);
+    public void messageReceived(ChannelHandlerContext ctx, Object msg) {
+        delegate.messageReceived(ctx, msg);
     }
     
     @Override
@@ -52,8 +52,4 @@ public class DelegableWebSocketServerHandler extends SimpleChannelInboundHandler
         delegate.channelInactive(ctx);
     }
     
-    @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) {
-        delegate.channelUnregistered(ctx);
-    }
 }
