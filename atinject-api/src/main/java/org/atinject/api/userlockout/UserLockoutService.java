@@ -7,6 +7,8 @@ import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.AuthenticationFailed;
 import org.atinject.api.user.UserService;
+import org.atinject.api.usercredential.UserCredentialService;
+import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.api.userlockout.event.UserLocked;
 import org.atinject.api.userlockout.event.UserUnlocked;
 import org.atinject.core.tiers.Service;
@@ -18,6 +20,8 @@ public class UserLockoutService extends Service {
     
     @Inject UserService userService;
     
+    @Inject UserCredentialService userCredentialService;
+    
     @Inject Event<UserLocked> userLockedEvent;
     
     @Inject Event<UserUnlocked> userUnlockedEvent;
@@ -27,7 +31,7 @@ public class UserLockoutService extends Service {
     }
     
     public void lockUser(String username) {
-        userService.getUserByName(username);
+        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
         userLockedEvent.fire(new UserLocked());
     }
     

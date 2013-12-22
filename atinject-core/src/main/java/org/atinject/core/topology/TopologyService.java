@@ -15,9 +15,11 @@ import org.infinispan.remoting.transport.TopologyAwareAddress;
 @ApplicationScoped
 public class TopologyService {
     
-    @Inject @Named("distributed-executor") private DistributedCache<Object, Object> masterCacheNode;
+    @Inject @Named("distributed-executor")
+    private DistributedCache<Object, Object> masterCacheNode;
 
-    @Inject private MachineIdUrlMapper urlMapper;
+    @Inject
+    private MachineIdUrlMapper urlMapper;
     
     @PostConstruct
     public void initialize() {
@@ -58,6 +60,17 @@ public class TopologyService {
             topologyAwareAddresses.add(getUrl(((TopologyAwareAddress) member).getMachineId()));
         }
         return topologyAwareAddresses;        
+    }
+    
+    public List<TopologyAwareAddress> getAllRemoteAddress() {
+        List<Address> members = masterCacheNode.getRpcManager().getMembers();
+        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
+        for (Address member : members) {
+            if (! member.equals(getLocalAddress())) {
+                topologyAwareAddresses.add((TopologyAwareAddress) member);
+            }
+        }
+        return topologyAwareAddresses;
     }
     
     public List<TopologyAwareAddress> getAllAddress(){

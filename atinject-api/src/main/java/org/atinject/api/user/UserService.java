@@ -11,28 +11,24 @@ import org.atinject.api.user.event.UserIdCollided;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
-import org.slf4j.Logger;
 
 @ApplicationScoped
 public class UserService extends Service{
     
-    @Inject Logger logger;
+    @Inject @Named("user")
+    private DistributedCache<UUID, UserEntity> userCacheStore;
     
-    @Inject @Named("user") private DistributedCache<UUID, UserEntity> userCacheStore;
+    @Inject
+    private UserEntityFactory userEntityFactory;
     
-    @Inject UserEntityFactory userEntityFactory;
+    @Inject
+    private UserIdGenerator userIdGenerator;
     
-    @Inject UserIdGenerator userIdGenerator;
-    
-    @Inject Event<UserIdCollided> userIdCollidedEvent;
+    @Inject
+    private Event<UserIdCollided> userIdCollidedEvent;
     
     public UserEntity getUser(UUID userId){
         return userCacheStore.get(userId);
-    }
-    
-    public UserEntity getUserByName(String name){
-        // TODO
-        return null;
     }
     
     public void lockUser(UUID userId){

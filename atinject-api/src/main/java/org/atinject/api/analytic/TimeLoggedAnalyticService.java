@@ -8,7 +8,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.atinject.api.authentication.event.UserLoggedIn;
-import org.atinject.core.affinity.LocalRandomUUIDGenerator;
+import org.atinject.core.affinity.AffineVersion4UUIDGenerator;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.timer.Schedule;
 
@@ -16,7 +16,7 @@ import org.atinject.core.timer.Schedule;
 public class TimeLoggedAnalyticService {
 
     @Inject
-    LocalRandomUUIDGenerator idGenerator;
+    AffineVersion4UUIDGenerator idGenerator;
 
     // distributed cache to store raw data
     // elements will expire each day as they are crunched each day
@@ -27,7 +27,7 @@ public class TimeLoggedAnalyticService {
 
     public void onUserLogged(@Observes UserLoggedIn event) {
         // generate local event id
-        UUID key = idGenerator.getKey();
+        UUID key = idGenerator.getLocalKey();
 
         long t = System.currentTimeMillis();
         raw.put(key, t);

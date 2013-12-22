@@ -9,7 +9,7 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.core.affinity.LocalRandomUUIDGenerator;
+import org.atinject.core.affinity.AffineVersion4UUIDGenerator;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
@@ -27,15 +27,16 @@ public class RendezvousService extends Service {
 
     @Inject @Named("rendezvous") private DistributedCache<UUID, RendezvousEntity> rendezvousCache;
 
-    @Inject private LocalRandomUUIDGenerator generator;
+    @Inject private AffineVersion4UUIDGenerator generator;
     
     @Inject
     Event<SessionJoinedRendezvous> sessionJoinedRendezvousEvent;
+    
     @Inject
     Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
 
     public RendezvousEntity newRendezvous() {
-        UUID rendezvousId = generator.getKey();
+        UUID rendezvousId = generator.getLocalKey();
         RendezvousEntity rendezvous = entityFactory.newRendezvous()
                 .setId(rendezvousId);
         return rendezvous;
