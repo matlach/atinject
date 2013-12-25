@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
+import org.infinispan.commons.util.concurrent.NotifyingFuture;
 import org.infinispan.distexec.mapreduce.Collator;
 import org.infinispan.distexec.mapreduce.MapReduceTask;
 import org.infinispan.distexec.mapreduce.Mapper;
 import org.infinispan.distexec.mapreduce.Reducer;
 import org.infinispan.remoting.rpc.RpcManager;
-import org.infinispan.util.concurrent.NotifyingFuture;
 
 public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
     
@@ -35,6 +35,7 @@ public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
             catch (ExecutionException e) {
                 // log exception as error
                 // swallow exception
+                values.put(entry.getKey(), null);
             }
         }
         return values;
@@ -49,8 +50,9 @@ public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
         catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        catch (Exception e) {
-            throw new RuntimeException(e);
+        catch (ExecutionException e) {
+            // log exception as error
+            // swallow exception
         }
     }
 
