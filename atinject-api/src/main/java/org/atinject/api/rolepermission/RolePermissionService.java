@@ -9,6 +9,7 @@ import org.atinject.api.role.RoleService;
 import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.rolepermission.event.PermissionGrantedToRole;
 import org.atinject.api.rolepermission.event.PermissionRevokedToRole;
+import org.atinject.api.rolepermission.exception.RolePermissionException;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
@@ -34,21 +35,26 @@ public class RolePermissionService extends Service {
 
     public boolean isPermitted(String role, String permission) {
         if (!roleService.isRole(role)) {
-            throw new NullPointerException("role '" + role + "' do not exists");
+            throw new RolePermissionException("role '" + role + "' do not exists");
         }
         if (!permissionService.isPermission(permission)) {
-            throw new NullPointerException("permission '" + permission + "' do not exists");
+            throw new RolePermissionException("permission '" + permission + "' do not exists");
         }
         RolePermissions rolePermissions = getRolePermissions(role);
         if (rolePermissions == null) {
-            throw new NullPointerException("role '" + role + "' has no permission");
+            throw new RolePermissionException("role '" + role + "' has no permission");
         }
         return rolePermissions.hasPermission(permission);
     }
 
     public void grantPermissionToRole(String role, String permission) {
-
-        // lock, get, grant, put
+        RolePermissions rolePermissions = getRolePermissions(role);
+        grantPermissionToRole(rolePermissions, permission);
+    }
+    
+    public void grantPermissionToRole(RolePermissions rolePermissions, String permission) {
+        rolePermissions.addPermission(permission);
+        rolePermissionCache.put(rolePermissions.getRole(), rolePermissions);
         permissionGrantedToRoleEvent.fire(new PermissionGrantedToRole());
     }
 

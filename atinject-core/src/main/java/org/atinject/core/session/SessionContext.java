@@ -1,6 +1,6 @@
 package org.atinject.core.session;
 
-public class SessionContext {
+public final class SessionContext {
 
     private static ThreadLocal<Session> currentSession;
     
@@ -14,5 +14,9 @@ public class SessionContext {
     
     public static void removeCurrentSession(){
         currentSession.remove();
+    }
+    
+    private SessionContext() {
+        
     }
 }

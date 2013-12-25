@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import org.atinject.api.registration.event.GuestRegistered;
 import org.atinject.api.registration.event.UserRegistered;
-import org.atinject.api.role.enumeration.SimpleRoles;
+import org.atinject.api.role.enumeration.DefaultRoles;
 import org.atinject.api.rolepermission.RolePermissionService;
 import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.user.UserService;
@@ -61,7 +61,7 @@ public class AuthorizationService extends Service {
     }
 
     public boolean isGuest(UserRolesEntity userRoles) {
-        return userRoles.containsRole(SimpleRoles.GUEST);
+        return userRoles.containsRole(DefaultRoles.GUEST);
     }
 
     public boolean isRegistered(UserSession session) {
@@ -70,7 +70,7 @@ public class AuthorizationService extends Service {
     }
 
     public boolean isRegistered(UserRolesEntity userRoles) {
-        return userRoles.containsRole(SimpleRoles.REGISTERED);
+        return userRoles.containsRole(DefaultRoles.REGISTERED);
     }
 
     public boolean isAdmin(UserSession session) {
@@ -79,20 +79,20 @@ public class AuthorizationService extends Service {
     }
 
     public boolean isAdmin(UserRolesEntity userRoles) {
-        return userRoles.containsRole(SimpleRoles.ADMIN);
+        return userRoles.containsRole(DefaultRoles.ADMIN);
     }
 
     public void onGuest(@Observes GuestRegistered event) {
         // add guest role
-        userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.GUEST);
+        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.GUEST);
     }
 
     public void onUserRegistered(@Observes UserRegistered event) {
         // TODO optimize here: lock, get, remove, add, put
         // remove guest role
-        userRoleService.revokeUserRole(event.getUser().getId(), SimpleRoles.GUEST);
+        userRoleService.revokeUserRole(event.getUser().getId(), DefaultRoles.GUEST);
 
         // add registered role
-        userRoleService.grantUserRole(event.getUser().getId(), SimpleRoles.REGISTERED);
+        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.REGISTERED);
     }
 }

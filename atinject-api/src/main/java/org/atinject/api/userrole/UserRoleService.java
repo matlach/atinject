@@ -32,20 +32,28 @@ public class UserRoleService extends Service {
     
     public void grantUserRole(UUID userId, String role){
         UserRolesEntity userRoles = getUserRole(userId);
+        grantUserRole(userRoles, role);
+    }
+    
+    public void grantUserRole(UserRolesEntity userRoles, String role) {
         if (userRoles.containsRole(role)){
             // throw
         }
         userRoles.addRole(role);
-        userRoleCache.put(userId, userRoles);
+        userRoleCache.put(userRoles.getUserId(), userRoles);
     }
     
     public void revokeUserRole(UUID userId, String role){
         UserRolesEntity userRoles = getUserRole(userId);
+        revokeUserRole(userRoles, role);
+    }
+    
+    public void revokeUserRole(UserRolesEntity userRoles, String role) {
         if (! userRoles.containsRole(role)){
             // throw
         }
         userRoles.removeRole(role);
-        userRoleCache.put(userId, userRoles);
+        userRoleCache.put(userRoles.getUserId(), userRoles);
     }
 
 }

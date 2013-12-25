@@ -8,7 +8,7 @@ import org.atinject.api.registration.dto.RegisterAsGuestRequest;
 import org.atinject.api.registration.dto.RegisterAsGuestResponse;
 import org.atinject.api.registration.dto.RegisterRequest;
 import org.atinject.api.registration.dto.RegisterResponse;
-import org.atinject.api.role.enumeration.SimpleRoles;
+import org.atinject.api.role.enumeration.DefaultRoles;
 import org.atinject.api.user.UserAdapter;
 import org.atinject.api.user.dto.User;
 import org.atinject.api.user.entity.UserEntity;
@@ -32,7 +32,7 @@ public class RegistrationWebSocketService extends WebSocketService {
         return new RegisterAsGuestResponse().setUser(user);
     }
 
-    @RequiresRoles(SimpleRoles.GUEST)
+    @RequiresRoles(DefaultRoles.GUEST)
     @WebSocketMessage
     public RegisterResponse onRegister(RegisterRequest request, UserSession session) {
         registrationService.register(session.getUserId(), request.getUsername(), request.getPassword());
