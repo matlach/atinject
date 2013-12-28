@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="text/javascript" data-main="scripts/main" src="scripts/require.js"></script>
+</head>
+<body>
+
+<script>
+
+/*
+//event test
+//1. create request
+var doGetUserRequest = new GetUserRequest();
+doGetUserRequest.setUserId("123");
+userWebSocketService.doGetUserRequest(doGetUserRequest);
+//2. simulate response
+var onGetUserResponse = new GetUserResponse();
+onGetUserResponse.setRequestId(doGetUserRequest.getRequestId());
+var onGetUserResponseUser = new User();
+onGetUserResponseUser.setId("123");
+onGetUserResponse.setUser(onGetUserResponseUser);
+//3. dispatch response
+var event = new CustomEvent("onGetUserResponse", {detail:onGetUserResponse});
+window.dispatchEvent(event);
+*/
+
+// test
+/*
+var getUserResponse = new GetUserResponse();
+getUserResponse.setRequestId("abc");
+getUserResponse.setException(new WebSocketResponseException());
+var getUserResponseString = JSON.stringify(getUserResponse);
+alert(getUserResponseString);
+
+var getUserResponseRawObject = JSON.parse(getUserResponseString);
+//alert(getUserResponseRawObject.requestId);
+var getUserResponseObject = cast(getUserResponseRawObject, classAlias[getUserResponseRawObject._class]);
+alert(getUserResponseObject.getRequestId());
+alert(getUserResponseObject.getException());
+*/
+
+
+function initCanvas(){
+	var canvas = document.getElementById("canvas");
+	stage = new createjs.Stage(canvas);
+	shape = new createjs.Shape();
+	shape.graphics.f("red").r(50, 50, 100, 100);
+	stage.addChild(shape);
+	stage.update();
+};
+
+</script>
+
+<canvas id="canvas" width="480" height="240"></canvas>
+
+<div id="websocketConsole">
+
+<form>
+<fieldset id="websocketIO">
+	<legend>websocket io</legend>
+    <input type="button" value="open" onclick="openWebSocket();" />
+    <input type="button" value="close" onclick="closeWebSocket();" />
+    <label for="input">input:</label>
+    <input id="input" name="input" type="text" />
+    <input type="button" value="send" onclick="sendWebSocketMessage();" />
+    <label for="io">io:</label>
+    <textarea id="io"></textarea>
+</fieldset>
+
+<fieldset id="login">
+	<legend>login</legend>
+	<label for="loginUsername">username:</label>
+	<input id="loginUsername" name="loginUsername" type="text" />
+	<label for="loginPassword">password:</label>
+	<input id="loginPassword" name="loginPassword" type="password" />
+	<input type="button" value="login" onclick="login();" />
+</fieldset>
+
+<fieldset id="guestLogin">
+	<legend>guest login</legend>
+	<label for="guestLoginName">name:</label>
+	<input id="guestLoginName" name="guestLoginName" type="text" />
+	<input type="button" value="guestLogin" onclick="guestLogin();" />
+</fieldset>
+
+<fieldset id="logout">
+	<legend>logout</legend>
+	<input type="button" value="logout" onclick="logout();" />
+</fieldset>
+
+<fieldset id="register">
+	<legend>register</legend>
+	<label for="registerName"></label>
+	<input id="registerName" name="registerName" type="text" />
+	<label for="registerUsername"></label>
+	<input id="registerUsername" name="registerUsername" type="text" />
+	<label for="registerPassword"></label>
+	<input id="registerPassword" name="registerPassword" type="password" />
+	<input type="button" value="register" onclick="register();" />
+</fieldset>
+</form>
+
+</div>
+
+</body>
+</html>

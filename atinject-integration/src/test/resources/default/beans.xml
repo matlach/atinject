@@ -10,7 +10,6 @@
 		<class>org.atinject.core.thread.ThreadTrackerInterceptor</class>
 		<class>org.atinject.core.tiers.exception.HandleWebSocketServiceExceptionInterceptor</class>
 		<class>org.atinject.core.tiers.exception.HandleServiceExceptionInterceptor</class>
-		<class>org.atinject.core.tiers.exception.HandleCacheStoreExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
 <!-- 		<class>org.atinject.api.authorization.RequiresUserInterceptor</class>
 		<class>org.atinject.api.authorization.RequiresGuestInterceptor</class>

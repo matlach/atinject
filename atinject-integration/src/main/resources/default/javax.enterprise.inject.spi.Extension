@@ -5,7 +5,6 @@ org.atinject.core.dto.DefaultDTORegistryExtension
 org.atinject.core.entity.DefaultEntityRegistryExtension
 org.atinject.core.tiers.WebSocketServiceRegistryExtension
 org.atinject.core.tiers.ServiceRegistryExtension
-org.atinject.core.tiers.CacheStoreRegistryExtension
 org.atinject.core.concurrent.AsynchronousServiceExtension
 org.atinject.core.cache.CacheExtension
 org.atinject.core.websocket.WebSocketExtension

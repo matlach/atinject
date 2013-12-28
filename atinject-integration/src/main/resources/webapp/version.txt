@@ -1,0 +1,6 @@
+requirejs 2.1.9
+
+easeljs 0.7.1
+preloadjs 0.4.1
+soundjs 0.5.2
+tweenjs 0.5.1

@@ -43,17 +43,23 @@ public class UserEntity extends VersionableEntity {
     public static class UserExternalizer implements Externalizer<UserEntity> {
         private static final long serialVersionUID = 1L;
 
-        private static VersionableUserExternalizer externalizer =
-                CDI.select(VersionableUserExternalizer.class).get();
+        private static VersionableUserExternalizer externalizer;
+        
+        private static VersionableUserExternalizer getExternalizer() {
+            if (externalizer == null) {
+                externalizer = CDI.select(VersionableUserExternalizer.class).get();
+            }
+            return externalizer;
+        }
         
         @Override
         public void writeObject(ObjectOutput output, UserEntity user) throws IOException {
-            externalizer.writeObject(output, user);
+            getExternalizer().writeObject(output, user);
         }
 
         @Override
         public UserEntity readObject(ObjectInput input) throws IOException, ClassNotFoundException {
-            return externalizer.readObject(input);
+            return getExternalizer().readObject(input);
         }
     }
 
