@@ -15,6 +15,9 @@ public class CacheProducer {
     public <K, V> LocalCache<K, V> newLocalCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
+        if (cache == null) {
+            throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
+        }
         return CDI.select(LocalCache.class).get().withCache(cache);
     }
     
@@ -22,6 +25,9 @@ public class CacheProducer {
     public <K, V> DistributedCache<K, V> newDistributedCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
+        if (cache == null) {
+            throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
+        }
         return CDI.select(DistributedCache.class).get().withCache(cache);
     }
     
@@ -29,6 +35,9 @@ public class CacheProducer {
     public <K, V> ReplicatedCache<K, V> newReplicatedCache(InjectionPoint ip){
         Named named = ip.getAnnotated().getAnnotation(Named.class);
         org.infinispan.Cache<K, V> cache = (org.infinispan.Cache<K, V>) cacheManager.getCache(named.value());
+        if (cache == null) {
+            throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
+        }
         return CDI.select(ReplicatedCache.class).get().withCache(cache);
     }
     

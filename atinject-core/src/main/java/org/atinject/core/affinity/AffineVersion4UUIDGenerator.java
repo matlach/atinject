@@ -36,7 +36,7 @@ public class AffineVersion4UUIDGenerator {
     
     @PostConstruct
     public void initialize() {
-        KeyAffinityServiceFactory.newKeyAffinityService(
+        keyAffinityService = KeyAffinityServiceFactory.newKeyAffinityService(
                 cache.unwrap(), asynchronousService, new Version4UUIDKeyGenerator(), keyBufferSize);
     }
     

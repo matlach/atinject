@@ -55,6 +55,9 @@ public class DefaultSuperAdminProvider implements SuperAdminProvider {
         
         // ensure super admin role has all the permission
         RolePermissions superAdminPermissions = rolePermissionService.getRolePermissions(DefaultRoles.SUPER_ADMIN);
+        if (superAdminPermissions == null) {
+            superAdminPermissions = rolePermissionService.addRolePermissions(DefaultRoles.SUPER_ADMIN);
+        }
         for (String permission : permissionService.getAllPermission()) {
             if (! superAdminPermissions.hasPermission(permission)) {
                 rolePermissionService.grantPermissionToRole(DefaultRoles.SUPER_ADMIN, permission);

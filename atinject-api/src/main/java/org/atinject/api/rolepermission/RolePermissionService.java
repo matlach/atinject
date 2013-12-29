@@ -10,7 +10,7 @@ import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.rolepermission.event.PermissionGrantedToRole;
 import org.atinject.api.rolepermission.event.PermissionRevokedToRole;
 import org.atinject.api.rolepermission.exception.RolePermissionException;
-import org.atinject.core.cache.DistributedCache;
+import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
@@ -19,18 +19,30 @@ public class RolePermissionService extends Service {
 
     @Inject
     RoleService roleService;
+    
     @Inject
     PermissionService permissionService;
+    
     @Inject @Named("rolepermission")
-    DistributedCache<String, RolePermissions> rolePermissionCache;
+    ReplicatedCache<String, RolePermissions> rolePermissionCache;
 
     @Inject
     Event<PermissionGrantedToRole> permissionGrantedToRoleEvent;
+    
     @Inject
     Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
 
     public RolePermissions getRolePermissions(String role) {
         return rolePermissionCache.get(role);
+    }
+    
+    public RolePermissions addRolePermissions(String role) {
+        if (getRolePermissions(role) != null) {
+            throw new RolePermissionException("role '" + role + "' already exists");
+        }
+        RolePermissions rolePermissions = new RolePermissions().setRole(role);
+        rolePermissionCache.put(role, rolePermissions);
+        return rolePermissions;
     }
 
     public boolean isPermitted(String role, String permission) {

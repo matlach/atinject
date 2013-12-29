@@ -1,12 +1,10 @@
-define(["UserCache", "UserWebSocketService", "GetUserRequest", "GetUserResponse", "User"],
-function(UserCache, UserWebSocketService, GetUserRequest, GetUserResponse, User){
+define(["atinject/user/UserCache", "atinject/user/UserWebSocketService", "atinject/user/UserFactory"],
+function(userCache, userWebSocketService, userFactory){
 	
-	function UserService(UserCache, UserWebSocketService, GetUserRequest, GetUserResponse, User) {
-		this.userCache = UserCache;
-		this.userWebSocketService = UserWebSocketService;
-		this.GetUserRequest = GetUserRequest;
-		this.GetUserResponse = GetUserResponse;
-		this.User = User;
+	function UserService(userCache, userWebSocketService, userFactory) {
+		this.userCache = userCache;
+		this.userWebSocketService = userWebSocketService;
+		this.userFactory = userFactory;
 	};
 
 	UserService.prototype.getUser = function(userId) {
@@ -18,7 +16,7 @@ function(UserCache, UserWebSocketService, GetUserRequest, GetUserResponse, User)
 			window.dispatchEvent(event);
 		}
 		// not in cache, ask server
-		var request = new GetUserRequest().setUserId(userId);
+		var request = userFactory.newGetUserRequest().setUserId(userId);
 		this.userWebSocketService.doGetUserRequest(request);
 	};
 
@@ -33,7 +31,7 @@ function(UserCache, UserWebSocketService, GetUserRequest, GetUserResponse, User)
 		window.dispatchEvent(event);
 	};
 	
-	var userService = new UserService(UserCache, UserWebSocketService, GetUserRequest, GetUserResponse, User);
+	var userService = new UserService(userCache, userWebSocketService, userFactory);
 	window.addEventListener("onGetUserRequestResponse", function(e){userService.onGetUser(e.detail.request, e.detail.response);}, false);
 
 	return userService;

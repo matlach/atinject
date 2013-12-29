@@ -27,7 +27,7 @@ public class PackageArchive {
     }
     
     public void export() throws Exception {
-        
+        // TODO manage javascript
         Path exportPath = Paths.get(getExportPath());
         File exportDirectory = exportPath.toFile();
         if (exportDirectory.exists()) {

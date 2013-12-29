@@ -179,6 +179,10 @@ public class ExportJS {
 "        return this.${jsonTypeInfoProperty};" + NEWLINE +
 "    };" + NEWLINE +
 "    " + NEWLINE +
+"    ${dtoClassSimpleName}.prototype.getClassSimpleName = function() {" + NEWLINE +
+"        this.getClass().split(\".\").slice(-1)[0]" + NEWLINE + // TODO this will need some kind of optimization
+"    };" + NEWLINE +
+"    " + NEWLINE +
 "    return ${dtoClassSimpleName};" + NEWLINE +
 "});" + NEWLINE;
     

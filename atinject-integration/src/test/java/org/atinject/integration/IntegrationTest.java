@@ -82,6 +82,7 @@ public abstract class IntegrationTest {
     static Map<String, List<String>> dependencies;
     static {
         dependencies = new HashMap<>();
+        dependencies.put(framework, Collections.<String>emptyList());
         dependencies.put(core, Collections.<String>emptyList());
         dependencies.put(api, Arrays.asList(core));
         dependencies.put(api_analytic, Arrays.asList(core));

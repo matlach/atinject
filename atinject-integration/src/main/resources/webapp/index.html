@@ -8,39 +8,6 @@
 
 <script>
 
-/*
-//event test
-//1. create request
-var doGetUserRequest = new GetUserRequest();
-doGetUserRequest.setUserId("123");
-userWebSocketService.doGetUserRequest(doGetUserRequest);
-//2. simulate response
-var onGetUserResponse = new GetUserResponse();
-onGetUserResponse.setRequestId(doGetUserRequest.getRequestId());
-var onGetUserResponseUser = new User();
-onGetUserResponseUser.setId("123");
-onGetUserResponse.setUser(onGetUserResponseUser);
-//3. dispatch response
-var event = new CustomEvent("onGetUserResponse", {detail:onGetUserResponse});
-window.dispatchEvent(event);
-*/
-
-// test
-/*
-var getUserResponse = new GetUserResponse();
-getUserResponse.setRequestId("abc");
-getUserResponse.setException(new WebSocketResponseException());
-var getUserResponseString = JSON.stringify(getUserResponse);
-alert(getUserResponseString);
-
-var getUserResponseRawObject = JSON.parse(getUserResponseString);
-//alert(getUserResponseRawObject.requestId);
-var getUserResponseObject = cast(getUserResponseRawObject, classAlias[getUserResponseRawObject._class]);
-alert(getUserResponseObject.getRequestId());
-alert(getUserResponseObject.getException());
-*/
-
-
 function initCanvas(){
 	var canvas = document.getElementById("canvas");
 	stage = new createjs.Stage(canvas);
@@ -48,6 +15,18 @@ function initCanvas(){
 	shape.graphics.f("red").r(50, 50, 100, 100);
 	stage.addChild(shape);
 	stage.update();
+};
+
+function openWebSocket() {
+	require(["atinject/WebSocketClient"], function(WebSocketClient) {
+		WebSocketClient.openWebSocket();
+	});
+};
+
+function closeWebSocket() {
+	require(["atinject/WebSocketClient"], function(webSocketClient) {
+		webSocketClient.closeWebSocket();
+	});
 };
 
 </script>

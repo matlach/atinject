@@ -1,10 +1,10 @@
-define(["UserService"],
-function(UserService){
+define(["atinject/user/UserService"],
+function(userService){
 
-	function UserView() {
+	function UserView(userService) {
 		this.listeners = new Object();
 		this.gettingUser = false;
-		this.userService = UserService;
+		this.userService = userService;
 	};
 
 	UserView.prototype.getUser = function(userId) {
@@ -26,7 +26,6 @@ function(UserService){
 		alert(user.getUserId());
 		this.gettingUser = false;
 	};
-	var userView = new UserView();
 	
-	return userView;
+	return new UserView(userService);
 });

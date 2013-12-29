@@ -1,4 +1,4 @@
-package org.atinject.api.user;
+package org.atinject.api.rolepermission;
 
 import javax.enterprise.inject.Produces;
 
@@ -10,13 +10,13 @@ import org.infinispan.transaction.LockingMode;
 import org.infinispan.transaction.TransactionMode;
 import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
-public class UserCacheProducer {
+public class RolePermissionsCacheProducer {
     
-    @Produces @Named("rolepermission")
+    @Produces @Named("user")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
-                        .cacheMode(CacheMode.REPL_SYNC)
+                        .cacheMode(CacheMode.DIST_SYNC)
                     .dataContainer()
                         .persistence()
                             .addSingleFileStore()

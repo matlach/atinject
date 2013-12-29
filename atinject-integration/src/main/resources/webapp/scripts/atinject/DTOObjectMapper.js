@@ -1,15 +1,15 @@
-define(["CLASS_ALIAS"],
+define(["atinject/CLASS_ALIAS"],
 function(CLASS_ALIAS){
 	
 	function DTOObjectMapper(CLASS_ALIAS) {
 		this.classAlias = CLASS_ALIAS;
-		
-		var stringConstructor = "".constructor;
-		var arrayConstructor = [].constructor;
-		var objectConstructor = {}.constructor;
 	}
 
-	DTOObjectMapper.prototype.cast = new function (rawObj, constructor) {
+	DTOObjectMapper.prototype.stringConstructor = "".constructor;
+	DTOObjectMapper.prototype.arrayConstructor = [].constructor;
+	DTOObjectMapper.prototype.objectConstructor = {}.constructor;
+	
+	DTOObjectMapper.prototype.cast = function(rawObj, constructor) {
 	    var obj = new constructor();
 	    for(var i in rawObj){
 	    	if (rawObj[i] === null){
