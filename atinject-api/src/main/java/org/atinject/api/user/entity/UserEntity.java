@@ -46,7 +46,7 @@ public class UserEntity extends VersionableEntity {
 
     @Override
     public final int hashCode() {
-        return id.hashCode();
+        return Objects.requireNonNull(getId()).hashCode();
     }
     
     public static class UserExternalizer implements Externalizer<UserEntity> {
