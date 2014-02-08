@@ -2,7 +2,6 @@ package org.atinject.api.userlockout;
 
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
-import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
 import org.atinject.api.authentication.AuthenticationService;
@@ -14,7 +13,7 @@ import org.atinject.core.nullanalysis.NonNull;
 @Decorator
 public abstract class UserLockoutAuthenticationServiceDecorator implements AuthenticationService {
 
-    @Inject @Any @Delegate AuthenticationService authenticationService;
+    @Inject @Delegate AuthenticationService authenticationService;
     
     @Inject UserLockoutService userLockoutService;
     

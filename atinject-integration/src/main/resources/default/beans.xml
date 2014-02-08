@@ -25,6 +25,7 @@
 	</alternatives>
 
 	<decorators>
+		<class>org.atinject.api.registrationrole.GrantRoleDecorator</class>
 		<class>org.atinject.api.userlockout.UserLockoutAuthenticationServiceDecorator</class>
 	</decorators>
 </beans>

@@ -20,7 +20,7 @@ import org.atinject.core.websocket.WebSocketMessage;
 public class RegistrationWebSocketService extends WebSocketService {
 
     @Inject
-    RegistrationService registrationService;
+    RegistrationServiceImpl registrationService;
     
     @Inject
     UserAdapter userAdapter;

@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import javax.inject.Inject;
 
 import org.atinject.api.registration.GuestUsernamePasswordGenerator;
-import org.atinject.api.registration.RegistrationService;
+import org.atinject.api.registration.RegistrationServiceImpl;
 import org.atinject.api.usercredential.PasswordDigester;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.integration.ArquillianIT;
@@ -39,7 +39,7 @@ public class AuthenticationServiceIT extends IntegrationTest {
         return archive;
     }
     
-    @Inject RegistrationService registrationService;
+    @Inject RegistrationServiceImpl registrationService;
     @Inject GuestUsernamePasswordGenerator guestUsernamePasswordGenerator;
     @Inject AuthenticationService authenticationService;
     @Inject PasswordDigester passwordDigester;
