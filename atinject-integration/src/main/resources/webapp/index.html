@@ -8,18 +8,14 @@
 
 <script>
 
-function initCanvas(){
-	var canvas = document.getElementById("canvas");
-	stage = new createjs.Stage(canvas);
-	shape = new createjs.Shape();
-	shape.graphics.f("red").r(50, 50, 100, 100);
-	stage.addChild(shape);
-	stage.update();
-};
+require(["atinject/DemoStage"],
+function(demoStage){
+	demoStage.initialize();
+});
 
 function openWebSocket() {
-	require(["atinject/WebSocketClient"], function(WebSocketClient) {
-		WebSocketClient.openWebSocket();
+	require(["atinject/WebSocketClient"], function(webSocketClient) {
+		webSocketClient.openWebSocket();
 	});
 };
 
@@ -33,6 +29,7 @@ function closeWebSocket() {
 
 <canvas id="canvas" width="480" height="240"></canvas>
 
+<div id="fps"></div>
 <div id="websocketConsole">
 
 <form>
