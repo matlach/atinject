@@ -41,7 +41,6 @@ public class UserServiceIT extends IntegrationTest {
                     .clazz("org.atinject.core.thread.ThreadTrackerInterceptor")
                     .clazz("org.atinject.core.tiers.exception.HandleWebSocketServiceExceptionInterceptor")
                     .clazz("org.atinject.core.tiers.exception.HandleServiceExceptionInterceptor")
-                    .clazz("org.atinject.core.tiers.exception.HandleCacheStoreExceptionInterceptor")
                     .clazz("org.atinject.core.transaction.TransactionalInterceptor")
                     .up();
         

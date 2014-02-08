@@ -12,7 +12,7 @@ import org.infinispan.transaction.lookup.DummyTransactionManagerLookup;
 
 public class UserCacheProducer {
     
-    @Produces @Named("rolepermission")
+    @Produces @Named("user")
     public Configuration newCacheConfiguration() {
         return new ConfigurationBuilder()
                     .clustering()
