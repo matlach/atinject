@@ -5,11 +5,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import org.atinject.api.registration.event.GuestRegistered;
-import org.atinject.api.registration.event.UserRegistered;
 import org.atinject.api.role.enumeration.DefaultRoles;
 import org.atinject.api.rolepermission.RolePermissionService;
 import org.atinject.api.rolepermission.entity.RolePermissions;
@@ -82,17 +79,5 @@ public class AuthorizationService extends Service {
         return userRoles.containsRole(DefaultRoles.ADMIN);
     }
 
-    public void onGuest(@Observes GuestRegistered event) {
-        // add guest role
-        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.GUEST);
-    }
 
-    public void onUserRegistered(@Observes UserRegistered event) {
-        // TODO optimize here: lock, get, remove, add, put
-        // remove guest role
-        userRoleService.revokeUserRole(event.getUser().getId(), DefaultRoles.GUEST);
-
-        // add registered role
-        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.REGISTERED);
-    }
 }
