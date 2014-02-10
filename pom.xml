@@ -248,31 +248,28 @@
 
 	<modules>
 		<module>atinject-core</module>
-		<module>atinject-api</module>
 		<module>atinject-integration</module>
+		<module>atinject-api-analytic</module>
+		<module>atinject-api-facebook</module>
+		<module>atinject-api-permission</module>
+		<module>atinject-api-role</module>
+		<module>atinject-api-role-permission</module>
+		<module>atinject-api-system-property</module>
 		<module>atinject-api-user</module>
-		<module>atinject-api-user-session</module>
+		<module>atinject-api-user-affinity</module>
 		<module>atinject-api-user-authentication</module>
 		<module>atinject-api-user-authorization</module>
 		<module>atinject-api-user-credential</module>
-		<module>atinject-role</module>
-		<module>atinject-api-role</module>
-		<module>atinject-api-permission</module>
-		<module>atinject-api-user-affinity</module>
-		<module>atinject-user-topology</module>
-		<module>atinject-api-user-topology</module>
-		<module>atinject-api-user-role</module>
-		<module>atinject-api-user-permission</module>
-		<module>atinject-api-role-permission</module>
 		<module>atinject-api-user-lockout</module>
+		<module>atinject-api-user-permission</module>
 		<module>atinject-api-user-preference</module>
 		<module>atinject-api-user-registration</module>
-		<module>atinject-api-user-relocation</module>
-		<module>atinject-api-facebook</module>
-		<module>atinject-api-user-websocket</module>
-		<module>atinject-api-system-property</module>
-		<module>atinject-api-analytic</module>
 		<module>atinject-api-user-registration-role</module>
+		<module>atinject-api-user-role</module>
+		<module>atinject-api-user-relocation</module>
+		<module>atinject-api-user-session</module>
+		<module>atinject-api-user-topology</module>
+		<module>atinject-api-user-websocket</module>
 	</modules>
 
 	<build>
