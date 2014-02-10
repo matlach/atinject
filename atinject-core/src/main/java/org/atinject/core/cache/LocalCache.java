@@ -19,7 +19,7 @@ public class LocalCache<K, V> {
 
     protected AdvancedCache<K, V> cache;
     
-    LocalCache withCache(org.infinispan.Cache<K, V> cache) {
+    LocalCache<K, V> withCache(org.infinispan.Cache<K, V> cache) {
         if (this.cache != null) {
             throw new IllegalStateException("cannot reassign cache");
         }

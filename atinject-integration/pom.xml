@@ -28,9 +28,34 @@
 			<artifactId>atinject-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>atinject-api</artifactId>
+			<artifactId>atinject-api-user</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-api-user-authentication</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-api-user-registration</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-api-permission</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-api-role</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

@@ -5,7 +5,7 @@ import org.infinispan.distribution.DistributionManager;
 public class DistributedCache<K, V> extends ClusteredCache<K, V> {
 
     @Override
-    DistributedCache withCache(org.infinispan.Cache<K, V> cache) {
+    DistributedCache<K, V> withCache(org.infinispan.Cache<K, V> cache) {
         super.withCache(cache);
         return this;
     }
