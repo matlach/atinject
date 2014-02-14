@@ -19,8 +19,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class ScheduledService implements ScheduledExecutorService
-{
+public class ScheduledService implements ScheduledExecutorService {
 
     private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     

@@ -9,8 +9,7 @@ import javax.interceptor.InvocationContext;
 
 @Asynchronous
 @Interceptor
-public class AsynchronousInterceptor
-{
+public class AsynchronousInterceptor {
 
     private static ThreadLocal<Object> hack = new ThreadLocal<>();
     
@@ -26,15 +25,12 @@ public class AsynchronousInterceptor
         
         return asynchronousService.submit(new Callable<Object>(){
             @Override
-            public Object call() throws Exception
-            {
+            public Object call() throws Exception {
                 hack.set(new Object());
-                try
-                {
+                try {
                     return ctx.getMethod().invoke(ctx.getTarget(), ctx.getParameters());
                 }
-                finally
-                {
+                finally {
                     hack.remove();
                 }
             }

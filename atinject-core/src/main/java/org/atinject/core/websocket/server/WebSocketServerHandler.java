@@ -216,9 +216,8 @@ public class WebSocketServerHandler {
             sendHttpResponse(ctx, req, res);
         }
         
-        public void handleHttpStaticContent(ChannelHandlerContext ctx, FullHttpRequest request){
-            try
-            {
+        public void handleHttpStaticContent(ChannelHandlerContext ctx, FullHttpRequest request) {
+            try {
                 final String uri = request.getUri();
                 final String path = sanitizeUri(uri);
                 if (path == null) {
@@ -400,7 +399,7 @@ public class WebSocketServerHandler {
                 if (binary){
                     sendNotificationAsBinary(ctx.channel(), notification);
                 }
-                else{
+                else {
                     sendNotificationAsText(ctx.channel(), notification);
                 }
             }
@@ -568,15 +567,14 @@ public class WebSocketServerHandler {
                 Session session = CDI.select(SessionService.class).get().getSession(sessionId);
                 // set current session
                 SessionContext.setCurrentSession(session);
-                try{
+                try {
                     // manually inject web socket extension, as callable should have been serialized
                     WebSocketExtension webSocketExtension = CDI.select(WebSocketExtension.class).get();
                     
                     WebSocketMessageMethod webSocketMessageMethod = webSocketExtension.getWebSocketMessageMethod(request.getClass());
                     
                     Object returnValue = null;
-                    if (webSocketMessageMethod.isInjectSessionParameter())
-                    {
+                    if (webSocketMessageMethod.isInjectSessionParameter()) {
                         if (webSocketMessageMethod.isWebSocketRequestFirstParameter()) {
                             returnValue = webSocketMessageMethod.getWebSocketMessageMethod().invoke(webSocketMessageMethod.getTarget(), request, session);
                         }

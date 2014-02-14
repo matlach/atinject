@@ -7,8 +7,7 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
-public class AsynchronousServiceExtension implements Extension
-{
+public class AsynchronousServiceExtension implements Extension {
 
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> event) {
         Class<T> clazz = event.getAnnotatedType().getJavaClass();

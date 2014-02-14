@@ -19,8 +19,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class AsynchronousService implements ExecutorService
-{
+public class AsynchronousService implements ExecutorService {
 
     private ThreadPoolExecutor threadPoolExecutor;
     
