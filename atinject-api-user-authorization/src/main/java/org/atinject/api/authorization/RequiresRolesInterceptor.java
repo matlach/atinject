@@ -13,7 +13,7 @@ public class RequiresRolesInterceptor {
     
     @AroundInvoke
     public Object authorize(InvocationContext invocationContext) throws Exception{
-        Session session = SessionContext.getCurrentSession();
+        Session session = SessionContext.get();
         if (session == null){
             throw new IllegalStateException();
         }

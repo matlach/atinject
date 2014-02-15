@@ -566,7 +566,7 @@ public class WebSocketServerHandler {
             public WebSocketResponse call() throws Exception {
                 Session session = CDI.select(SessionService.class).get().getSession(sessionId);
                 // set current session
-                SessionContext.setCurrentSession(session);
+                SessionContext.set(session);
                 try {
                     // manually inject web socket extension, as callable should have been serialized
                     WebSocketExtension webSocketExtension = CDI.select(WebSocketExtension.class).get();
@@ -588,7 +588,7 @@ public class WebSocketServerHandler {
                     return (WebSocketResponse) returnValue;
                 }
                 finally {
-                    SessionContext.removeCurrentSession();
+                    SessionContext.remove();
                 }
             }
         }

@@ -14,7 +14,7 @@ public class RequiresUserInterceptor {
     
     @AroundInvoke
     public Object authorize(InvocationContext invocationContext) throws Exception{
-        UserSession session = (UserSession) SessionContext.getCurrentSession();
+        UserSession session = (UserSession) SessionContext.get();
         if (session == null){
             throw new IllegalStateException();
         }

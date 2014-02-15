@@ -8,15 +8,15 @@ public final class UserSessionContext {
         
     }
     
-    public static UserSession getCurrentSession(){
-        return (UserSession) SessionContext.getCurrentSession();
+    public static UserSession get() {
+        return (UserSession) SessionContext.get();
     }
     
-    public static void setCurrentSession(UserSession session){
-        SessionContext.setCurrentSession(session);
+    public static void set(UserSession session) {
+        SessionContext.set(session);
     }
     
-    public static void removeCurrentSession(){
-        SessionContext.removeCurrentSession();
+    public static void remove() {
+        SessionContext.remove();
     }
 }
