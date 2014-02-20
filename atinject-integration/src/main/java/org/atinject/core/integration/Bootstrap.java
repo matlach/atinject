@@ -36,7 +36,7 @@ public class Bootstrap {
         shutdownThread.setDaemon(true);
         shutdownThread.start();
         
-        new JavaSECDIProvider();
+        JavaSECDIProvider.initialize();
         
         // TODO inject here a "version service"
         System.out.println("booting atinject core version 1");
