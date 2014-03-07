@@ -67,7 +67,7 @@
 		<logback.version>1.1.1</logback.version>
 		<weld.version>2.2.0.Alpha1</weld.version>
 		<netty.version>5.0.0.Alpha1</netty.version>
-		<infinispan.version>6.0.1.Final</infinispan.version>
+		<infinispan.version>7.0.0.Alpha1</infinispan.version>
 		<jackson.version>2.3.1</jackson.version>
 		<hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
