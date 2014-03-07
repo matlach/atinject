@@ -52,7 +52,6 @@ import javax.inject.Inject;
 import org.atinject.core.cdi.CDI;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.dto.DTOObjectMapper;
-import org.atinject.core.netty.ByteBufUtil;
 import org.atinject.core.notification.NotificationEvent;
 import org.atinject.core.session.Session;
 import org.atinject.core.session.SessionContext;
@@ -103,8 +102,9 @@ public class WebSocketServerHandler {
     @Inject
     private AsynchronousService asynchronousService;
     
-    // maybe this could be stored per client
-    private boolean binary = false;
+    // TODO maximum of concurrent connection
+    // TODO boolean to stop accepting new connection
+    // TODO boolean to stop servicing http/websocket request
     
     public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
@@ -117,12 +117,7 @@ public class WebSocketServerHandler {
             return;
         }
         // send to websocket
-        if (binary){
-            sendNotificationAsBinary(channel, event.getNotification());
-        }
-        else{
-            sendNotificationAsText(channel, event.getNotification());
-        }
+        sendNotificationAsText(channel, event.getNotification());
     }
     
         public void channelRegistered(ChannelHandlerContext ctx) {
@@ -396,12 +391,7 @@ public class WebSocketServerHandler {
                 // send notification to provide session id to the client
                 SessionOpenedNotification notification = new SessionOpenedNotification();
                 notification.setSessionId(session.getSessionId());
-                if (binary){
-                    sendNotificationAsBinary(ctx.channel(), notification);
-                }
-                else {
-                    sendNotificationAsText(ctx.channel(), notification);
-                }
+                sendNotificationAsText(ctx.channel(), notification);
             }
         }
         
@@ -433,16 +423,9 @@ public class WebSocketServerHandler {
                 return;
             }
             if (frame instanceof BinaryWebSocketFrame){
-                if (!binary){
-                    throw new RuntimeException("server is not in binary mode");
-                }
-                handleBinaryWebSocketFrame(ctx, (BinaryWebSocketFrame) frame);
                 return;
             }
             if (frame instanceof TextWebSocketFrame){
-                if (binary){
-                    throw new RuntimeException("server is not in text mode");
-                }
                 handleTextWebSocketFrame(ctx, (TextWebSocketFrame) frame);
                 return;
             }
@@ -462,24 +445,6 @@ public class WebSocketServerHandler {
             ctx.channel().write(new PongWebSocketFrame(frame.content()));
         }
         
-        public void handleBinaryWebSocketFrame(ChannelHandlerContext ctx, BinaryWebSocketFrame frame){
-            // validate session (need to be bound at that point)
-            Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
-            String sessionId = sessionAttribute.get();
-            if (sessionId == null){
-                throw new RuntimeException("handshake is not complete, kick");
-            }
-            
-            // decode binary web socket frame
-            WebSocketRequest request = decodeBinaryWebSocketFrame(frame);
-            
-            // perform request
-            WebSocketResponse response = performRequest(sessionId, request);
-            
-            // send response
-            sendResponseAsBinary(ctx.channel(), response);
-        }
-        
         public void handleTextWebSocketFrame(ChannelHandlerContext ctx, TextWebSocketFrame frame){
             // validate session (need to be bound at that point)
             Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
@@ -496,16 +461,6 @@ public class WebSocketServerHandler {
             
             // send response
             sendResponseAsText(ctx.channel(), response);
-        }
-        
-        public WebSocketRequest decodeBinaryWebSocketFrame(BinaryWebSocketFrame frame){
-            // read json
-            final String json = ByteBufUtil.readUTF8(frame.content());
-            
-            // unserialize json
-            final WebSocketRequest request = dtoObjectMapper.readValue(json);
-            
-            return request;
         }
         
         public WebSocketRequest decodeTextWebSocketFrame(TextWebSocketFrame frame){
@@ -604,18 +559,6 @@ public class WebSocketServerHandler {
             catch (ExecutionException e) {
                 throw new RuntimeException(e);
             }
-        }
-        
-        public ChannelFuture sendNotificationAsBinary(Channel channel, WebSocketNotification notification){
-            ByteBuf byteBuf = Unpooled.buffer();
-            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(notification));
-            return channel.write(new BinaryWebSocketFrame(byteBuf));
-        }
-        
-        public ChannelFuture sendResponseAsBinary(Channel channel, WebSocketResponse response){
-            ByteBuf byteBuf = Unpooled.buffer();
-            ByteBufUtil.writeUTF8(byteBuf, dtoObjectMapper.writeValueAsString(response));
-            return channel.write(new BinaryWebSocketFrame(byteBuf));
         }
         
         public ChannelFuture sendNotificationAsText(Channel channel, WebSocketNotification notification){

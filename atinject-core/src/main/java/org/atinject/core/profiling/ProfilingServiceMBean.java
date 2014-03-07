@@ -9,16 +9,14 @@ import org.softee.management.annotation.ManagedOperation.Impact;
 
 @MBean(objectName="")
 @Description("")
-public class ProfilingServiceMBean
-{
+public class ProfilingServiceMBean {
 
     @Inject
     private ProfilingService profilingService;
     
     @ManagedOperation(Impact.ACTION)
     @Description("")
-    public void reset()
-    {
+    public void reset() {
         profilingService.reset();
     }
 }

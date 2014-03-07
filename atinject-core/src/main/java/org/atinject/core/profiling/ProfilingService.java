@@ -18,8 +18,7 @@ import org.atinject.core.concurrent.ScheduledService;
 import org.slf4j.Logger;
 
 @ApplicationScoped
-public class ProfilingService
-{
+public class ProfilingService {
 
     @Inject
     private Logger logger;
@@ -200,7 +199,7 @@ public class ProfilingService
             else{
                 CompressedStatistics compressedStatistics = entry.getValue().compress();
                 statistics.add(compressedStatistics);
-                System.out.println(entry.getKey() + " count " + compressedStatistics.count + " mean " + compressedStatistics.mean);
+                logger.info(entry.getKey() + " count " + compressedStatistics.count + " mean " + compressedStatistics.mean);
             }
         }
     }

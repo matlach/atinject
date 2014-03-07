@@ -15,27 +15,22 @@ import java.util.List;
 import javax.enterprise.inject.Produces;
 import javax.management.MBeanServer;
 
-public class ManagementMXBeanProducer
-{
+public class ManagementMXBeanProducer {
 
     @Produces
-    public ClassLoadingMXBean classLoadingMXBean()
-    {
+    public ClassLoadingMXBean classLoadingMXBean() {
         return ManagementFactory.getClassLoadingMXBean();
     }
     
     @Produces
-    public CompilationMXBean compilationMXBean()
-    {
+    public CompilationMXBean compilationMXBean() {
         return ManagementFactory.getCompilationMXBean();
     }
     
     @Produces
-    public GarbageCollectorMXBean garbageCollectorMXBean()
-    {
+    public GarbageCollectorMXBean garbageCollectorMXBean() {
         List<GarbageCollectorMXBean> garbageCollectorMXBeans = ManagementFactory.getGarbageCollectorMXBeans();
-        for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans)
-        {
+        for (GarbageCollectorMXBean garbageCollectorMXBean : garbageCollectorMXBeans) {
             garbageCollectorMXBean.getName();
             return garbageCollectorMXBean;
         }
@@ -43,11 +38,9 @@ public class ManagementMXBeanProducer
     }
     
     @Produces
-    public MemoryManagerMXBean memoryManagerMXBean()
-    {
+    public MemoryManagerMXBean memoryManagerMXBean() {
         List<MemoryManagerMXBean> memoryManagerMXBeans = ManagementFactory.getMemoryManagerMXBeans();
-        for (MemoryManagerMXBean memoryManagerMXBean : memoryManagerMXBeans)
-        {
+        for (MemoryManagerMXBean memoryManagerMXBean : memoryManagerMXBeans) {
             memoryManagerMXBean.getName();
             return memoryManagerMXBean;
         }
@@ -55,17 +48,14 @@ public class ManagementMXBeanProducer
     }
     
     @Produces
-    public MemoryMXBean memoryMXBean()
-    {
+    public MemoryMXBean memoryMXBean() {
         return ManagementFactory.getMemoryMXBean();
     }
     
     @Produces
-    public MemoryPoolMXBean memoryPoolMXBean()
-    {
+    public MemoryPoolMXBean memoryPoolMXBean() {
         List<MemoryPoolMXBean> memoryPoolMXBeans = ManagementFactory.getMemoryPoolMXBeans();
-        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans)
-        {
+        for (MemoryPoolMXBean memoryPoolMXBean : memoryPoolMXBeans) {
             memoryPoolMXBean.getName();
             return memoryPoolMXBean;
         }
@@ -73,26 +63,22 @@ public class ManagementMXBeanProducer
     }
     
     @Produces
-    public OperatingSystemMXBean operatingSystemMXBean()
-    {
+    public OperatingSystemMXBean operatingSystemMXBean() {
         return ManagementFactory.getOperatingSystemMXBean();
     }
     
     @Produces
-    public MBeanServer platformMBeanServer()
-    {
+    public MBeanServer platformMBeanServer() {
         return ManagementFactory.getPlatformMBeanServer();
     }
     
     @Produces
-    public RuntimeMXBean runtimeMXBean()
-    {
+    public RuntimeMXBean runtimeMXBean() {
         return ManagementFactory.getRuntimeMXBean();
     }
     
     @Produces
-    public ThreadMXBean threadMXBean()
-    {
+    public ThreadMXBean threadMXBean() {
         return ManagementFactory.getThreadMXBean();
     }
 }
