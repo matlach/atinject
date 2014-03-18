@@ -12,7 +12,7 @@ import org.atinject.api.user.dto.User;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.tiers.WebSocketService;
-import org.atinject.core.websocket.WebSocketMessage;
+import org.atinject.core.websocket.OnMessage;
 
 @ApplicationScoped
 public class RegistrationWebSocketService extends WebSocketService {
@@ -23,14 +23,14 @@ public class RegistrationWebSocketService extends WebSocketService {
     @Inject
     UserAdapter userAdapter;
 
-    @WebSocketMessage
+    @OnMessage
     public RegisterAsGuestResponse onRegisterAsGuest(RegisterAsGuestRequest request, UserSession session) {
         UserEntity userEntity = registrationService.registerAsGuest();
         User user = userAdapter.userEntityToUser(userEntity);
         return new RegisterAsGuestResponse().setUser(user);
     }
 
-    @WebSocketMessage
+    @OnMessage
     public RegisterResponse onRegister(RegisterRequest request, UserSession session) {
         registrationService.register(session.getUserId(), request.getUsername(), request.getPassword());
 

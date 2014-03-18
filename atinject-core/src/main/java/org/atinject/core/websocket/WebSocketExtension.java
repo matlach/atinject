@@ -144,15 +144,15 @@ public class WebSocketExtension implements Extension
     
     private void processMethod(Method method)
     {
-        if (method.isAnnotationPresent(WebSocketMessage.class))
+        if (method.isAnnotationPresent(OnMessage.class))
         {
             processWebSocketMessageMethod(method);
         }
-        else if (method.isAnnotationPresent(WebSocketOpen.class))
+        else if (method.isAnnotationPresent(OnOpen.class))
         {
             processWebSocketOpenMethod(method);
         }
-        else if (method.isAnnotationPresent(WebSocketClose.class))
+        else if (method.isAnnotationPresent(OnClose.class))
         {
             processWebSocketCloseMethod(method);
         }

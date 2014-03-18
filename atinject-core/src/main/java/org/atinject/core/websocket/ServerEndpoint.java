@@ -12,7 +12,6 @@ import javax.inject.Qualifier;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
-public @interface WebSocketEndpoint
-{
+public @interface ServerEndpoint {
     String path() default "/";
 }

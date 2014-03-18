@@ -10,8 +10,8 @@ import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.nullanalysis.NonNull;
 import org.atinject.core.tiers.WebSocketService;
-import org.atinject.core.websocket.WebSocketClose;
-import org.atinject.core.websocket.WebSocketMessage;
+import org.atinject.core.websocket.OnClose;
+import org.atinject.core.websocket.OnMessage;
 
 @ApplicationScoped
 public class AuthenticationWebSocketService extends WebSocketService {
@@ -22,14 +22,14 @@ public class AuthenticationWebSocketService extends WebSocketService {
     
     @Inject UserAdapter userAdapter;
     
-    @WebSocketMessage
+    @OnMessage
     public LoginResponse onLoginRequest(@NonNull LoginRequest request, @NonNull UserSession session){
         UserEntity userEntity = authenticationService.login(session, request.getUsername(), request.getPassword());
         userAdapter.userEntityToUser(userEntity);
         return authenticationDTOFactory.newLoginResponse();
     }
     
-    @WebSocketClose
+    @OnClose
     public void onLogoutRequest(UserSession session){
         authenticationService.logout(session);
     }
