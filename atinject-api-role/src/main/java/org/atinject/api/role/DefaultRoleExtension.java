@@ -2,6 +2,7 @@ package org.atinject.api.role;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class DefaultRoleExtension extends AbstractEnumerationExtension implement
 
     <T extends Roles> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Roles> event) {
         logger.info("merging '{}' to roles", event.getAnnotatedType().getJavaClass());
-        Field[] fields = event.getAnnotatedType().getJavaClass().getDeclaredFields();
+        List<Field> fields = getNonSyntheticFields(event.getAnnotatedType().getJavaClass());
         for (Field field : fields) {
             if (!isPublicStaticFinalString(field)) {
                 throw new ExceptionInInitializerError(

@@ -2,12 +2,24 @@ package org.atinject.core.enumeration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public abstract class AbstractEnumerationExtension {
 
     protected boolean isInterface(Class<?> clazz) {
         return clazz.isInterface();
+    }
+    
+    protected List<Field> getNonSyntheticFields(Class<?> clazz) {
+        List<Field> nonSyntheticFields = new ArrayList<>();
+        for (Field field : clazz.getFields()) {
+            if (! field.isSynthetic()) {
+                nonSyntheticFields.add(field);
+            }
+        }
+        return nonSyntheticFields;
     }
     
     protected boolean isPublicStaticFinalString(Field field) {
