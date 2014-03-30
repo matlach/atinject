@@ -27,14 +27,14 @@ public class UserServiceIT extends IntegrationTest {
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
 
         BeansDescriptor beans = Descriptors.create(BeansDescriptor.class)
-                .createAlternatives()
+                .getOrCreateAlternatives()
 //                    .clazz("org.atinject.api.usersession.UserSessionCache")
 //                    .clazz("org.atinject.api.usersession.UserSessionFactory")
 //                    .clazz("org.atinject.api.usersession.UserSessionService")
                     .up()
-                .createDecorators()
+                .getOrCreateDecorators()
                     .up()
-                .createInterceptors()
+                .getOrCreateInterceptors()
                     .clazz("org.atinject.core.concurrent.AsynchronousInterceptor")
                     .clazz("org.atinject.core.concurrent.RetryInterceptor")
                     .clazz("org.atinject.core.profiling.ProfileInterceptor")

@@ -65,11 +65,11 @@
 
 		<slf4j.version>1.7.6</slf4j.version>
 		<logback.version>1.1.1</logback.version>
-		<weld.version>2.2.0.Alpha1</weld.version>
+		<weld.version>2.2.0.Beta2</weld.version>
 		<netty.version>5.0.0.Alpha1</netty.version>
-		<infinispan.version>7.0.0.Alpha1</infinispan.version>
-		<jackson.version>2.3.1</jackson.version>
-		<hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
+		<infinispan.version>7.0.0.Alpha2</infinispan.version>
+		<jackson.version>2.3.2</jackson.version>
+		<hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
 		<junit.version>4.11</junit.version>
 	</properties>

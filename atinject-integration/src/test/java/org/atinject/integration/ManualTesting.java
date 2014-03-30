@@ -33,13 +33,13 @@ public class ManualTesting extends IntegrationTest {
         File javaxEnterpriseInjectSpiExtensionFile = Paths.get("src/main/resources/default").resolve("javax.enterprise.inject.spi.Extension").toFile();
 
         BeansDescriptor beans = Descriptors.create(BeansDescriptor.class)
-                .createAlternatives()
+                .getOrCreateAlternatives()
                     .clazz(UserSessionFactory.class.getCanonicalName())
                     .clazz(UserSessionService.class.getCanonicalName())
                     .up()
-                .createDecorators()
+                .getOrCreateDecorators()
                     .up()
-                .createInterceptors()
+                .getOrCreateInterceptors()
                     .clazz(AsynchronousInterceptor.class.getCanonicalName())
                     .clazz(RetryInterceptor.class.getCanonicalName())
                     .clazz(ProfileInterceptor.class.getCanonicalName())
