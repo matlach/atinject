@@ -33,7 +33,6 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.Decorator;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.Interceptor;
-import javax.inject.Singleton;
 
 import org.atinject.core.transaction.InMemoryTransactionServices;
 import org.jboss.weld.Container;
@@ -124,6 +123,7 @@ import org.jboss.weld.serialization.ContextualStoreImpl;
 import org.jboss.weld.serialization.spi.ContextualStore;
 import org.jboss.weld.serialization.spi.ProxyServices;
 import org.jboss.weld.servlet.ServletApiAbstraction;
+import org.jboss.weld.servlet.ServletContextService;
 import org.jboss.weld.servlet.spi.HttpContextActivationFilter;
 import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
 import org.jboss.weld.transaction.spi.TransactionServices;
@@ -199,7 +199,7 @@ public class WeldStartup {
         verifyServices(registry, environment.getRequiredDeploymentServices());
 
         if (!registry.contains(TransactionServices.class)) {
-            registry.add(TransactionServices.class, new InMemoryTransactionServices());
+        	registry.add(TransactionServices.class, new InMemoryTransactionServices());
 //            BootstrapLogger.LOG.jtaUnavailable();
         }
 
@@ -302,6 +302,8 @@ public class WeldStartup {
         if (!services.contains(HttpContextActivationFilter.class)) {
             services.add(HttpContextActivationFilter.class, AcceptingHttpContextActivationFilter.INSTANCE);
         }
+
+        services.add(ServletContextService.class, new ServletContextService());
     }
 
     // needs to be resolved once extension beans are deployed
@@ -324,8 +326,7 @@ public class WeldStartup {
             throw BootstrapLogger.LOG.managerNotInitialized();
         }
 
-        // we need to know which BDAs are physical so that we fire ProcessModule for their archives only
-        Set<BeanDeployment> physicalBeanDeploymentArchives = new HashSet<>(getBeanDeployments());
+        Set<BeanDeployment> physicalBeanDeploymentArchives = new HashSet<BeanDeployment>(getBeanDeployments());
 
         ExtensionBeanDeployer extensionBeanDeployer = new ExtensionBeanDeployer(deploymentManager, deployment, bdaMapping, contexts);
         extensionBeanDeployer.addExtensions(extensions);
@@ -349,7 +350,6 @@ public class WeldStartup {
             beanDeployment.createClasses();
         }
 
-
         // Re-Read the deployment structure, bdaMapping will be the physical
         // structure, extensions and any classes added using addAnnotatedType
         // outside the physical BDA
@@ -362,7 +362,7 @@ public class WeldStartup {
         AfterTypeDiscoveryImpl.fire(deploymentManager, deployment, bdaMapping, contexts);
 
         for (BeanDeployment beanDeployment : getBeanDeployments()) {
-            beanDeployment.createEnabled();
+            beanDeployment.createEnablement();
         }
     }
 
@@ -390,7 +390,12 @@ public class WeldStartup {
             beanDeployment.deployBeans(environment);
         }
 
+        getContainer().setState(ContainerState.DISCOVERED);
+
         AfterBeanDiscoveryImpl.fire(deploymentManager, deployment, bdaMapping, contexts);
+
+        // Extensions may have registered beans / observers. We need to flush caches.
+        flushCaches();
 
         // Re-read the deployment structure, bdaMapping will be the physical
         // structure, extensions, classes, and any beans added using addBean
@@ -426,18 +431,11 @@ public class WeldStartup {
         // Register the managers so external requests can handle them
         // clear the TypeSafeResolvers, so data that is only used at startup
         // is not kept around using up memory
-        deploymentManager.getBeanResolver().clear();
-        deploymentManager.getAccessibleLenientObserverNotifier().clear();
-        deploymentManager.getGlobalStrictObserverNotifier().clear();
-        deploymentManager.getGlobalLenientObserverNotifier().clear();
-        deploymentManager.getDecoratorResolver().clear();
+        flushCaches();
         deploymentManager.getServices().cleanupAfterBoot();
         deploymentManager.cleanupAfterBoot();
         for (BeanDeployment beanDeployment : getBeanDeployments()) {
             BeanManagerImpl beanManager = beanDeployment.getBeanManager();
-            beanManager.getBeanResolver().clear();
-            beanManager.getAccessibleLenientObserverNotifier().clear();
-            beanManager.getDecoratorResolver().clear();
             beanManager.getInterceptorMetadataReader().cleanAfterBoot();
             beanManager.getServices().cleanupAfterBoot();
             beanManager.cleanupAfterBoot();
@@ -468,6 +466,24 @@ public class WeldStartup {
         getContainer().setState(ContainerState.INITIALIZED);
     }
 
+    private void flushCaches() {
+        deploymentManager.getBeanResolver().clear();
+        deploymentManager.getAccessibleLenientObserverNotifier().clear();
+        deploymentManager.getGlobalStrictObserverNotifier().clear();
+        deploymentManager.getGlobalLenientObserverNotifier().clear();
+        deploymentManager.getDecoratorResolver().clear();
+        deploymentManager.getInterceptorResolver().clear();
+        deploymentManager.getNameBasedResolver().clear();
+        for (BeanDeployment beanDeployment : getBeanDeployments()) {
+            BeanManagerImpl beanManager = beanDeployment.getBeanManager();
+            beanManager.getBeanResolver().clear();
+            beanManager.getAccessibleLenientObserverNotifier().clear();
+            beanManager.getDecoratorResolver().clear();
+            beanManager.getInterceptorResolver().clear();
+            beanManager.getNameBasedResolver().clear();
+        }
+    }
+
     private Collection<BeanDeployment> getBeanDeployments() {
         return bdaMapping.getBeanDeployments();
     }
@@ -477,7 +493,7 @@ public class WeldStartup {
     }
 
     protected Collection<ContextHolder<? extends Context>> createContexts(ServiceRegistry services) {
-        List<ContextHolder<? extends Context>> contexts = new ArrayList<>();
+        List<ContextHolder<? extends Context>> contexts = new ArrayList<ContextHolder<? extends Context>>();
 
         BeanIdentifierIndex beanIdentifierIndex = services.get(BeanIdentifierIndex.class);
 
@@ -486,25 +502,25 @@ public class WeldStartup {
         * these (e.g. if we are running in a servlet environment) they may be
         * useful for an application.
         */
-        contexts.add(new ContextHolder<>(new ApplicationContextImpl(contextId), ApplicationContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new SingletonContextImpl(contextId), SingletonContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new BoundSessionContextImpl(contextId, beanIdentifierIndex), BoundSessionContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new BoundConversationContextImpl(contextId, beanIdentifierIndex), BoundConversationContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new BoundRequestContextImpl(contextId), BoundRequestContext.class, BoundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new RequestContextImpl(contextId), RequestContext.class, UnboundLiteral.INSTANCE));
-        contexts.add(new ContextHolder<>(new DependentContextImpl(services.get(ContextualStore.class)), DependentContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<ApplicationContext>(new ApplicationContextImpl(contextId), ApplicationContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<SingletonContext>(new SingletonContextImpl(contextId), SingletonContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<BoundSessionContext>(new BoundSessionContextImpl(contextId, beanIdentifierIndex), BoundSessionContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<BoundConversationContext>(new BoundConversationContextImpl(contextId, beanIdentifierIndex), BoundConversationContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<BoundRequestContext>(new BoundRequestContextImpl(contextId), BoundRequestContext.class, BoundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<RequestContext>(new RequestContextImpl(contextId), RequestContext.class, UnboundLiteral.INSTANCE));
+        contexts.add(new ContextHolder<DependentContext>(new DependentContextImpl(services.get(ContextualStore.class)), DependentContext.class, UnboundLiteral.INSTANCE));
 
         if (Reflections.isClassLoadable(ServletApiAbstraction.SERVLET_CONTEXT_CLASS_NAME, WeldClassLoaderResourceLoader.INSTANCE)) {
             // Register the Http contexts if not in
-//            contexts.add(new ContextHolder<>(new HttpSessionContextImpl(contextId, beanIdentifierIndex), HttpSessionContext.class, HttpLiteral.INSTANCE));
-//            contexts.add(new ContextHolder<>(new HttpSessionDestructionContext(contextId, beanIdentifierIndex), HttpSessionDestructionContext.class, HttpLiteral.INSTANCE));
-//            contexts.add(new ContextHolder<>(new LazyHttpConversationContextImpl(contextId, beanIdentifierIndex), HttpConversationContext.class, HttpLiteral.INSTANCE));
-//            contexts.add(new ContextHolder<>(new HttpRequestContextImpl(contextId), HttpRequestContext.class, HttpLiteral.INSTANCE));
+//            contexts.add(new ContextHolder<HttpSessionContext>(new HttpSessionContextImpl(contextId, beanIdentifierIndex), HttpSessionContext.class, HttpLiteral.INSTANCE));
+//            contexts.add(new ContextHolder<HttpSessionDestructionContext>(new HttpSessionDestructionContext(contextId, beanIdentifierIndex), HttpSessionDestructionContext.class, HttpLiteral.INSTANCE));
+//            contexts.add(new ContextHolder<HttpConversationContext>(new LazyHttpConversationContextImpl(contextId, beanIdentifierIndex), HttpConversationContext.class, HttpLiteral.INSTANCE));
+//            contexts.add(new ContextHolder<HttpRequestContext>(new HttpRequestContextImpl(contextId), HttpRequestContext.class, HttpLiteral.INSTANCE));
         }
 
         if (deployment.getServices().contains(EjbServices.class)) {
             // Register the EJB Request context if EjbServices are available
-            contexts.add(new ContextHolder<>(new EjbRequestContextImpl(contextId), EjbRequestContext.class, EjbLiteral.INSTANCE));
+            contexts.add(new ContextHolder<EjbRequestContext>(new EjbRequestContextImpl(contextId), EjbRequestContext.class, EjbLiteral.INSTANCE));
         }
 
         /*
@@ -532,7 +548,7 @@ public class WeldStartup {
         this.extensions = extensions;
         // TODO: we should fire BeforeBeanDiscovery to allow extensions to register additional scopes
         @SuppressWarnings("unchecked")
-        final Set<Class<? extends Annotation>> scopes = ImmutableSet.of(Dependent.class, RequestScoped.class, ConversationScoped.class, SessionScoped.class, ApplicationScoped.class, Singleton.class);
+        final Set<Class<? extends Annotation>> scopes = ImmutableSet.of(Dependent.class, RequestScoped.class, ConversationScoped.class, SessionScoped.class, ApplicationScoped.class);
         return new TypeDiscoveryConfigurationImpl(scopes);
     }
 
@@ -547,7 +563,7 @@ public class WeldStartup {
      * @return the set of beans the index should be built from
      */
     private Set<Bean<?>> getBeansForBeanIdentifierIndex() {
-        Set<Bean<?>> beans = new HashSet<>();
+        Set<Bean<?>> beans = new HashSet<Bean<?>>();
         for (BeanDeployment beanDeployment : getBeanDeployments()) {
             for (Bean<?> bean : beanDeployment.getBeanManager().getBeans()) {
                 if (bean.getScope().equals(SessionScoped.class) || bean.getScope().equals(ConversationScoped.class)) {
