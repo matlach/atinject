@@ -59,6 +59,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
@@ -307,8 +310,8 @@
 							<configuration>
 								<rules>
 									<requireJavaVersion>
-										<!-- Enforce java 1.7 as minimum for compiling -->
-										<version>[1.7.0,)</version>
+										<!-- Enforce java 8 as minimum for compiling -->
+										<version>[1.8.0,)</version>
 									</requireJavaVersion>
 									<requireMavenVersion>
 										<version>[3.0.2,)</version>
@@ -323,10 +326,10 @@
 					<version>3.1</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
-						<compilerVersion>1.7</compilerVersion>
+						<compilerVersion>1.8</compilerVersion>
 						<fork>true</fork>
-						<source>1.7</source>
-						<target>1.7</target>
+						<source>1.8</source>
+						<target>1.8</target>
 						<debug>true</debug>
 						<optimize>true</optimize>
 						<!--
