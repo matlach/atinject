@@ -31,6 +31,7 @@ public class AsynchronousService implements ExecutorService {
                 60L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<Runnable>(),
                 new ContextAwareThreadFactory());
+        // TODO implements RejectedExecutionHandler
         threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
     
