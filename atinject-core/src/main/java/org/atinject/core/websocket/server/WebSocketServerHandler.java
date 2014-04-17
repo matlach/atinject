@@ -131,12 +131,9 @@ public class WebSocketServerHandler {
         public void messageReceived(ChannelHandlerContext ctx, Object msg) {
             if (msg instanceof FullHttpRequest) {
                 handleHttpRequest(ctx, (FullHttpRequest) msg);
-                return;
             }
-            
-            if (msg instanceof WebSocketFrame) {
+            else if (msg instanceof WebSocketFrame) {
                 handleWebSocketFrame(ctx, (WebSocketFrame) msg);
-                return;
             }
         }
         
@@ -254,7 +251,7 @@ public class WebSocketServerHandler {
                 }
     
                 // TODO use mapped byte buffer here ? 
-                try (RandomAccessFile raf = new RandomAccessFile(file, "r");) {
+                try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
                     long fileLength = raf.length();
                     FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
                     HttpHeaders.setContentLength(response, fileLength);
