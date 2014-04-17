@@ -17,14 +17,12 @@ public class Version1UUIDGenerator extends AbstractUUIDGenerator {
 
     private AtomicLong lastTime;
 
-    private String macAddress;
-
     private long clockSeqAndNode;
 
     @PostConstruct
     public void initialize() {
         lastTime = new AtomicLong(Long.MIN_VALUE);
-        macAddress = new HardwareAddressLookup().toString();
+        String macAddress = new HardwareAddressLookup().toString();
         clockSeqAndNode = 0x8000000000000000L;
         clockSeqAndNode |= Hex.parseLong(macAddress);
         clockSeqAndNode |= (long) (Math.random() * 0x3FFF) << 48;
