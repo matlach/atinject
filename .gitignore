@@ -6,3 +6,5 @@
 /target
 */target
 */infinispan*
+.idea
+*.iml
