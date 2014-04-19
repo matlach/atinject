@@ -2,9 +2,12 @@ package org.atinject.core.websocket.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
+import java.net.BindException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -54,7 +57,15 @@ public class WebSocketServer
          .channel(NioServerSocketChannel.class)
          .childHandler(new DelegableWebSocketServerInitializer());
 
-        ch = b.bind(port).syncUninterruptibly().channel();
+        ch = b.bind(port)
+        		.addListener((ChannelFutureListener)(future) -> {
+        			if (! future.isSuccess()) {
+        				if (future.cause() instanceof BindException) {
+        					logger.error("cannot bind on port {}", port);
+        				}
+        			}
+        		})
+        		.syncUninterruptibly().channel();
         logger.info("Web socket server started at port {} ", port);
         logger.info("Open your browser and navigate to http://localhost:{}", port);
         webSocketServerStarted.fire(new WebSocketServerStarted());
