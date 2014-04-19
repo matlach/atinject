@@ -1,7 +1,7 @@
 package org.atinject.core.topology;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
-import org.infinispan.remoting.transport.Address;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
 
 @ApplicationScoped
@@ -53,88 +52,62 @@ public class TopologyService {
         return urlMapper.getUrl(machineId);
     }
     
-    public List<String> getAllUrl(){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<String> topologyAwareAddresses = new ArrayList<>(members.size());
-        for (Address member : members) {
-            topologyAwareAddresses.add(getUrl(((TopologyAwareAddress) member).getMachineId()));
-        }
-        return topologyAwareAddresses;        
+    public List<String> getAllUrl() {
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.map(member -> getUrl(member.getMachineId()))
+    			.collect(Collectors.toList());
     }
     
     public List<TopologyAwareAddress> getAllRemoteAddress() {
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
-        for (Address member : members) {
-            if (! member.equals(getLocalAddress())) {
-                topologyAwareAddresses.add((TopologyAwareAddress) member);
-            }
-        }
-        return topologyAwareAddresses;
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.filter(member -> member.equals(getLocalAddress()))
+    			.collect(Collectors.toList());
     }
     
-    public List<TopologyAwareAddress> getAllAddress(){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
-        for (Address member : members) {
-            topologyAwareAddresses.add((TopologyAwareAddress) member);
-        }
-        return topologyAwareAddresses;
+    public List<TopologyAwareAddress> getAllAddress() {
+        return masterCacheNode.getRpcManager().getMembers().stream()
+        		.map(member -> (TopologyAwareAddress) member)
+        		.collect(Collectors.toList());
     }
     
-    public List<TopologyAwareAddress> getAllAddressByRackId(String rackId){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
-        for (Address member : members) {
-            if (((TopologyAwareAddress) member).getRackId().equals(rackId)){
-                topologyAwareAddresses.add((TopologyAwareAddress) member);
-            }
-        }
-        return topologyAwareAddresses;
+    public List<TopologyAwareAddress> getAllAddressByRackId(String rackId) {
+        return masterCacheNode.getRpcManager().getMembers().stream()
+        		.map(member -> (TopologyAwareAddress) member)
+        		.filter(member -> member.getRackId().equals(rackId))
+        		.collect(Collectors.toList());
     }
     
-    public List<TopologyAwareAddress> getAllAddressBySiteId(String siteId){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<TopologyAwareAddress> topologyAwareAddresses = new ArrayList<>(members.size());
-        for (Address member : members) {
-            if (((TopologyAwareAddress) member).getSiteId().equals(siteId)){
-                topologyAwareAddresses.add((TopologyAwareAddress) member);
-            }
-        }
-        return topologyAwareAddresses;
+    public List<TopologyAwareAddress> getAllAddressBySiteId(String siteId) {
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.filter(member -> member.getSiteId().equals(siteId))
+    			.collect(Collectors.toList());
     }
     
-    public TopologyAwareAddress getAddress(String machineId){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        for (Address member : members) {
-            TopologyAwareAddress topologyAwareMember = (TopologyAwareAddress) member;
-            if (topologyAwareMember.getMachineId().equals(machineId)){
-                return topologyAwareMember;
-            }
-        }
-        return null;
+    public TopologyAwareAddress getAddress(String machineId) {
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.filter(member -> member.getMachineId().equals(machineId))
+    			.findFirst()
+    			.orElse(null);
     }
     
-    public List<String> getAllMachineIdBySiteId(String siteId){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<String> machineIds = new ArrayList<>(members.size());
-        for (Address member : members) {
-            if (((TopologyAwareAddress) member).getSiteId().equals(siteId)){
-                machineIds.add(((TopologyAwareAddress) member).getMachineId());
-            }
-        }
-        return machineIds;
+    public List<String> getAllMachineIdBySiteId(String siteId) {
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.filter(member -> member.getSiteId().equals(siteId))
+    			.map(member -> member.getMachineId())
+    			.collect(Collectors.toList());
     }
     
-    public List<String> getAllMachineIdByRackId(String rackId){
-        List<Address> members = masterCacheNode.getRpcManager().getMembers();
-        List<String> machineIds = new ArrayList<>(members.size());
-        for (Address member : members) {
-            if (((TopologyAwareAddress) member).getRackId().equals(rackId)){
-                machineIds.add(((TopologyAwareAddress) member).getMachineId());
-            }
-        }
-        return machineIds;
+    public List<String> getAllMachineIdByRackId(String rackId) {
+    	return masterCacheNode.getRpcManager().getMembers().stream()
+    			.map(member -> (TopologyAwareAddress) member)
+    			.filter(member -> member.getRackId().equals(rackId))
+    			.map(member -> member.getMachineId())
+    			.collect(Collectors.toList());
     }
     
 }
