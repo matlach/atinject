@@ -4,7 +4,7 @@ package org.atinject.core.locale.enumeration;
 public interface Locales {
 
     // TODO convert to real enum as values are dictated by an ISO standard
-    // http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html
+    // http://www.oracle.com/technetwork/java/javase/java8locales-2095355.html
     
     public static final String ENGLISH = "en";
     
