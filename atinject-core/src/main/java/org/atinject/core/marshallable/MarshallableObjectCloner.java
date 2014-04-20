@@ -5,6 +5,10 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 
 public class MarshallableObjectCloner {
 
+	private MarshallableObjectCloner() {
+		
+	}
+	
  // TODO this need to be configured optimally
     private static final ObjectMapper mapper = new ObjectMapper(new SmileFactory());
     
