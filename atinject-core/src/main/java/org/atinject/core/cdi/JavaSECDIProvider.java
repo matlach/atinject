@@ -26,11 +26,9 @@ public class JavaSECDIProvider {
         };
         weld.initialize();
         
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable(){
-            @Override
-            public void run() {
-                weld.shutdown();
-            }}));
+        Runtime.getRuntime()
+        	.addShutdownHook(
+        		new Thread(() -> weld.shutdown()));
     }
     
 }
