@@ -10,7 +10,7 @@ public abstract class WebSocketResponse extends DTO
 
     private UUID requestId;
     
-    private WebSocketResponseException exception;
+    private WebSocketResponseFault exception;
     
     public WebSocketResponse(){
         super();
@@ -27,12 +27,12 @@ public abstract class WebSocketResponse extends DTO
         return this;
     }
 
-    public WebSocketResponseException getException()
+    public WebSocketResponseFault getException()
     {
         return exception;
     }
 
-    public WebSocketResponse setException(WebSocketResponseException exception)
+    public WebSocketResponse setException(WebSocketResponseFault exception)
     {
         this.exception = exception;
         return this;

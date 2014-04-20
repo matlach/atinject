@@ -18,7 +18,7 @@ import org.atinject.core.dto.DTO;
 import org.atinject.core.websocket.dto.WebSocketNotification;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.dto.WebSocketResponse;
-import org.atinject.core.websocket.dto.WebSocketResponseException;
+import org.atinject.core.websocket.dto.WebSocketResponseFault;
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -136,9 +136,9 @@ public class ExportJS {
             saveJavascript(path, javascript);
             return javascript;
         }
-        else if (dtoClass.equals(WebSocketResponseException.class)){
-            String javascript = generateComplexDTO(WebSocketResponseException.class);
-            String path = BASE_JAVASCRIPT_PATH + "/" + WebSocketResponseException.class.getSimpleName() + ".js";
+        else if (dtoClass.equals(WebSocketResponseFault.class)){
+            String javascript = generateComplexDTO(WebSocketResponseFault.class);
+            String path = BASE_JAVASCRIPT_PATH + "/" + WebSocketResponseFault.class.getSimpleName() + ".js";
             saveJavascript(path, javascript);
             return javascript;
         }
@@ -397,7 +397,7 @@ public static final String CLASS_ALIAS_TEMPLATE =
         if (WebSocketResponse.class.equals(dtoClass)) {
             return "";
         }
-        if (WebSocketResponseException.class.equals(dtoClass)) {
+        if (WebSocketResponseFault.class.equals(dtoClass)) {
             return "";
         }
         if (WebSocketNotification.class.equals(dtoClass)) {
