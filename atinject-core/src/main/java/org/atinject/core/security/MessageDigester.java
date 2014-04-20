@@ -3,7 +3,7 @@ package org.atinject.core.security;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
-public class MessageDigester {
+public abstract class MessageDigester {
     
     private static Charset UTF8_CHARSET = Charset.forName("UTF-8");
     
