@@ -18,13 +18,11 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class CommonForkJoinPool implements ExecutorService{
 
-    
     private ForkJoinPool forkJoinPool;
     
     @PostConstruct
     public void initialize() {
-        // TODO this can be replaced by jdk8 ForkJoinPool.commonPool(); once it become available
-        forkJoinPool = new ForkJoinPool();
+        forkJoinPool = ForkJoinPool.commonPool();
     }
     
     @PreDestroy
