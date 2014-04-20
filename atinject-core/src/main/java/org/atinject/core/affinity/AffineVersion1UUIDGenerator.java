@@ -10,13 +10,13 @@ import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.topology.TopologyService;
-import org.atinject.core.uuid.Version4UUIDGenerator;
+import org.atinject.core.uuid.Version1UUIDGenerator;
 import org.infinispan.affinity.KeyAffinityService;
 import org.infinispan.affinity.KeyAffinityServiceFactory;
 import org.infinispan.affinity.KeyGenerator;
 
 @ApplicationScoped
-public class AffineVersion4UUIDGenerator {
+public class AffineVersion1UUIDGenerator {
 
     @Inject @Named("distributed-executor")
     private DistributedCache<UUID, Object> cache;
@@ -25,7 +25,7 @@ public class AffineVersion4UUIDGenerator {
     private AsynchronousService asynchronousService;
     
     @Inject
-    private Version4UUIDGenerator version4UUIDGenerator;
+    private Version1UUIDGenerator version1UUIDGenerator;
     
     private KeyAffinityService<UUID> keyAffinityService;
     
@@ -40,7 +40,7 @@ public class AffineVersion4UUIDGenerator {
         keyAffinityService = KeyAffinityServiceFactory.newKeyAffinityService(
                 cache.unwrap(),
                 asynchronousService, 
-                (KeyGenerator<UUID>)() -> version4UUIDGenerator.get(),
+                (KeyGenerator<UUID>)() -> version1UUIDGenerator.get(),
                 keyBufferSize);
     }
     
