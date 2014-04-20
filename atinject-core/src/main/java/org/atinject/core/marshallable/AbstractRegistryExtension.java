@@ -18,7 +18,7 @@ public abstract class AbstractRegistryExtension<T> {
     
     public void addClass(Class<? extends T> clazz) {
         classes.add(clazz);
-        logger.info("added '{}' to dto registry", clazz.getSimpleName());
+        logger.info("added '{}' to registry", clazz.getSimpleName());
     }
     
     public List<Class<? extends T>> getClasses() {
