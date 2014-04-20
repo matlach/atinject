@@ -2,8 +2,8 @@ package org.atinject.core.logging;
 
 import org.slf4j.Logger;
 
-public final class LoggerFactory
-{
+public final class LoggerFactory {
+	
     private LoggerFactory() {
         
     }

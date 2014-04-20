@@ -3,7 +3,7 @@ package org.atinject.core.marshallable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 
-public class MarshallableObjectCloner {
+public final class MarshallableObjectCloner {
 
 	private MarshallableObjectCloner() {
 		
