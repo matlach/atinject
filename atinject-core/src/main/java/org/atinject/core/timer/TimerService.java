@@ -148,11 +148,10 @@ public class TimerService extends Service
         // following hour, hour is incremented.  If next valid hour value is
         // in the following day, day is incremented, and so on.
         //
-        
+        int current = 0;
+        int offset = 0;
         // increase alarm seconds
-        int current = next.get( Calendar.SECOND );
-        int offset = getOffsetToNext( current, MIN_SECOND, MAX_SECOND, timer.getSeconds() );
-        logger.debug( "after sec: " + next.getTime() );
+        proccessSeconds(next, timer);
         
         // increase alarm minutes
         current = next.get( Calendar.MINUTE );
@@ -288,47 +287,40 @@ public class TimerService extends Service
     //                      General utility methods
     // ----------------------------------------------------------------------
     
+    private Calendar proccessSeconds(Calendar now, Timer timer) {
+        int offset = getOffsetToNextSecond( now, timer );
+        now.add(Calendar.SECOND, offset);
+        logger.debug( "after sec: " + now.getTime() );
+        return now;
+    }
+    
+    private int getOffsetToNextSecond(Calendar now, Timer timer) {
+    	if (timer.isValidForEachSeconds()) {
+    		return 1;
+    	}
+    	return getOffsetToNext(now.get(Calendar.SECOND), MIN_SECOND, MAX_SECOND, timer.getSeconds());
+    }
+    
     /**
-     * if values = {-1}
-     *   offset is 1 (because next value definitely matches)
      * if current < last(values)
      *   offset is diff to next valid value
      * if current >= last(values)
      *   offset is diff to values[0], wrapping from max to min
      */
     private static int getOffsetToNext( int current, int min, int max, int[] values ) {
-        int offset = 0;
-        
-        // find the distance to the closest valid value > current (wrapping if neccessary)
-        
-        // {-1} means *  -- offset is 1 because current++ is valid value
-        if (values[0] == -1 )
-        {
-            offset = 1;
+        // need to wrap
+        if( current >= last(values) ){
+            int next = first(values);
+            return (max - current + 1) + (next - min);
         }
-        else
-        {
-            // need to wrap
-            if( current >= last(values) )
-            {
-                int next = values[0];
-                offset = (max-current+1) + (next-min);
+        
+        // current < max(values) -- find next valid value after current
+        for( int i=0; i<values.length; i++ ) {
+            if( current < values[i] ) {
+                return values[i] - current;
             }
-            else // current < max(values) -- find next valid value after current
-            {
-                findvalue:
-                for( int i=0; i<values.length; i++ )
-                {
-                    if( current < values[i] )
-                    {
-                        offset = values[i] - current;
-                        break findvalue;
-                    }
-                }
-            } // end current < max(values)
         }
-        
-        return offset;
+        throw new RuntimeException("assert, array not sorted");
     }
     
     /**
@@ -339,51 +331,23 @@ public class TimerService extends Service
      * if current >= last(values)
      *   offset is diff to values[0], wrapping from max to min
      */
-    private static int getOffsetToNextOrEqual( int current, int min, int max, int[] values )
-    {
-        int offset = 0;
-        int[] safeValues = null;
-        
+    private static int getOffsetToNextOrEqual( int current, int min, int max, int[] values ) {
         // find the distance to the closest valid value >= current (wrapping if necessary)
         
-        // {-1} means *  -- offset is 0 if current is valid value
-        if (values[0] == -1 || isIn(current, values) )
-        {
-            offset = 0;
-        }
-        else
-        {
-            safeValues = discardValuesOverMax( values, max );
-            
-            // need to wrap
-            if( current > last(safeValues) )
-            {
-                int next = safeValues[0];
-                offset = (max-current+1) + (next-min);
-            }
-            else // current <= max(values) -- find next valid value
-            {
-                findvalue:
-                for( int i=0; i<values.length; i++ )
-                {
-                    if( current < safeValues[i] )
-                    {
-                        offset = safeValues[i] - current;
-                        break findvalue;
-                    }
-                }
-            } // end current <= max(values)
+        // offset is 0 if current is valid value
+        if (isIn(current, values) ) {
+            return 0;
         }
         
-        return offset;
+        return getOffsetToNext(current, min, max, values);
     }
     
     /**
      * handles -1 in values as * and returns true
      * otherwise returns true iff given value is in the array
      */
-    private static boolean isIn( int find, int[] values )
-    {
+    private static boolean isIn( int find, int[] values ) {
+    	// TODO should not be checked here
         if( values[0] == -1 )
         {
             return true;
@@ -397,33 +361,12 @@ public class TimerService extends Service
         return false;
     }
     
-    /**
-     * @return the last int in the array
-     */
-    private static int last( int[] intArray )
-    {
+    private static int first(int[] intArray) {
+    	return intArray[0];
+    }
+    
+    private static int last( int[] intArray ) {
         return intArray[ intArray.length - 1 ];
     }
-    
-    /**
-     * Assumes inputted values are not null, have at least one value, and are in
-     * ascending order.
-     * @return  copy of values without any trailing values that exceed the max
-     */
-    private static int[] discardValuesOverMax( int[] values, int max )
-    {
-        // TODO validate values first, so we don't need to check over and over
-        int[] safeValues = null;
-        for( int i=0; i<values.length; i++ )
-        {
-            if( values[i] > max )
-            {
-                safeValues = new int[i];
-                System.arraycopy( values, 0, safeValues, 0, i );
-                return safeValues;
-            }
-        }
-        return values;
-    }
-    
+        
 }

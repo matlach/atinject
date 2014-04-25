@@ -93,6 +93,13 @@ public class Timer {
     {
         return seconds;
     }
+    
+    public boolean isValidForEachSeconds() {
+    	if (seconds != null && seconds[0] == -1) {
+    		return true;
+    	}
+    	return false;
+    }
 
     public void setSeconds(int[] seconds)
     {
