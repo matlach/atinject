@@ -296,7 +296,7 @@ public class TimerService extends Service
     
     private int getOffsetToNextSecond(Calendar now, Timer timer) {
     	if (timer.isValidForEachSeconds()) {
-    		return 1;
+    		return 0;
     	}
     	return getOffsetToNext(now.get(Calendar.SECOND), MIN_SECOND, MAX_SECOND, timer.getSeconds());
     }
