@@ -1,7 +1,6 @@
 package org.atinject.core.cache.event;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.atinject.core.event.Event;
 import org.infinispan.notifications.cachemanagerlistener.event.ViewChangedEvent;
@@ -34,13 +33,13 @@ public class ViewChanged extends Event {
 	}
 
 	public ViewChanged setEvent(ViewChangedEvent event) {
-    	localAddress = (JGroupsTopologyAwareAddress) event.getLocalAddress();
-    	newMembers = event.getNewMembers().stream()
-    			.map(member -> (JGroupsTopologyAwareAddress) member)
-    			.collect(Collectors.toList());
-    	oldMembers = event.getOldMembers().stream()
-    			.map(member -> (JGroupsTopologyAwareAddress) member)
-    			.collect(Collectors.toList());
+//    	localAddress = (JGroupsTopologyAwareAddress) event.getLocalAddress();
+//    	newMembers = event.getNewMembers().stream()
+//    			.map(member -> (JGroupsTopologyAwareAddress) member)
+//    			.collect(Collectors.toList());
+//    	oldMembers = event.getOldMembers().stream()
+//    			.map(member -> (JGroupsTopologyAwareAddress) member)
+//    			.collect(Collectors.toList());
         viewId = event.getViewId();
         return this;
     }
