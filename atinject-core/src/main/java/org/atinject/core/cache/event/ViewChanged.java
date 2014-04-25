@@ -6,25 +6,26 @@ import java.util.stream.Collectors;
 import org.atinject.core.event.Event;
 import org.infinispan.notifications.cachemanagerlistener.event.ViewChangedEvent;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
+import org.infinispan.remoting.transport.jgroups.JGroupsTopologyAwareAddress;
 
 public class ViewChanged extends Event {
 	
     private static final long serialVersionUID = 1L;
     
-    private TopologyAwareAddress localAddress;
-    private List<TopologyAwareAddress> newMembers;
-    private List<TopologyAwareAddress> oldMembers;
+    private JGroupsTopologyAwareAddress localAddress;
+    private List<JGroupsTopologyAwareAddress> newMembers;
+    private List<JGroupsTopologyAwareAddress> oldMembers;
     private int viewId;
     
     public TopologyAwareAddress getLocalAddress() {
 		return localAddress;
 	}
 
-	public List<TopologyAwareAddress> getNewMembers() {
+	public List<JGroupsTopologyAwareAddress> getNewMembers() {
 		return newMembers;
 	}
 
-	public List<TopologyAwareAddress> getOldMembers() {
+	public List<JGroupsTopologyAwareAddress> getOldMembers() {
 		return oldMembers;
 	}
 
@@ -33,12 +34,12 @@ public class ViewChanged extends Event {
 	}
 
 	public ViewChanged setEvent(ViewChangedEvent event) {
-    	localAddress = (TopologyAwareAddress) event.getLocalAddress();
+    	localAddress = (JGroupsTopologyAwareAddress) event.getLocalAddress();
     	newMembers = event.getNewMembers().stream()
-    			.map(member -> (TopologyAwareAddress) member)
+    			.map(member -> (JGroupsTopologyAwareAddress) member)
     			.collect(Collectors.toList());
     	oldMembers = event.getOldMembers().stream()
-    			.map(member -> (TopologyAwareAddress) member)
+    			.map(member -> (JGroupsTopologyAwareAddress) member)
     			.collect(Collectors.toList());
         viewId = event.getViewId();
         return this;
