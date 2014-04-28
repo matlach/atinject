@@ -1,9 +1,5 @@
 package org.atinject.integration;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -11,6 +7,7 @@ import java.nio.file.Paths;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 
+import org.assertj.core.api.Assertions;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -43,7 +40,7 @@ public class ArquillianIT extends IntegrationTest
     
     @Test
     public void testArquillianBootstrap() {
-        assertThat(ut, is(not(equalTo(null))));
+    	Assertions.assertThat(ut).isNotNull();
     }
     
 }
