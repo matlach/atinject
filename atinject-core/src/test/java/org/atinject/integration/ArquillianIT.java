@@ -13,10 +13,10 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
-public class ArquillianIT extends IntegrationTest
-{
+public class ArquillianIT extends IntegrationTest {
 
-    @Inject UserTransaction ut;
+    @Inject
+    private UserTransaction ut;
     
     @Deployment
     public static JavaArchive createDeployment() {
