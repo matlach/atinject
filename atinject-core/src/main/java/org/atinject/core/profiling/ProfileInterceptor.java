@@ -5,6 +5,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
+import com.codahale.metrics.Timer.Context;
+
 @Profile
 @Interceptor
 public class ProfileInterceptor {
@@ -13,14 +15,18 @@ public class ProfileInterceptor {
     private ProfilingService profilingService;
     
     @AroundInvoke
-    public Object profile(InvocationContext invocationContext) throws Exception{
-        long t0 = System.nanoTime();
-        try{
+    public Object profile(InvocationContext invocationContext) throws Exception {
+    	profilingService.beforeInvocation(invocationContext);
+    	Exception exception = null;
+        try (Context timerContext = profilingService.getTimerContext(invocationContext)) {
             return invocationContext.proceed();
         }
-        // consider catching exception to gather exception statistics
-        finally{
-            profilingService.addProfiling(invocationContext, System.nanoTime() - t0);
+        catch (Exception e) {
+        	exception = e;
+        	throw e;
+        }
+        finally {
+        	profilingService.afterInvocation(invocationContext, exception);
         }
     }
 }
