@@ -206,6 +206,7 @@
 			</exclusions>
 		</dependency>
 
+		<!-- TODO do not depends on -all artifact, and only what we require from netty -->
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
