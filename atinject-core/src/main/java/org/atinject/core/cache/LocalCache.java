@@ -44,16 +44,20 @@ public class LocalCache<K, V> {
         return map;
     }
     
-    public void lock(K key) {
-        cache.lock(key);
+    public boolean lockInterruptibly(K key) {
+    	return cache.withFlags(Flag.ZERO_LOCK_ACQUISITION_TIMEOUT, Flag.FAIL_SILENTLY).lock(key);
     }
     
-    public void lockAll(K... keys) {
-        cache.lock(keys);
+    public boolean lock(K key) {
+        return cache.lock(key);
     }
     
-    public void lockAll(Collection<K> keys) {
-        cache.lock(keys);
+    public boolean lockAll(K... keys) {
+        return cache.lock(keys);
+    }
+    
+    public boolean lockAll(Collection<K> keys) {
+        return cache.lock(keys);
     }
     
     public void put(K key, V value) {
