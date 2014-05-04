@@ -20,15 +20,18 @@ import org.atinject.core.tiers.Service;
 
 @ApplicationScoped
 public class AuthorizationService extends Service {
-    @Inject
-    UserService userService;
-    @Inject
-    UserRoleService userRoleService;
-    @Inject
-    UserPermissionService userPermissionService;
+    
+	@Inject
+    private UserService userService;
+    
+	@Inject
+    private UserRoleService userRoleService;
+    
+	@Inject
+    private UserPermissionService userPermissionService;
 
     @Inject
-    RolePermissionService rolePermissionService;
+    private RolePermissionService rolePermissionService;
 
     public boolean isPermitted(UUID userId, String permission) {
         Set<String> permissions = new HashSet<>();
