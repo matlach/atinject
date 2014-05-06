@@ -125,7 +125,7 @@ public class TimerService extends Service
         long delay = timer.alarmTime - System.currentTimeMillis();
         
         if (delay < 0) {
-            logger.debug("delay is negative :" + delay);
+            logger.debug("delay is negative : {}", delay);
             throw new RuntimeException("occuring in the past");
         }
     }
@@ -136,7 +136,7 @@ public class TimerService extends Service
     public void updateTimer(Timer timer){
         
         Calendar now = Calendar.getInstance();
-        logger.debug("now: " + now.getTime());
+        logger.debug("now: {}", now.getTime());
         
         
         Calendar next = (Calendar)now.clone();
@@ -160,13 +160,13 @@ public class TimerService extends Service
         // force increment at least to next minute
         offset = getOffsetToNextOrEqual( current, MIN_MINUTE, MAX_MINUTE, timer.getMinutes() );
         next.add( Calendar.MINUTE, offset );
-        logger.debug( "after min: " + next.getTime() );
+        logger.debug( "after min: {}", next.getTime() );
         
         // update alarm hours if necessary
         current = next.get( Calendar.HOUR_OF_DAY );  // (as updated by minute shift)
         offset = getOffsetToNextOrEqual( current, MIN_HOUR, MAX_HOUR, timer.getHours() );
         next.add( Calendar.HOUR_OF_DAY, offset );
-        logger.debug( "after hour (current:"+current+"): " + next.getTime() );
+        logger.debug( "after hour (current: {}): {}",current, next.getTime() );
         
         //
         // If days of month AND days of week are restricted, we take whichever match
@@ -187,29 +187,29 @@ public class TimerService extends Service
             if( dayOfMonthAlarm.getTime().getTime() < dayOfWeekAlarm.getTime().getTime() )
             {
                 next = dayOfMonthAlarm;
-                logger.debug( "after dayOfMonth CLOSER: " + next.getTime() );
+                logger.debug( "after dayOfMonth CLOSER: {}", next.getTime() );
             }
             else
             {
                 next = dayOfWeekAlarm;
-                logger.debug( "after dayOfWeek CLOSER: " + next.getTime() );
+                logger.debug( "after dayOfWeek CLOSER: {}", next.getTime() );
             }
         }
         else if( timer.getDaysOfWeek()[0] != -1 ) // only dayOfWeek is restricted
         {
             // update dayInWeek and month if necessary
             updateDayOfWeekAndMonth(timer, next );
-            logger.debug( "after dayOfWeek: " + next.getTime() );
+            logger.debug( "after dayOfWeek: {}", next.getTime() );
         }
         else if( timer.getDaysOfMonth()[0] != -1 ) // only dayOfMonth is restricted
         {
             // update dayInMonth and month if necessary
             updateDayOfMonthAndMonth(timer, next );
-            logger.debug( "after dayOfMonth: " + next.getTime() );
+            logger.debug( "after dayOfMonth: {}", next.getTime() );
         }
         // else if neither is restricted (both[0] == -1), we don't need to do anything.
         
-        logger.debug("alarm: " + next.getTime());
+        logger.debug("alarm: {}", next.getTime());
         
         timer.alarmTime = next.getTime().getTime();
     }
@@ -282,24 +282,41 @@ public class TimerService extends Service
         }
     }
     
-    
+    private Calendar proccessSeconds(Calendar now, Timer timer) {
+        int offset = getOffsetToNextSecond( now, timer );
+        now.add(Calendar.SECOND, offset);
+        logger.debug( "after sec: {}", now.getTime() );
+        return now;
+    }    
     
     // ----------------------------------------------------------------------
     //                      General utility methods
     // ----------------------------------------------------------------------
-    
-    private Calendar proccessSeconds(Calendar now, Timer timer) {
-        int offset = getOffsetToNextSecond( now, timer );
-        now.add(Calendar.SECOND, offset);
-        logger.debug( "after sec: " + now.getTime() );
-        return now;
-    }
     
     private int getOffsetToNextSecond(Calendar now, Timer timer) {
     	if (timer.isValidForEachSeconds()) {
     		return 0;
     	}
     	return getOffsetToNext(now.get(Calendar.SECOND), MIN_SECOND, MAX_SECOND, timer.getSeconds());
+    }
+
+    /**
+     * if values = {-1} or current is valid
+     *   offset is 0.
+     * if current < last(values)
+     *   offset is diff to next valid value
+     * if current >= last(values)
+     *   offset is diff to values[0], wrapping from max to min
+     */
+    private static int getOffsetToNextOrEqual( int current, int min, int max, int[] values ) {
+        // find the distance to the closest valid value >= current (wrapping if necessary)
+        
+        // offset is 0 if current is valid value
+        if (isIn(current, values) ) {
+            return 0;
+        }
+        
+        return getOffsetToNext(current, min, max, values);
     }
     
     /**
@@ -322,25 +339,6 @@ public class TimerService extends Service
             }
         }
         throw new RuntimeException("assert, array not sorted");
-    }
-    
-    /**
-     * if values = {-1} or current is valid
-     *   offset is 0.
-     * if current < last(values)
-     *   offset is diff to next valid value
-     * if current >= last(values)
-     *   offset is diff to values[0], wrapping from max to min
-     */
-    private static int getOffsetToNextOrEqual( int current, int min, int max, int[] values ) {
-        // find the distance to the closest valid value >= current (wrapping if necessary)
-        
-        // offset is 0 if current is valid value
-        if (isIn(current, values) ) {
-            return 0;
-        }
-        
-        return getOffsetToNext(current, min, max, values);
     }
     
     /**
