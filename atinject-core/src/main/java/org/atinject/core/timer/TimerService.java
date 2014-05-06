@@ -1,6 +1,7 @@
 package org.atinject.core.timer;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -352,13 +353,7 @@ public class TimerService extends Service
         {
             return true;
         }
-        // TODO make sure values are already sorted and perform a binary search instead
-        for( int i=0; i<values.length; i++ )
-        {
-            if( find == values[i] )
-                return true;
-        }
-        return false;
+        return Arrays.binarySearch(values, find) >= 0;
     }
     
     private static int first(int[] intArray) {
