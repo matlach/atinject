@@ -20,6 +20,7 @@
 
 package org.atinject.core.timer;
 
+import java.util.Arrays;
 import java.util.TimeZone;
 
 
@@ -31,8 +32,6 @@ public class Timer {
     private int[] daysOfWeek;
     private int[] daysOfMonth;
     private int[] months;
-    
-    private int year; // no support for a list of years -- must be * or specified
     
     public long alarmTime;
     
@@ -62,31 +61,37 @@ public class Timer {
      * is exclusive with <code>dayOfMonth</code>. Allowed values 1-7
      * (1 = Sunday, 2 = Monday, ...), or {-1} for all.
      * <code>java.util.Calendar</code> constants can be used.
-     * @param year year of the alarm. When this field is not set (i.e. -1)
-     * the alarm is repetitive (i.e. it is rescheduled when reached).
-     * @param listener the alarm listener.
      * @return the AlarmEntry.
      * @exception PastDateException if the alarm date is in the past
      * (or less than 1 second away from the current date).
      */
-    public Timer(int[] seconds, int[] minutes, int[] hours,
-            int[] daysOfWeek,
-            int[] daysOfMonth,
-            int[] months,
-            int year,
-            String info,
-            String timeZone) {
+    public Timer(
+    		int[] seconds, int[] minutes, int[] hours,
+            int[] daysOfWeek, int[] daysOfMonth, int[] months,
+            String info, String timeZone) {
 
-        this.seconds = seconds;
-        this.minutes = minutes;
-        this.months = months;
-        this.hours = hours;
-        this.daysOfWeek = daysOfWeek;
-        this.daysOfMonth = daysOfMonth;
-        this.year = year;
+        this.seconds = validateAndSort(0, 59, seconds);
+        this.minutes = validateAndSort(0, 59, minutes);
+        this.months = validateAndSort(0, 11, months);
+        this.hours = validateAndSort(0, 23, hours);
+        this.daysOfWeek = validateAndSort(1, 7, daysOfWeek);
+        this.daysOfMonth = validateAndSort(1, 31, daysOfMonth);
         
         this.info = info;
         this.timeZone = TimeZone.getTimeZone(timeZone);
+    }
+    
+    private int[] validateAndSort(int min, int max, int[] array) {
+    	Arrays.sort(array);
+    	if (array[0] != -1) {
+    		if (array[0] < min) {
+    			throw new RuntimeException();
+    		}
+    		if (array[array.length-1] > max) {
+    			throw new RuntimeException();
+    		}
+    	}
+    	return array;
     }
 
     public int[] getSeconds()
@@ -95,10 +100,7 @@ public class Timer {
     }
     
     public boolean isValidForEachSeconds() {
-    	if (seconds != null && seconds[0] == -1) {
-    		return true;
-    	}
-    	return false;
+    	return seconds[0] == -1;
     }
 
     public void setSeconds(int[] seconds)
@@ -130,7 +132,15 @@ public class Timer {
     {
         return daysOfWeek;
     }
-
+    
+    public boolean isValidForEachDayOfWeek() {
+    	return daysOfWeek[0] == -1;
+    }
+    
+    public boolean isDayOfWeekRestricted() {
+    	return !isValidForEachDayOfWeek();
+    }
+    
     public void setDaysOfWeek(int[] daysOfWeek)
     {
         this.daysOfWeek = daysOfWeek;
@@ -139,6 +149,10 @@ public class Timer {
     public int[] getDaysOfMonth()
     {
         return daysOfMonth;
+    }
+    
+    public boolean isDayOfMonthRestricted() {
+    	return daysOfMonth[0] != -1;
     }
 
     public void setDaysOfMonth(int[] daysOfMonth)
@@ -156,16 +170,6 @@ public class Timer {
         this.months = months;
     }
 
-    public int getYear()
-    {
-        return year;
-    }
-
-    public void setYear(int year)
-    {
-        this.year = year;
-    }
-
     public long getAlarmTime()
     {
         return alarmTime;
@@ -177,12 +181,3 @@ public class Timer {
     }
     
 }
-
-
-
-
-
-
-
-
-

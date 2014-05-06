@@ -6,8 +6,8 @@ public class ClusteredTimer extends Timer {
     public String key;
     
     public ClusteredTimer(int[] seconds, int[] minutes, int[] hours, int[] daysOfWeek, int[] daysOfMonth, int[] months,
-            int year, String info, String timeZone, String cacheName, String key) {
-        super(seconds, minutes, hours, daysOfWeek, daysOfMonth, months, year, info, timeZone);
+            String info, String timeZone, String cacheName, String key) {
+        super(seconds, minutes, hours, daysOfWeek, daysOfMonth, months, info, timeZone);
         
         this.cacheName = cacheName;
         this.key = key;

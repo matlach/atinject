@@ -44,7 +44,8 @@ public class ClusteredTimerService extends Service {
             final Object object = CDI.select(method.getDeclaringClass()).get();
             
             final Timer timer = new Timer(schedule.seconds(), schedule.minutes(), schedule.hours(),
-                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), schedule.years(), schedule.info(), schedule.timezone());
+                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), 
+                    schedule.info(), schedule.timezone());
             timerService.updateTimer(timer);
             timerService.checkTimer(timer);
             

@@ -18,7 +18,6 @@ public @interface Schedule
     int[] daysOfWeek() default {-1};
     int[] daysOfMonth() default {-1};
     int[] months() default {-1};
-    int years() default -1;
     
     String timezone() default "GMT";
     

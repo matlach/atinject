@@ -49,9 +49,11 @@ public class TimerService extends Service
     @Inject
     private Logger logger;
     
-    @Inject ScheduledService scheduledService;
+    @Inject
+    private ScheduledService scheduledService;
     
-    @Inject TimerExtension timerExtension;
+    @Inject
+    private TimerExtension timerExtension;
     
     @PostConstruct
     public void initialize() {
@@ -64,8 +66,10 @@ public class TimerService extends Service
             
             final Object object = CDI.select(method.getDeclaringClass()).get();
             
-            final Timer timer = new Timer(schedule.seconds(), schedule.minutes(), schedule.hours(),
-                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(), schedule.years(), schedule.info(), schedule.timezone());
+            final Timer timer = new Timer(
+            		schedule.seconds(), schedule.minutes(), schedule.hours(),
+                    schedule.daysOfWeek(), schedule.daysOfMonth(), schedule.months(),
+                    schedule.info(), schedule.timezone());
             updateTimer(timer);
             checkTimer(timer);
             
@@ -74,19 +78,22 @@ public class TimerService extends Service
                 public void run() {
                     try {
                         method.invoke(object);
-                        
-                        updateTimer(timer);
-                        long nextAlarm = timer.alarmTime - System.currentTimeMillis();
-                        logger.info("next alarm in : {}", TimeUnit.MILLISECONDS.toSeconds(nextAlarm));
-                        scheduledService.schedule(this, nextAlarm, TimeUnit.MILLISECONDS);
                     }
                     catch (Exception e) {
                         // swallow
                         logger.error("error while invoking scheduled", e);
                     }
+                    finally {
+                    	updateTimer(timer);
+                        long nextAlarm = timer.alarmTime - System.currentTimeMillis();
+                        logger.info("next alarm in : {}", TimeUnit.MILLISECONDS.toSeconds(nextAlarm));
+                        scheduledService.schedule(this, nextAlarm, TimeUnit.MILLISECONDS);
+                    }
                 }}, 0, TimeUnit.SECONDS);
         }
     }
+    
+    
     
     public void schedule(int[] seconds, int[] minutes, int[] hours,
             int[] daysOfWeek, int[] daysOfMonth, int[] months, int years) {
@@ -174,7 +181,7 @@ public class TimerService extends Service
         // If only one is restricted, take the first match for that one.
         // If neither is restricted, don't do anything.
         //
-        if( timer.getDaysOfMonth()[0] != -1 && timer.getDaysOfWeek()[0] != -1 )
+        if( timer.isDayOfMonthRestricted() && timer.isDayOfWeekRestricted() )
         {
             // BOTH are restricted - take earlier match
             Calendar dayOfWeekAlarm = (Calendar)next.clone();
@@ -195,13 +202,13 @@ public class TimerService extends Service
                 logger.debug( "after dayOfWeek CLOSER: {}", next.getTime() );
             }
         }
-        else if( timer.getDaysOfWeek()[0] != -1 ) // only dayOfWeek is restricted
+        else if( timer.isDayOfWeekRestricted() ) // only dayOfWeek is restricted
         {
             // update dayInWeek and month if necessary
             updateDayOfWeekAndMonth(timer, next );
             logger.debug( "after dayOfWeek: {}", next.getTime() );
         }
-        else if( timer.getDaysOfMonth()[0] != -1 ) // only dayOfMonth is restricted
+        else if( timer.isDayOfMonthRestricted() ) // only dayOfMonth is restricted
         {
             // update dayInMonth and month if necessary
             updateDayOfMonthAndMonth(timer, next );
