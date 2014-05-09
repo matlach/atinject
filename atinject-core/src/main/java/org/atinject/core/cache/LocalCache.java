@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
@@ -97,6 +98,10 @@ public class LocalCache<K, V> {
         return cache.size();
     }
 
+    public Set<K> keySet() {
+    	return cache.keySet();
+    }
+    
     public Collection<V> values() {
         return cache.values();
     }
