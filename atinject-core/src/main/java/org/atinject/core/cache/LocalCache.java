@@ -3,15 +3,18 @@ package org.atinject.core.cache;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Spliterator;
 
 import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
 import org.atinject.core.tiers.exception.HandleCacheException;
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
+import org.infinispan.filter.KeyValueFilter;
 
 @HandleCacheException
 @Profile
@@ -106,6 +109,22 @@ public class LocalCache<K, V> {
         return cache.values();
     }
 
+	public Iterator<Entry<K, V>> iterator() {
+    	return iterator((key, value, metadata) -> true);
+    }
+    
+    public Iterator<Entry<K, V>> iterator(KeyValueFilter<? super K, ? super V> filter) {
+    	return cache.filterEntries(filter).iterator();
+    }
+    
+	public Spliterator<Entry<K, V>> spliterator() {
+    	return spliterator((key, value, metadata) -> true);
+    }
+    
+    public Spliterator<Entry<K, V>> spliterator(KeyValueFilter<? super K, ? super V> filter) {
+    	return cache.filterEntries(filter).spliterator();
+    }
+    
     public void clear() {
         cache.clear();
     }
