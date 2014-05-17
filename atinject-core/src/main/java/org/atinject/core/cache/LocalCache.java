@@ -22,6 +22,7 @@ import org.infinispan.filter.KeyValueFilter;
 public class LocalCache<K, V> {
 
     protected AdvancedCache<K, V> cache;
+    protected AdvancedCache<K, V> cacheWithZeroLockAcquisitionTimeoutAndFailSilently;
     
     LocalCache<K, V> withCache(org.infinispan.Cache<K, V> cache) {
         if (this.cache != null) {
@@ -29,6 +30,8 @@ public class LocalCache<K, V> {
         }
         this.cache = cache.getAdvancedCache()
                 .withFlags(Flag.IGNORE_RETURN_VALUES);
+        cacheWithZeroLockAcquisitionTimeoutAndFailSilently = this.cache
+        		.withFlags(Flag.ZERO_LOCK_ACQUISITION_TIMEOUT, Flag.FAIL_SILENTLY);
         return this;
     }
     
@@ -49,7 +52,7 @@ public class LocalCache<K, V> {
     }
     
     public boolean lockInterruptibly(K key) {
-    	return cache.withFlags(Flag.ZERO_LOCK_ACQUISITION_TIMEOUT, Flag.FAIL_SILENTLY).lock(key);
+    	return cacheWithZeroLockAcquisitionTimeoutAndFailSilently.lock(key);
     }
     
     public boolean lock(K key) {
