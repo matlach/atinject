@@ -1,22 +1,25 @@
 package org.atinject.api.usersession;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.atinject.core.session.SessionContext;
 
-public final class UserSessionContext {
+@ApplicationScoped
+public class UserSessionContext {
 
-    private UserSessionContext() {
-        
+	@Inject
+	private SessionContext sessionContext;
+	
+    public UserSession get() {
+        return (UserSession) sessionContext.get();
     }
     
-    public static UserSession get() {
-        return (UserSession) SessionContext.get();
+    public void set(UserSession session) {
+        sessionContext.set(session);
     }
     
-    public static void set(UserSession session) {
-        SessionContext.set(session);
-    }
-    
-    public static void remove() {
-        SessionContext.remove();
+    public void remove() {
+        sessionContext.remove();
     }
 }
