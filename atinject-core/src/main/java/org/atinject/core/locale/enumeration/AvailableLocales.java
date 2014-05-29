@@ -1,5 +1,7 @@
 package org.atinject.core.locale.enumeration;
 
+import java.util.Locale;
+
 
 public interface AvailableLocales {
 
@@ -33,4 +35,8 @@ public interface AvailableLocales {
     public static final String FRENCH_LUXEMBOURG = "fr_LU";
 
     public static final String FRENCH_SWITZERLAND = "fr_CH";
+    
+    public static Locale fromLocale(String locale) {
+    	return null;
+    }
 }

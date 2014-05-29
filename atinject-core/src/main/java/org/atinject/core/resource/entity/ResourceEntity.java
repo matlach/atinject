@@ -1,5 +1,7 @@
 package org.atinject.core.resource.entity;
 
+import java.util.Map;
+
 import org.atinject.core.entity.Entity;
 
 public class ResourceEntity extends Entity {
@@ -10,6 +12,6 @@ public class ResourceEntity extends Entity {
     
     String bundleId;
     
-    String text;
+    Map<String, ResourceStringEntity> resourceStrings;
     
 }
