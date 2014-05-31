@@ -4,38 +4,29 @@ import java.util.UUID;
 
 import org.atinject.core.dto.DTO;
 
-public abstract class WebSocketResponse extends DTO
-{
+public abstract class WebSocketResponse extends DTO {
+	
     private static final long serialVersionUID = 1L;
 
     private UUID requestId;
     
-    private WebSocketResponseFault exception;
+    private WebSocketResponseFault fault;
     
-    public WebSocketResponse(){
-        super();
-    }
-
-    public UUID getRequestId()
-    {
+    public UUID getRequestId() {
         return requestId;
     }
 
-    public WebSocketResponse setRequestId(UUID requestId)
-    {
+    public WebSocketResponse setRequestId(UUID requestId) {
         this.requestId = requestId;
         return this;
     }
 
-    public WebSocketResponseFault getException()
-    {
-        return exception;
-    }
+	public WebSocketResponseFault getFault() {
+		return fault;
+	}
 
-    public WebSocketResponse setException(WebSocketResponseFault exception)
-    {
-        this.exception = exception;
-        return this;
-    }
-    
+	public void setFault(WebSocketResponseFault fault) {
+		this.fault = fault;
+	}
+
 }

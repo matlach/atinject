@@ -9,4 +9,5 @@ org.atinject.core.concurrent.AsynchronousServiceExtension
 org.atinject.core.cache.CacheExtension
 org.atinject.core.websocket.WebSocketExtension
 org.atinject.core.timer.TimerExtension
+org.atinject.core.exception.DefaultExceptionCodeExtension
 org.atinject.core.startup.StartupExtension

@@ -29,7 +29,7 @@ public class HandleWebSocketServiceExceptionInterceptor {
             if (log) {
                 logger.error("", e);
             }
-            throw e; // TODO do not throw, need to create WebSocketResponse and WebSocketResponse.exception dynamically
+            throw e;
         }
     }
 }

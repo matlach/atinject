@@ -1,6 +1,8 @@
 package org.atinject.api.rolepermission.exception;
 
-public class RolePermissionException extends RuntimeException {
+import org.atinject.core.exception.ApplicationException;
+
+public class RolePermissionException extends ApplicationException {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,4 +21,9 @@ public class RolePermissionException extends RuntimeException {
     public RolePermissionException(Throwable cause) {
         super(cause);
     }
+
+	@Override
+	public String getExceptionCode() {
+		return null;
+	}
 }

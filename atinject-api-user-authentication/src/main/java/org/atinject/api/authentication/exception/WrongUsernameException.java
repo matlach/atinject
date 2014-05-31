@@ -1,7 +1,14 @@
 package org.atinject.api.authentication.exception;
 
-public class WrongUsernameException extends RuntimeException {
+import org.atinject.core.exception.ApplicationException;
+
+public class WrongUsernameException extends ApplicationException {
 
     private static final long serialVersionUID = 1L;
+
+	@Override
+	public String getExceptionCode() {
+		return AuthenticationExceptionCodes.WRONG_USERNAME;
+	}
 
 }
