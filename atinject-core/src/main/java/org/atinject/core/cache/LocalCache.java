@@ -19,7 +19,7 @@ import org.infinispan.filter.KeyValueFilter;
 @HandleCacheException
 @Profile
 @ThreadTracker
-public class LocalCache<K, V> {
+public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
 
     protected AdvancedCache<K, V> cache;
     protected AdvancedCache<K, V> cacheWithZeroLockAcquisitionTimeoutAndFailSilently;
@@ -112,6 +112,7 @@ public class LocalCache<K, V> {
         return cache.values();
     }
 
+    @Override
 	public Iterator<Entry<K, V>> iterator() {
     	return iterator((key, value, metadata) -> true);
     }
@@ -120,6 +121,7 @@ public class LocalCache<K, V> {
     	return cache.filterEntries(filter).iterator();
     }
     
+    @Override
 	public Spliterator<Entry<K, V>> spliterator() {
     	return spliterator((key, value, metadata) -> true);
     }
