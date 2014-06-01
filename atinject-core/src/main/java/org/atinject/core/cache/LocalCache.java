@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Spliterator;
+import java.util.stream.Collectors;
 
 import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
@@ -38,17 +39,14 @@ public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
     public V get(K key) {
         return cache.get(key);
     }
-    
+
     public Map<K, V> getAll(K... keys) {
         return getAll(Arrays.asList(keys));
     }
     
-    public Map<K, V> getAll(Collection<K> keys){
-        Map<K, V> map = new HashMap<>(keys.size());
-        for (K key : keys) {
-            map.put(key, get(key));
-        }
-        return map;
+    public Map<K, V> getAll(Collection<K> keys) {
+        return keys.stream()
+                .collect(Collectors.toMap(key -> key, key -> get(key)));
     }
     
     public boolean lockInterruptibly(K key) {
@@ -70,22 +68,26 @@ public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
     public void put(K key, V value) {
         cache.put(key, value);
     }
-    
+
     public void putAll(Entry<K, V>... entries) {
-        Map<K, V> map = new HashMap<>(entries.length);
-        for (Entry<K, V> entry : entries) {
-            map.put(entry.getKey(), entry.getValue());
-        }
-        putAll(map);
+        putAll(Arrays.asList(entries));
+    }
+
+    public void putAll(Collection<Entry<K, V>> entries) {
+    	// TODO eclipse bug
+    	// java 8 syntax should be
+    	// entries.stream().collect(Collectors.toMap(Entry::getKey(), Entry::getValue()));
+    	Map<K, V> map = new HashMap<>();
+    	for (Entry<K, V> entry : entries) {
+    		map.put(entry.getKey(), entry.getValue());
+    	}
+    	putAll(map);
     }
     
     public void putAll(Map<K, V> entries) {
         cache.putAll(entries);
     }
-    
-    /**
-     * Note : if pessimistic transaction are used, ensure {@link #lock(key)} has been called before
-     */
+
     public void remove(K key) {
         cache.remove(key);
     }
@@ -95,9 +97,7 @@ public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
     }
     
     public void removeAll(Collection<K> keys) {
-        for (K key : keys) {
-            cache.remove(key);
-        }
+        keys.forEach(key -> cache.remove(key));
     }
     
     public int size() {
