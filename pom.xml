@@ -295,6 +295,7 @@
 		<module>atinject-api-user-session</module>
 		<module>atinject-api-user-topology</module>
 		<module>atinject-api-user-websocket</module>
+		<module>atinject-core-logging</module>
 	</modules>
 
 	<build>
