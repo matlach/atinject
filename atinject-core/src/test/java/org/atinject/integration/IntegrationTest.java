@@ -1,7 +1,7 @@
 package org.atinject.integration;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
@@ -22,7 +22,7 @@ public abstract class IntegrationTest {
     
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
-    private static Map<String, Integer> inSequenceCounter = new HashMap<>();
+    private static Set<String> inFailureTests = new HashSet<>();
     
     @Rule public TestRule watchman = new TestWatcher() {
 
@@ -31,26 +31,23 @@ public abstract class IntegrationTest {
             logger.info("starting {}", description.getMethodName());
             
             InSequence inSequence = description.getAnnotation(InSequence.class);
-            if (inSequence != null) {
-                int expectedSequenceValue = inSequence.value();
-                if (! inSequenceCounter.containsKey(description.getClassName())) {
-                    inSequenceCounter.put(description.getClassName(), Integer.valueOf(1));
-                }
-                int actualSequenceValue = inSequenceCounter.get(description.getClassName()).intValue();
-                Assume.assumeTrue(actualSequenceValue == expectedSequenceValue);
+            if (inSequence == null) {
+            	throw new RuntimeException("@InSequence annotation usage is mendatory");
+            }
+            if (inFailureTests.contains(description.getClassName())) {
+            	Assume.assumeTrue("test sequence has been broken", false);
             }
         }
 
         @Override
-        protected void finished(Description description) {
-            InSequence inSequence = description.getAnnotation(InSequence.class);
-            if (inSequence != null) {
-                int actualSequenceValue = inSequenceCounter.get(description.getClassName()).intValue();
-                int nextSequenceValue = actualSequenceValue + 1;
-                inSequenceCounter.put(description.getClassName(), Integer.valueOf(nextSequenceValue));
-            }
-            
-            logger.info("finished {}", description.getMethodName());
+        protected void succeeded(Description description) {
+        	logger.info("finished {}", description.getMethodName());
+        }
+
+        @Override
+        protected void failed(Throwable e, Description description) {
+        	inFailureTests.add(description.getClassName());
+        	logger.info("finished {}", description.getMethodName());
         }
     };
     
