@@ -3,13 +3,12 @@ java -jar atinject.jar org.atinject.Boostrap
 -XX:+AggressiveOpts
 -Xms1g
 -Xmx1g
+-Xss256k
 -XX:MaxMetaspaceSize=128m
 -XX:NewRatio=1
 -XX:+UseG1GC
 -XX:+DisableExplicitGC
 -Duser.timezone=GMT
--Dinfinispan.unsafe.allow_jdk8_chm=true
-
 
 #! /bin/sh
 ### BEGIN INIT INFO
