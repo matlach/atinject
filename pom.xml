@@ -1,20 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.atinject</groupId>
 	<artifactId>atinject</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>atinject</name>
-	<url>https://github.com/matlach/atinject</url>
 	<description>atinject, realtime, scalable, cdi enhanced, 3-tiers architecture</description>
-
+	<url>https://github.com/matlach/atinject</url>
+	<inceptionYear>2013</inceptionYear>
 	<organization>
 		<name>the atinject project</name>
 		<url>https://github.com/matlach/atinject</url>
 	</organization>
-	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
 	<developers>
 		<developer>
 			<id>matlach</id>
@@ -23,13 +31,12 @@
 		</developer>
 	</developers>
 
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
-	<inceptionYear>2013</inceptionYear>
+	<modules>
+		<module>atinject-core</module>
+		<module>atinject-integration</module>
+		<module>atinject-core-logging</module>
+		<module>atinject-api</module>
+	</modules>
 
 	<scm>
 		<url>https://github.com/matlach/atinject</url>
@@ -43,8 +50,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        
+		<maven.compiler.target>1.8</maven.compiler.target>
+
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
@@ -99,7 +106,7 @@
 				<artifactId>netty-all</artifactId>
 				<version>${netty.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.infinispan</groupId>
 				<artifactId>infinispan-core</artifactId>
@@ -143,7 +150,7 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.jboss.arquillian.container</groupId>
 				<artifactId>arquillian-weld-se-embedded-1.1</artifactId>
@@ -157,7 +164,7 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.assertj</groupId>
 				<artifactId>assertj-core</artifactId>
@@ -166,7 +173,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 	<dependencies>
 
 		<dependency>
@@ -206,7 +212,8 @@
 			</exclusions>
 		</dependency>
 
-		<!-- TODO do not depends on -all artifact, and only what we require from netty -->
+		<!-- TODO do not depends on -all artifact, and only what we require from 
+			netty -->
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-all</artifactId>
@@ -263,7 +270,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -271,15 +278,7 @@
 
 	</dependencies>
 
-	<modules>
-		<module>atinject-core</module>
-		<module>atinject-integration</module>
-		<module>atinject-core-logging</module>
-		<module>atinject-api</module>
-	</modules>
-
 	<build>
-
 		<pluginManagement>
 			<plugins>
 
@@ -295,9 +294,9 @@
 				</plugin>
 
 				<plugin>
-				    <groupId>org.codehaus.sonar</groupId>
-				    <artifactId>sonar-maven-plugin</artifactId>
-				    <version>4.2</version>
+					<groupId>org.codehaus.sonar</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>4.2</version>
 				</plugin>
 
 				<plugin>
@@ -334,77 +333,67 @@
 						<target>1.8</target>
 						<debug>true</debug>
 						<optimize>true</optimize>
-						<!--
-						<showDeprecation>true</showDeprecation>
-						<showWarnings>true</showWarnings> 
-						<compilerArguments>
-							<Xlint:-options/>
-							<Xlint:unchecked/>
-							<Xlint:deprecation/> 
-						</compilerArguments>
-						-->
+						<!-- <showDeprecation>true</showDeprecation> <showWarnings>true</showWarnings> 
+							<compilerArguments> <Xlint:-options/> <Xlint:unchecked/> <Xlint:deprecation/> 
+							</compilerArguments> -->
 					</configuration>
 				</plugin>
 
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<!-- property set by jacoco-maven-plugin -->
+					<argLine>${itCoverageAgent}</argLine>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+							<!-- <goal>verify</goal> -->
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
-	<plugins>
-	<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>2.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-failsafe-plugin</artifactId>
-			<configuration>
-				<!-- property set by jacoco-maven-plugin -->
-				<argLine>${itCoverageAgent}</argLine>
-			</configuration>
-			<executions>
-				<execution>
-					<id>integration-test</id>
-					<goals>
-						<goal>integration-test</goal>
-						<!-- <goal>verify</goal> -->
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.0.201403182114</version>
+				<executions>
+					<execution>
+						<id>prepare-integration-tests</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<phase>pre-integration-test</phase>
+						<configuration>
+							<destFile>${sonar.jacoco.itReportPath}</destFile>
+							<propertyName>itCoverageAgent</propertyName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-		<plugin>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>0.7.0.201403182114</version>
-			<executions>
-				<execution>
-					<id>prepare-integration-tests</id>
-					<goals>
-						<goal>prepare-agent</goal>
-					</goals>
-					<phase>pre-integration-test</phase>
-					<configuration>
-						<destFile>${sonar.jacoco.itReportPath}</destFile>
-						<propertyName>itCoverageAgent</propertyName>
-					</configuration>
-				</execution>
-			</executions>
-		</plugin>
-
-	</plugins>
-
+		</plugins>
 	</build>
-
-
 
 </project>

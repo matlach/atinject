@@ -1,45 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<artifactId>atinject</artifactId>
 		<groupId>org.atinject</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
+
 	<artifactId>atinject-core</artifactId>
 	<packaging>jar</packaging>
 
-    <name>atinject-core</name>
+	<name>atinject-core</name>
 
 	<dependencies>
 		<dependency>
-	        <groupId>com.codahale.metrics</groupId>
-	        <artifactId>metrics-core</artifactId>
-	        <version>3.0.1</version>
-	    </dependency>
-	    
-	    <dependency>
-	    	<groupId>${project.groupId}</groupId>
-	    	<artifactId>atinject-core-logging</artifactId>
-	    	<version>${project.version}</version>
-	    </dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-core-logging</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
-	
-	  <build>
-    <plugins>
-     <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-jar-plugin</artifactId>
-       <version>2.2</version>
-       <executions>
-         <execution>
-           <goals>
-             <goal>test-jar</goal>
-           </goals>
-         </execution>
-       </executions>
-     </plugin>
-    </plugins>
-  </build>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
