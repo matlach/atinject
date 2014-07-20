@@ -34,6 +34,22 @@
 		<module>atinject-api-user-session</module>
 		<module>atinject-api-user-topology</module>
 		<module>atinject-api-user-websocket</module>
+		<module>atinject-api-user-authentication-challenge</module>
 	</modules>
+	
+	<dependencies>
+	  	<dependency>
+	  		<groupId>${project.groupId}</groupId>
+	  		<artifactId>atinject-core</artifactId>
+	  		<version>${project.version}</version>
+	  	</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>atinject-core</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>
