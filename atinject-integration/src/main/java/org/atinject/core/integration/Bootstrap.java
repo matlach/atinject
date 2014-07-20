@@ -1,6 +1,6 @@
 package org.atinject.core.integration;
 
-import org.atinject.core.cdi.JavaSECDIProvider;
+import org.atinject.core.cdi.DefaultJavaSECDIProvider;
 
 
 
@@ -15,7 +15,6 @@ public class Bootstrap {
         // TODO this wrapper class should be instantiated by reflection using a well known system property like
         // -Dorg.atinject.bootstrap.custom.system.properties=org.atinject....
         System.setProperty("user.timezone", "GMT");
-        System.setProperty("infinispan.unsafe.allow_jdk8_chm", "true");
 
         Thread shutdownThread = new Thread(new Runnable()
         {
@@ -36,7 +35,7 @@ public class Bootstrap {
         shutdownThread.setDaemon(true);
         shutdownThread.start();
         
-        JavaSECDIProvider.initialize();
+        DefaultJavaSECDIProvider.initialize();
         
         // TODO inject here a "version service"
         System.out.println("booting atinject core version 1");

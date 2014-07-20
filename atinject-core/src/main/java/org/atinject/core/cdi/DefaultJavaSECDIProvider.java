@@ -7,9 +7,9 @@ import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.resources.spi.ResourceLoader;
 import org.jboss.weld.transaction.spi.TransactionServices;
 
-public final class JavaSECDIProvider {
+public final class DefaultJavaSECDIProvider {
 
-    private JavaSECDIProvider() {
+    private DefaultJavaSECDIProvider() {
         
     }
     
