@@ -45,6 +45,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -88,7 +89,7 @@ public class WebSocketServerHandler {
     private static final AttributeKey<WebSocketServerHandshaker> WEB_SOCKET_SERVER_HANDSHAKER_KEY = AttributeKey.valueOf("handshaker");
     
     // TODO we must pass the executor from the initializer to here 
-    private Map<String, Channel> channelGroup = new ConcurrentHashMap<>();
+    private Map<String, Channel> channelGroup;
     
     @Inject
     private SessionService sessionService;
@@ -102,13 +103,21 @@ public class WebSocketServerHandler {
     @Inject
     private AsynchronousService asynchronousService;
     
-    // TODO maximum of concurrent connection
-    // TODO boolean to stop accepting new connection
-    // TODO boolean to stop servicing http/websocket request
+    private int maximumConcurrentConnection;
+    private boolean acceptConnection;
+    private boolean processRequest;
     
     public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
     public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
     public static final int HTTP_CACHE_SECONDS = 60;
+    
+    @PostConstruct
+    public void initialize() {
+    	maximumConcurrentConnection = 1000;
+        acceptConnection = true;
+        processRequest = true;
+    	channelGroup = new ConcurrentHashMap<String, Channel>(maximumConcurrentConnection);
+    }
     
     public void onNotificationEvent(@Observes NotificationEvent event){
         Channel channel = channelGroup.get(event.getSession().getSessionId());
@@ -121,6 +130,12 @@ public class WebSocketServerHandler {
     }
     
         public void channelRegistered(ChannelHandlerContext ctx) {
+        	if (!acceptConnection) {
+        		ctx.close();
+        	}
+        	if (channelGroup.size() > maximumConcurrentConnection) {
+        		ctx.close();
+        	}
             logger.info("channel registered");
         }
         
@@ -129,6 +144,9 @@ public class WebSocketServerHandler {
         }
         
         public void messageReceived(ChannelHandlerContext ctx, Object msg) {
+        	if (!processRequest) {
+        		return;
+        	}
             if (msg instanceof FullHttpRequest) {
                 handleHttpRequest(ctx, (FullHttpRequest) msg);
             }
