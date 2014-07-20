@@ -1,10 +1,12 @@
 .DS_STORE
+
 .project
 .classpath
 .settings
 .metadata
-/target
-*/target
+
+target
 */infinispan*
+
 .idea
 *.iml
