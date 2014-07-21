@@ -18,7 +18,7 @@ import org.atinject.core.websocket.OnMessage;
 public class RegistrationWebSocketService extends WebSocketService {
 
     @Inject
-    RegistrationServiceImpl registrationService;
+    RegistrationService registrationService;
     
     @Inject
     UserAdapter userAdapter;

@@ -1,6 +1,7 @@
 package org.atinject.api.registration.event;
 
 import org.atinject.api.user.entity.UserEntity;
+import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.core.event.Event;
 
 public class UserRegistered extends Event {
@@ -8,11 +9,8 @@ public class UserRegistered extends Event {
     private static final long serialVersionUID = 1L;
 
     private UserEntity user;
+    private UserCredentialEntity userCredential;
     
-    public UserRegistered(){
-        super();
-    }
-
     public UserEntity getUser() {
         return user;
     }
@@ -22,4 +20,12 @@ public class UserRegistered extends Event {
         return this;
     }
     
+    public UserCredentialEntity getUserCredential() {
+        return userCredential;
+    }
+
+    public UserRegistered setUserCredential(UserCredentialEntity userCredential) {
+        this.userCredential = userCredential;
+        return this;
+    }
 }
