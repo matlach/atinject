@@ -20,7 +20,7 @@ public class VersionableEntityObjectMapper
     private ObjectMapper mapper;
 
     @PostConstruct
-    public void initialize(){
+    public void initialize() {
         mapper = new ObjectMapper()
         .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -30,94 +30,45 @@ public class VersionableEntityObjectMapper
         .setVisibility(PropertyAccessor.SETTER, Visibility.NONE);
     }
     
-    public void writeObject(ObjectOutput output, VersionableEntity entity, int version) throws IOException
-    {
+    public void writeObject(ObjectOutput output, VersionableEntity entity, int version) throws IOException {
         output.writeInt(version);
         byte[] json = writeValueAsBytes(entity);
         output.writeInt(json.length);
         output.write(json);
     }
     
-    public int readVersion(ObjectInput input) throws IOException{
+    public int readVersion(ObjectInput input) throws IOException {
         return input.readInt();
     }
     
-    public byte[] readJSONBytes(ObjectInput input) throws IOException{
+    public byte[] readJSONBytes(ObjectInput input) throws IOException {
         int jsonLength = input.readInt();
         byte[] json = new byte[jsonLength];
         input.read(json);
         return json;
     }
     
-    public byte[] writeValueAsBytes(Object value)
-    {
-        try
-        {
-            return mapper.writeValueAsBytes(value);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public byte[] writeValueAsBytes(Object value) throws IOException {
+    	return mapper.writeValueAsBytes(value);
     }
     
-    public String writeValueAsString(Object value)
-    {
-        try
-        {
-            return mapper.writeValueAsString(value);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public String writeValueAsString(Object value) throws IOException {
+        return mapper.writeValueAsString(value);
     }
     
-    public <T extends VersionableEntity> T readValue(byte[] content, Class<T> valueType)
-    {
-        try
-        {
-            return mapper.readValue(content, valueType);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public <T extends VersionableEntity> T readValue(byte[] content, Class<T> valueType) throws IOException {
+        return mapper.readValue(content, valueType);
     }
     
-    public <T extends VersionableEntity> T readValue(String content, Class<T> valueType)
-    {
-        try
-        {
-            return mapper.readValue(content, valueType);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public <T extends VersionableEntity> T readValue(String content, Class<T> valueType) throws IOException {
+        return mapper.readValue(content, valueType);
     }
 
-    public JsonNode readTree(byte[] content)
-    {
-        try
-        {
-            return mapper.readTree(content);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public JsonNode readTree(byte[] content) throws IOException {
+        return mapper.readTree(content);
     }
 
-    public JsonNode readTree(String content)
-    {
-        try
-        {
-            return mapper.readTree(content);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+    public JsonNode readTree(String content) throws IOException {
+        return mapper.readTree(content);
     }
 }
