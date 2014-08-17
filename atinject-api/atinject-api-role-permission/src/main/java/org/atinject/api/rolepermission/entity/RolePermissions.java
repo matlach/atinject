@@ -43,4 +43,10 @@ public class RolePermissions extends Entity {
     public boolean hasPermission(String permission) {
         return this.permissions.contains(permission);
     }
+
+	@Override
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

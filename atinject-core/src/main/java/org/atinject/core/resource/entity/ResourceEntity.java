@@ -13,5 +13,11 @@ public class ResourceEntity extends Entity {
     String bundleId;
     
     Map<String, ResourceStringEntity> resourceStrings;
+
+	@Override
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

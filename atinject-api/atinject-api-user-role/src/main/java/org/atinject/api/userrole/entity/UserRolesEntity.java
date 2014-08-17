@@ -45,4 +45,10 @@ public class UserRolesEntity extends Entity {
     public boolean containsRole(String role){
         return roles.contains(role);
     }
+
+	@Override
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

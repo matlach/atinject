@@ -53,4 +53,10 @@ public class UserCredentialEntity extends VersionableEntity {
         return this;
     }
 
+	@Override
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

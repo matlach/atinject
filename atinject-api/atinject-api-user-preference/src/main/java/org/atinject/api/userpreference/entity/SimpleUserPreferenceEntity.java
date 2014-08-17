@@ -6,10 +6,6 @@ public class SimpleUserPreferenceEntity extends UserPreferenceEntity {
 
     private String value;
     
-    public SimpleUserPreferenceEntity(){
-        super();
-    }
-
     public String getValue() {
         return value;
     }
@@ -18,5 +14,11 @@ public class SimpleUserPreferenceEntity extends UserPreferenceEntity {
         this.value = value;
         return this;
     }
+
+	@Override
+	public Object getId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }
