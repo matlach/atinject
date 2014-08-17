@@ -18,10 +18,10 @@ import org.atinject.core.websocket.OnMessage;
 public class RegistrationWebSocketService extends WebSocketService {
 
     @Inject
-    RegistrationService registrationService;
+    private RegistrationService registrationService;
     
     @Inject
-    UserAdapter userAdapter;
+    private UserAdapter userAdapter;
 
     @OnMessage
     public RegisterAsGuestResponse onRegisterAsGuest(RegisterAsGuestRequest request, UserSession session) {
