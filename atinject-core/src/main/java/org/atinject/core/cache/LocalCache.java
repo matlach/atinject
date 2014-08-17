@@ -14,13 +14,14 @@ import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
 import org.atinject.core.tiers.exception.HandleCacheException;
 import org.infinispan.AdvancedCache;
+import org.infinispan.container.entries.CacheEntry;
 import org.infinispan.context.Flag;
 import org.infinispan.filter.KeyValueFilter;
 
 @HandleCacheException
 @Profile
 @ThreadTracker
-public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
+public class LocalCache<K, V> implements Iterable<CacheEntry<K, V>>{
 
     protected AdvancedCache<K, V> cache;
     protected AdvancedCache<K, V> cacheWithZeroLockAcquisitionTimeoutAndFailSilently;
@@ -113,20 +114,20 @@ public class LocalCache<K, V> implements Iterable<Entry<K, V>>{
     }
 
     @Override
-	public Iterator<Entry<K, V>> iterator() {
+	public Iterator<CacheEntry<K, V>> iterator() {
     	return iterator((key, value, metadata) -> true);
     }
     
-    public Iterator<Entry<K, V>> iterator(KeyValueFilter<? super K, ? super V> filter) {
+    public Iterator<CacheEntry<K, V>> iterator(KeyValueFilter<? super K, ? super V> filter) {
     	return cache.filterEntries(filter).iterator();
     }
     
     @Override
-	public Spliterator<Entry<K, V>> spliterator() {
+	public Spliterator<CacheEntry<K, V>> spliterator() {
     	return spliterator((key, value, metadata) -> true);
     }
     
-    public Spliterator<Entry<K, V>> spliterator(KeyValueFilter<? super K, ? super V> filter) {
+    public Spliterator<CacheEntry<K, V>> spliterator(KeyValueFilter<? super K, ? super V> filter) {
     	return cache.filterEntries(filter).spliterator();
     }
     
