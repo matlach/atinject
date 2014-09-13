@@ -1,5 +1,6 @@
 package org.atinject.core.cache;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
@@ -115,20 +118,36 @@ public class LocalCache<K, V> implements Iterable<CacheEntry<K, V>>{
 
     @Override
 	public Iterator<CacheEntry<K, V>> iterator() {
-    	return iterator((key, value, metadata) -> true);
+    	return iterator((KeyValueFilter<K, V> & Serializable)(key, value, metadata) -> true);
     }
     
-    public Iterator<CacheEntry<K, V>> iterator(KeyValueFilter<? super K, ? super V> filter) {
+    public Iterator<CacheEntry<K, V>> iterator(KeyValueFilter<K, V> filter) {
     	return cache.filterEntries(filter).iterator();
     }
     
     @Override
 	public Spliterator<CacheEntry<K, V>> spliterator() {
-    	return spliterator((key, value, metadata) -> true);
+    	return spliterator((KeyValueFilter<K, V> & Serializable)(key, value, metadata) -> true);
     }
     
-    public Spliterator<CacheEntry<K, V>> spliterator(KeyValueFilter<? super K, ? super V> filter) {
+    public Spliterator<CacheEntry<K, V>> spliterator(KeyValueFilter<K, V> filter) {
     	return cache.filterEntries(filter).spliterator();
+    }
+    
+    public Stream<CacheEntry<K, V>> stream() {
+    	return StreamSupport.stream(spliterator(), false);
+    }
+    
+    public Stream<CacheEntry<K, V>> stream(KeyValueFilter<K, V> filter) {
+    	return StreamSupport.stream(spliterator(filter), false);
+    }
+    
+    public Stream<CacheEntry<K, V>> parallelStream() {
+    	return StreamSupport.stream(spliterator(), true);
+    }
+    
+    public Stream<CacheEntry<K, V>> parallelStream(KeyValueFilter<K, V> filter) {
+    	return StreamSupport.stream(spliterator(filter), true);
     }
     
     public void clear() {
