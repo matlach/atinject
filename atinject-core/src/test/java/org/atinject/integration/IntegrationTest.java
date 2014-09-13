@@ -3,6 +3,7 @@ package org.atinject.integration;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.atinject.core.cache.CustomJGroupsLoggerFactory;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -20,6 +21,10 @@ import org.slf4j.LoggerFactory;
 @RunWith(Arquillian.class)
 public abstract class IntegrationTest {
     
+	static {
+		System.setProperty(org.jgroups.Global.CUSTOM_LOG_FACTORY, CustomJGroupsLoggerFactory.class.getName());
+	}
+	
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
     private static Set<String> inFailureTests = new HashSet<>();
