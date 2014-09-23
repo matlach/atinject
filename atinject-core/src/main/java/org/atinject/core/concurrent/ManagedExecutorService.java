@@ -5,47 +5,15 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
+public abstract class ManagedExecutorService implements ExecutorService {
 
-@ApplicationScoped
-public class AsynchronousService implements ExecutorService {
-
-    private ThreadPoolExecutor threadPoolExecutor;
-    
-    /**
-     * @see Executors#newFixedThreadPool(int)
-     * @see ThreadPoolExecutor#allowCoreThreadTimeOut(boolean)
-     */
-    @PostConstruct
-    public void initialize() {
-        threadPoolExecutor = new ThreadPoolExecutor(100, 100,
-                60L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(),
-                new ContextAwareThreadFactory());
-        // TODO implements RejectedExecutionHandler
-        threadPoolExecutor.allowCoreThreadTimeOut(true);
-    }
-    
-    @PreDestroy
-    public void cleanUp() {
-        shutdown();
-        try {
-            awaitTermination(60L, TimeUnit.SECONDS);
-        }
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
+	protected ThreadPoolExecutor threadPoolExecutor;
+	
     public void getActiveCount() {
         threadPoolExecutor.getActiveCount();
     }
@@ -142,5 +110,4 @@ public class AsynchronousService implements ExecutorService {
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return threadPoolExecutor.invokeAny(tasks, timeout, unit);
     }
-
 }
