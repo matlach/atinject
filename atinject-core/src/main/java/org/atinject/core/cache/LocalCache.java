@@ -112,8 +112,16 @@ public class LocalCache<K, V> implements Iterable<CacheEntry<K, V>>{
     	return cache.keySet();
     }
     
+    public Stream<K> streamKeys() {
+    	return cache.keySet().stream();
+    }
+    
     public Collection<V> values() {
         return cache.values();
+    }
+    
+    public Stream<V> streamValues() {
+    	return cache.values().stream();
     }
 
     @Override
