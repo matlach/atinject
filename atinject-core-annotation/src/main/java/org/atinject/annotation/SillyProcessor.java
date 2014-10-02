@@ -24,7 +24,7 @@ public class SillyProcessor extends AbstractProcessor {
 	private Messager messager;
 
 	@Override
-	public void init(ProcessingEnvironment env) {
+	public synchronized void init(ProcessingEnvironment env) {
 		filer = env.getFiler();
 		messager = env.getMessager();
 	}

@@ -19,7 +19,8 @@ public class UserEntity extends VersionableEntity {
     private UUID id;
     private String name;
 
-    public UUID getId() {
+    @Override
+	public UUID getId() {
         return id;
     }
 

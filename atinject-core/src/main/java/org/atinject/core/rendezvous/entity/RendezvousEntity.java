@@ -18,7 +18,8 @@ public class RendezvousEntity extends Entity {
         sessionIds = new HashSet<>();
     }
     
-    public UUID getId() {
+    @Override
+	public UUID getId() {
         return id;
     }
 

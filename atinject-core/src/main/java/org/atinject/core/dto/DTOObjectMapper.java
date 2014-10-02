@@ -44,7 +44,8 @@ public class DTOObjectMapper {
         }
     }
 
-    public <T extends DTO> T readValue(byte[] content) {
+    @SuppressWarnings("unchecked")
+	public <T extends DTO> T readValue(byte[] content) {
         try {
             return (T) mapper.readValue(content, DTO.class);
         }
@@ -53,6 +54,7 @@ public class DTOObjectMapper {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends DTO> T readValue(String content) {
         try {
             return (T) mapper.readValue(content, DTO.class);

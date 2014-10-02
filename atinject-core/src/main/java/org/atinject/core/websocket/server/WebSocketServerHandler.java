@@ -116,7 +116,7 @@ public class WebSocketServerHandler {
     	maximumConcurrentConnection = 1000;
         acceptConnection = true;
         processRequest = true;
-    	channelGroup = new ConcurrentHashMap<String, Channel>(maximumConcurrentConnection);
+    	channelGroup = new ConcurrentHashMap<>(maximumConcurrentConnection);
     }
     
     public void onNotificationEvent(@Observes NotificationEvent event){
