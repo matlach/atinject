@@ -10,11 +10,10 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ServiceExceptionSanitizer {
 
-    List<String> keywords = new ArrayList<>();
+    private List<String> keywords = new ArrayList<>();
     
     @PostConstruct
-    public void initialize()
-    {
+    public void initialize() {
         keywords.add("sun.reflect.NativeMethodAccessorImpl.invoke");
         keywords.add("sun.reflect.DelegatingMethodAccessorImpl.invoke");
         
@@ -29,24 +28,16 @@ public class ServiceExceptionSanitizer {
         keywords.add("org.eclipse.jdt.internal.junit");
     }
     
-    public Exception sanitize(Exception e){
-        StackTraceElement[] stackTrace = new StackTraceElement[e.getStackTrace().length];
-        int i = 0;
-        for (StackTraceElement stackTraceElement : e.getStackTrace()){
-            String stackTraceElementString = stackTraceElement.toString();
-            boolean retainStackTraceElement = true;
-            for (String keyword : keywords){
-                if (stackTraceElementString.contains(keyword)){
-                    retainStackTraceElement = false;
-                    break;
-                }
-            }
-            if (retainStackTraceElement){
-                stackTrace[i] = stackTraceElement;
-                i++;
-            }
-        }
-        e.setStackTrace(Arrays.copyOfRange(stackTrace, 0, i));
+    public Exception sanitize(Exception e) {
+    	e.setStackTrace(
+    			Arrays.stream(e.getStackTrace())
+	        		.filter(stackTraceElement -> containsAnyKeyword(stackTraceElement))
+	        		.toArray(StackTraceElement[]::new));
         return e;
+    }
+    
+    private boolean containsAnyKeyword(StackTraceElement stackTraceElement) {
+    	return keywords.parallelStream()
+    			.anyMatch(keyword -> stackTraceElement.toString().contains(keyword));
     }
 }
