@@ -2,18 +2,18 @@ package org.atinject.api.userrole;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.role.RoleService;
+import org.atinject.api.role.enumeration.Roles;
 import org.atinject.api.user.UserService;
 import org.atinject.api.userrole.entity.UserRolesEntity;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserRoleService extends Service {
+@Service
+public class UserRoleService {
 
     @Inject UserService userService;
     @Inject RoleService roleService;
@@ -30,6 +30,10 @@ public class UserRoleService extends Service {
         return userRoles;
     }
     
+    public <R extends Enum<?> & Roles> void grantUserRole(UUID userId, R role) {
+    	grantUserRole(userId, role.name());
+    }
+    
     public void grantUserRole(UUID userId, String role){
         UserRolesEntity userRoles = getUserRole(userId);
         grantUserRole(userRoles, role);
@@ -41,6 +45,10 @@ public class UserRoleService extends Service {
         }
         userRoles.addRole(role);
         userRoleCache.put(userRoles.getUserId(), userRoles);
+    }
+    
+    public <R extends Enum<?> & Roles> void revokeUserRole(UUID userId, R role) {
+    	revokeUserRole(userId, role.name());
     }
     
     public void revokeUserRole(UUID userId, String role){

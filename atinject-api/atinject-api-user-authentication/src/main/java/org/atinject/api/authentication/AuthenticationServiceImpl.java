@@ -1,6 +1,5 @@
 package org.atinject.api.authentication;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -20,8 +19,8 @@ import org.atinject.core.nullanalysis.NonNull;
 import org.atinject.core.session.SessionService;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class AuthenticationServiceImpl extends Service implements AuthenticationService {
+@Service
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Inject
     private UserCredentialService userCredentialService;

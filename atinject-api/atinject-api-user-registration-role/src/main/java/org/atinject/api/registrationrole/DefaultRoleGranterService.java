@@ -11,7 +11,8 @@ import org.atinject.api.role.enumeration.DefaultRoles;
 import org.atinject.api.userrole.UserRoleService;
 import org.atinject.core.tiers.Service;
 
-public abstract class DefaultRoleGranterService extends Service {
+@Service
+public abstract class DefaultRoleGranterService {
 
     @Inject @Delegate RegistrationService registrationService;
     

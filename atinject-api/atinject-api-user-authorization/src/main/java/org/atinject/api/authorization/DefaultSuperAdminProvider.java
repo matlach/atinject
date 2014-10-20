@@ -1,11 +1,15 @@
 package org.atinject.api.authorization;
 
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.permission.PermissionService;
+import org.atinject.api.permission.entity.Permissions;
 import org.atinject.api.role.enumeration.DefaultRoles;
+import org.atinject.api.role.enumeration.Roles;
 import org.atinject.api.rolepermission.RolePermissionService;
 import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.user.UserService;
@@ -39,7 +43,7 @@ public class DefaultSuperAdminProvider implements SuperAdminProvider {
     public static final String SUPER_ADMIN_PASSWORD = "admin";
     
     @PostConstruct
-    public void initialize() {
+    public <R extends Enum<?> & Roles, P extends Enum<?> & Permissions> void initialize() {
         // ensure super admin user / user credential exists
         UserCredentialEntity superAdminCredential = userCredentialService.getUserCredential(getUsername());
         if (superAdminCredential == null) {
@@ -50,7 +54,7 @@ public class DefaultSuperAdminProvider implements SuperAdminProvider {
         // ensure super admin user has the super admin role
         UserRolesEntity superAdminRoles = userRoleService.getUserRole(superAdminCredential.getUserId());
         if (superAdminRoles.containsRole(DefaultRoles.SUPER_ADMIN)) {
-            userRoleService.grantUserRole(superAdminRoles, DefaultRoles.SUPER_ADMIN);
+            userRoleService.grantUserRole(superAdminCredential.getUserId(), DefaultRoles.SUPER_ADMIN);
         }
         
         // ensure super admin role has all the permission
@@ -58,7 +62,8 @@ public class DefaultSuperAdminProvider implements SuperAdminProvider {
         if (superAdminPermissions == null) {
             superAdminPermissions = rolePermissionService.addRolePermissions(DefaultRoles.SUPER_ADMIN);
         }
-        for (String permission : permissionService.getAllPermission()) {
+        Set<P> staticPermissions = permissionService.getAllStaticPermission();
+        for (P permission : staticPermissions) {
             if (! superAdminPermissions.hasPermission(permission)) {
                 rolePermissionService.grantPermissionToRole(DefaultRoles.SUPER_ADMIN, permission);
             }

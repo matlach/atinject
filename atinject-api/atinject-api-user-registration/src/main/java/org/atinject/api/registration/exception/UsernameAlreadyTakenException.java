@@ -6,7 +6,7 @@ public class UsernameAlreadyTakenException extends RegistrationException {
 
 	@Override
 	public String getExceptionCode() {
-		return RegistrationExceptionCodes.USERNAME_ALREADY_TAKEN;
+		return RegistrationExceptionCodes.USERNAME_ALREADY_TAKEN.name();
 	}
 
 }

@@ -1,6 +1,5 @@
 package org.atinject.api.registration;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.registration.dto.RegisterAsGuestRequest;
@@ -14,8 +13,8 @@ import org.atinject.api.usersession.UserSession;
 import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.websocket.OnMessage;
 
-@ApplicationScoped
-public class RegistrationWebSocketService extends WebSocketService {
+@WebSocketService
+public class RegistrationWebSocketService {
 
     @Inject
     private RegistrationService registrationService;

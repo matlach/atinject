@@ -1,6 +1,8 @@
 package org.atinject.core.cache;
 
 import org.infinispan.distribution.DistributionManager;
+import org.infinispan.filter.KeyValueFilter;
+import org.infinispan.metadata.Metadata;
 
 public class DistributedCache<K, V> extends ClusteredCache<K, V> {
 
@@ -14,4 +16,5 @@ public class DistributedCache<K, V> extends ClusteredCache<K, V> {
         return super.cache.getDistributionManager();
     }
     
+    public final KeyValueFilter<K, V> affineKeyValueFilter = (K key, V value, Metadata metadata) -> getDistributionManager().getLocality(key).isLocal();
 }

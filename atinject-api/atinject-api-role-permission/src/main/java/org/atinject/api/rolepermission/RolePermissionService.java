@@ -1,11 +1,12 @@
 package org.atinject.api.rolepermission;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.atinject.api.permission.PermissionService;
+import org.atinject.api.permission.entity.Permissions;
 import org.atinject.api.role.RoleService;
+import org.atinject.api.role.enumeration.Roles;
 import org.atinject.api.rolepermission.entity.RolePermissions;
 import org.atinject.api.rolepermission.event.PermissionGrantedToRole;
 import org.atinject.api.rolepermission.event.PermissionRevokedToRole;
@@ -14,8 +15,8 @@ import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class RolePermissionService extends Service {
+@Service
+public class RolePermissionService {
 
     @Inject
     RoleService roleService;
@@ -32,8 +33,16 @@ public class RolePermissionService extends Service {
     @Inject
     Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
 
+    public <R extends Enum<?> & Roles> RolePermissions getRolePermissions(R role) {
+    	return getRolePermissions(role.name());
+    }
+    
     public RolePermissions getRolePermissions(String role) {
         return rolePermissionCache.get(role);
+    }
+    
+    public <R extends Enum<?> & Roles> RolePermissions addRolePermissions(R role) {
+    	return addRolePermissions(role.name());
     }
     
     public RolePermissions addRolePermissions(String role) {
@@ -45,6 +54,10 @@ public class RolePermissionService extends Service {
         return rolePermissions;
     }
 
+    public <R extends Enum<?> & Roles, P extends Enum<?> & Roles> boolean isPermitted(R role, P permission) {
+    	return isPermitted(role.name(), permission.name());
+    }
+    
     public boolean isPermitted(String role, String permission) {
         if (!roleService.isRole(role)) {
             throw new RolePermissionException("role '" + role + "' do not exists");
@@ -59,6 +72,10 @@ public class RolePermissionService extends Service {
         return rolePermissions.hasPermission(permission);
     }
 
+    public <R extends Enum<?> & Roles, P extends Enum<?> & Permissions> void grantPermissionToRole(R role, P permission) {
+    	grantPermissionToRole(role.name(), permission.name());
+    }
+    
     public void grantPermissionToRole(String role, String permission) {
         RolePermissions rolePermissions = getRolePermissions(role);
         grantPermissionToRole(rolePermissions, permission);
@@ -70,6 +87,10 @@ public class RolePermissionService extends Service {
         permissionGrantedToRoleEvent.fire(new PermissionGrantedToRole());
     }
 
+    public <R extends Enum<?> & Roles, P extends Enum<?> & Roles> void revokePermissionToRole(R role, P permission) {
+    	revokePermissionToRole(role.name(), permission.name());
+    }
+    
     public void revokePermissionToRole(String role, String permission) {
         // lock, get, revoke, put
         permissionRevokedToRoleEvent.fire(new PermissionRevokedToRole());

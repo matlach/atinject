@@ -2,7 +2,6 @@ package org.atinject.api.usercredential;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
@@ -10,8 +9,8 @@ import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserCredentialService extends Service {
+@Service
+public class UserCredentialService {
 
     @Inject @Named("user-credential") DistributedCache<String, UserCredentialEntity> userCredentialCacheStore;
     

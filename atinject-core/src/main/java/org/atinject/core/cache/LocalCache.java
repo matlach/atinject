@@ -1,6 +1,5 @@
 package org.atinject.core.cache;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import org.infinispan.AdvancedCache;
 import org.infinispan.container.entries.CacheEntry;
 import org.infinispan.context.Flag;
 import org.infinispan.filter.KeyValueFilter;
+import org.infinispan.metadata.Metadata;
 
 @HandleCacheException
 @Profile
@@ -38,6 +38,60 @@ public class LocalCache<K, V> implements Iterable<CacheEntry<K, V>>{
         cacheWithZeroLockAcquisitionTimeoutAndFailSilently = this.cache
         		.withFlags(Flag.ZERO_LOCK_ACQUISITION_TIMEOUT, Flag.FAIL_SILENTLY);
         return this;
+    }
+    
+	public final class MapEntryOnlyIterator implements Iterator<Entry<K, V>> {
+		private final Iterator<CacheEntry<K, V>> cacheEntryIterator;
+
+		public MapEntryOnlyIterator(final Iterator<CacheEntry<K, V>> cacheEntryIterator) {
+			this.cacheEntryIterator = cacheEntryIterator;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return cacheEntryIterator.hasNext();
+		}
+
+		@Override
+		public Entry<K, V> next() {
+			return cacheEntryIterator.next();
+		}
+	}
+    
+    public final class ValuesOnlyIterator implements Iterator<V> {
+    	private final Iterator<CacheEntry<K, V>> cacheEntryIterator;
+    	
+    	public ValuesOnlyIterator(final Iterator<CacheEntry<K, V>> cacheEntryIterator) {
+    		this.cacheEntryIterator = cacheEntryIterator;
+		}
+    	
+		@Override
+		public boolean hasNext() {
+			return cacheEntryIterator.hasNext();
+		}
+
+		@Override
+		public V next() {
+			return cacheEntryIterator.next().getValue();
+		}
+    }
+    
+    public final class KeysOnlyIterator implements Iterator<K> {
+    	private final Iterator<CacheEntry<K, V>> cacheEntryIterator;
+    	
+    	public KeysOnlyIterator(final Iterator<CacheEntry<K, V>> cacheEntryIterator) {
+    		this.cacheEntryIterator = cacheEntryIterator;
+		}
+    	
+		@Override
+		public boolean hasNext() {
+			return cacheEntryIterator.hasNext();
+		}
+
+		@Override
+		public K next() {
+			return cacheEntryIterator.next().getKey();
+		}
     }
     
     public V get(K key) {
@@ -126,16 +180,18 @@ public class LocalCache<K, V> implements Iterable<CacheEntry<K, V>>{
 
     @Override
 	public Iterator<CacheEntry<K, V>> iterator() {
-    	return iterator((KeyValueFilter<K, V> & Serializable)(key, value, metadata) -> true);
+    	return iterator(allKeyValueFilter);
     }
     
     public Iterator<CacheEntry<K, V>> iterator(KeyValueFilter<K, V> filter) {
     	return cache.filterEntries(filter).iterator();
     }
     
+    public final KeyValueFilter<K, V> allKeyValueFilter = (K key, V value, Metadata metadata) -> true;
+    
     @Override
 	public Spliterator<CacheEntry<K, V>> spliterator() {
-    	return spliterator((KeyValueFilter<K, V> & Serializable)(key, value, metadata) -> true);
+    	return spliterator(allKeyValueFilter);
     }
     
     public Spliterator<CacheEntry<K, V>> spliterator(KeyValueFilter<K, V> filter) {

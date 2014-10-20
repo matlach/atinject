@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.role.enumeration.DefaultRoles;
@@ -18,8 +17,8 @@ import org.atinject.api.userrole.entity.UserRolesEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class AuthorizationService extends Service {
+@Service
+public class AuthorizationService {
     
 	@Inject
     private UserService userService;
@@ -81,6 +80,5 @@ public class AuthorizationService extends Service {
     public boolean isAdmin(UserRolesEntity userRoles) {
         return userRoles.containsRole(DefaultRoles.ADMIN);
     }
-
 
 }

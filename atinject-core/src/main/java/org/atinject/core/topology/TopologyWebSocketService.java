@@ -1,6 +1,5 @@
 package org.atinject.core.topology;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.session.Session;
@@ -8,8 +7,8 @@ import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.topology.dto.GetTopologyRequest;
 import org.atinject.core.topology.dto.GetTopologyResponse;
 
-@ApplicationScoped
-public class TopologyWebSocketService extends WebSocketService {
+@WebSocketService
+public class TopologyWebSocketService {
 
     @Inject private TopologyService topologyService;
     

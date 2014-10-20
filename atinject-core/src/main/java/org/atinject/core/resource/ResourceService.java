@@ -14,7 +14,8 @@ import org.atinject.core.resource.entity.ResourceEntity;
 import org.atinject.core.resource.entity.ResourceStringEntity;
 import org.atinject.core.tiers.Service;
 
-public class ResourceService extends Service {
+@Service
+public class ResourceService {
 
 	@Inject
 	private ReplicatedCache<String, ResourceBundleEntity> resourceBundles;

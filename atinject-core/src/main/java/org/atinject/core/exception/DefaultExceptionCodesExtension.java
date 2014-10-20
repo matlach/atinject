@@ -17,13 +17,13 @@ public class DefaultExceptionCodesExtension extends AbstractEnumerationExtension
 
     private Logger logger = LoggerFactory.getLogger(DefaultExceptionCodesExtension.class);
     
-    private Map<String, Class<? extends ExceptionCodes>> exceptionCodes;
+    private Map<String, Class<?>> exceptionCodes;
     
     public DefaultExceptionCodesExtension(){
         exceptionCodes = new LinkedHashMap<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends ExceptionCodes> event) {
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<ExceptionCodes> event) {
         logger.info("merging '{}' to exception codes", event.getAnnotatedType().getJavaClass());
         List<Field> fields = getNonSyntheticFields(event.getAnnotatedType().getJavaClass());
         for (Field field : fields) {

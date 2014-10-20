@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
-@ApplicationScoped
-public class SystemPropertyService extends Service {
+@Service
+public class SystemPropertyService {
 
     @Inject
     Logger logger;

@@ -18,13 +18,13 @@ public class DefaultRoleExtension extends AbstractEnumerationExtension implement
 
     private Logger logger = LoggerFactory.getLogger(DefaultRoleExtension.class);
 
-    private Map<String, Class<? extends Roles>> roles;
+    private Map<String, Class<?>> roles;
 
     public DefaultRoleExtension() {
         roles = new LinkedHashMap<>();
     }
 
-    <T extends Roles> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Roles> event) {
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<Roles> event) {
         logger.info("merging '{}' to roles", event.getAnnotatedType().getJavaClass());
         List<Field> fields = getNonSyntheticFields(event.getAnnotatedType().getJavaClass());
         for (Field field : fields) {

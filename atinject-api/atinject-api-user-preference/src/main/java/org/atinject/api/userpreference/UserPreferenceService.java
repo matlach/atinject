@@ -2,7 +2,6 @@ package org.atinject.api.userpreference;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.userpreference.entity.UserPreferencesEntity;
@@ -10,8 +9,8 @@ import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserPreferenceService extends Service {
+@Service
+public class UserPreferenceService {
 
     @Inject @Named("user-preferences") private DistributedCache<UUID, UserPreferencesEntity> userPreferenceCacheStore;
     

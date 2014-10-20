@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.atinject.api.permission.entity.Permissions;
 import org.atinject.core.entity.Entity;
 
 public class RolePermissions extends Entity {
@@ -40,6 +41,10 @@ public class RolePermissions extends Entity {
         return this;
     }
 
+    public <P extends Enum<?> & Permissions> boolean hasPermission(P permission) {
+    	return hasPermission(permission.name());
+    }
+    
     public boolean hasPermission(String permission) {
         return this.permissions.contains(permission);
     }

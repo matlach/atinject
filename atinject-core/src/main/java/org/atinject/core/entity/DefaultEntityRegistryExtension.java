@@ -5,7 +5,7 @@ import javax.enterprise.inject.spi.ProcessAnnotatedType;
 
 import org.atinject.core.marshallable.AbstractRegistryExtension;
 
-public class DefaultEntityRegistryExtension extends AbstractRegistryExtension<Entity> implements EntityRegistryExtension {
+public class DefaultEntityRegistryExtension extends AbstractRegistryExtension implements EntityRegistryExtension {
     
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Entity> event) {
         addClass(event.getAnnotatedType().getJavaClass());

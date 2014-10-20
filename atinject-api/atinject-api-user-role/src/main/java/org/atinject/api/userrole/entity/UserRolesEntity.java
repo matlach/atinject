@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import org.atinject.api.role.enumeration.Roles;
 import org.atinject.core.entity.Entity;
 
 public class UserRolesEntity extends Entity {
@@ -40,6 +41,10 @@ public class UserRolesEntity extends Entity {
     public UserRolesEntity removeRole(String role){
         roles.remove(role);
         return this;
+    }
+    
+    public <R extends Enum<?> & Roles> boolean containsRole(R role){
+    	return containsRole(role.name());
     }
     
     public boolean containsRole(String role){

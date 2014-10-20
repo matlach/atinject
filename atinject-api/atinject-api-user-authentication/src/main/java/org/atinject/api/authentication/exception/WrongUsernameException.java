@@ -8,7 +8,7 @@ public class WrongUsernameException extends ApplicationException {
 
 	@Override
 	public String getExceptionCode() {
-		return AuthenticationExceptionCodes.WRONG_USERNAME;
+		return AuthenticationExceptionCodes.WRONG_USERNAME.name();
 	}
 
 }

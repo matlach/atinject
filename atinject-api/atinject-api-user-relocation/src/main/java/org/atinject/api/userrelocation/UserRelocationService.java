@@ -3,7 +3,6 @@ package org.atinject.api.userrelocation;
 import java.util.List;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -15,8 +14,8 @@ import org.atinject.api.usertopology.UserTopologyService;
 import org.atinject.core.affinity.AffineVersion4UUIDGenerator;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserRelocationService extends Service {
+@Service
+public class UserRelocationService {
 
     @Inject
     private UserService userService;

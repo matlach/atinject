@@ -1,6 +1,5 @@
 package org.atinject.api.user;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.user.dto.GetUserRequest;
@@ -13,8 +12,8 @@ import org.atinject.api.usersession.UserSession;
 import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.websocket.OnMessage;
 
-@ApplicationScoped
-public class UserWebSocketService extends WebSocketService {
+@WebSocketService
+public class UserWebSocketService {
 
     @Inject
     UserService userService;

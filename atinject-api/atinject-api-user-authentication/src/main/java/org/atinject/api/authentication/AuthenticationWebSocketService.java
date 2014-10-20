@@ -1,6 +1,5 @@
 package org.atinject.api.authentication;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.api.authentication.dto.LoginRequest;
@@ -13,8 +12,8 @@ import org.atinject.core.tiers.WebSocketService;
 import org.atinject.core.websocket.OnClose;
 import org.atinject.core.websocket.OnMessage;
 
-@ApplicationScoped
-public class AuthenticationWebSocketService extends WebSocketService {
+@WebSocketService
+public class AuthenticationWebSocketService {
 
     @Inject AuthenticationService authenticationService;
     

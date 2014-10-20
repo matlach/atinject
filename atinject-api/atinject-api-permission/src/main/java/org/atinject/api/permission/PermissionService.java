@@ -3,13 +3,13 @@ package org.atinject.api.permission;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.atinject.api.permission.entity.Permissions;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class PermissionService extends Service {
+@Service
+public class PermissionService {
 
     @Inject
     PermissionExtension permissionExtension;
@@ -22,6 +22,10 @@ public class PermissionService extends Service {
         permissions = permissionExtension.getAllPermission();
     }
 
+    public <P extends Enum<?> & Permissions> Set<P> getAllStaticPermission() {
+        return null;
+    }
+    
     public Set<String> getAllPermission() {
         return permissions;
     }

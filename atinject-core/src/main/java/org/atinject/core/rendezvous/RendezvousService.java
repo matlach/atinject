@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -19,8 +18,8 @@ import org.atinject.core.session.Session;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class RendezvousService extends Service {
+@Service
+public class RendezvousService {
 
     @Inject
     RendezvousEntityFactory entityFactory;

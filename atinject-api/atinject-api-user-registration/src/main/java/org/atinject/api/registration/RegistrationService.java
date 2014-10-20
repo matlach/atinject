@@ -2,7 +2,6 @@ package org.atinject.api.registration;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -14,8 +13,8 @@ import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class RegistrationService extends Service {
+@Service
+public class RegistrationService {
 
     @Inject
     private UserService userService;

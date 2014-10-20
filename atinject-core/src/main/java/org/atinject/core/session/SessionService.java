@@ -1,12 +1,12 @@
 package org.atinject.core.session;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -14,9 +14,10 @@ import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.session.event.SessionOpened;
+import org.atinject.core.tiers.Service;
 import org.atinject.core.topology.TopologyService;
 
-@ApplicationScoped
+@Service
 public class SessionService{
     
     @Inject @Named("session") private ReplicatedCache<String, Session> sessionCache;
@@ -25,44 +26,38 @@ public class SessionService{
         return sessionCache.get(sessionId);
     }
 
-    public Map<String, Session> getAllSessions(String... sessionIds){
+    public Map<String, Session> getAllSessions(String... sessionIds) {
         return sessionCache.getAll(sessionIds);
     }
     
-    public Map<String, Session> getAllSessions(List<String> sessionIds){
+    public Map<String, Session> getAllSessions(List<String> sessionIds) {
         return sessionCache.getAll(sessionIds);
     }
     
-    public List<Session> getAllSessionsByMachineId(String machineId){
-        List<Session> sessions = new ArrayList<>();
-        for (Session session : sessionCache.values()){
-            if (session.getMachineId().equals(machineId)){
-                sessions.add(session);
-            }
-        }
-        return sessions;
+    public List<Session> getAllSessions(Predicate<Session> predicate) {
+    	return sessionCache.values().stream()
+    			.filter(predicate)
+    			.collect(Collectors.toList());
     }
     
-    public List<Session> getAllSessionByMachineIds(Collection<String> machineIds){
-        List<Session> sessions = new ArrayList<>();
-        for (Session session : sessionCache.values()){
-            if (machineIds.contains(session.getMachineId())){
-                sessions.add(session);
-            }
-        }
-        return sessions;
+    public List<Session> getAllSessionsByMachineId(String machineId) {
+        return getAllSessions(SessionSpecifications.matchingMachineId(machineId));
     }
     
-    public void put(Session session){
+    public List<Session> getAllSessionByMachineIds(Collection<String> machineIds) {
+        return getAllSessions(SessionSpecifications.matchingMachineId(machineIds));
+    }
+    
+    public void put(Session session) {
         sessionCache.put(session.getSessionId(), session);
     }
     
-    public void remove(Session session){
+    public void remove(Session session) {
         sessionCache.remove(session.getSessionId());
     }
     
     public void removeAllSession(Collection<Session> sessions) {
-        for (Session session : sessions){
+        for (Session session : sessions) {
             sessionCache.remove(session.getSessionId());
         }
     }

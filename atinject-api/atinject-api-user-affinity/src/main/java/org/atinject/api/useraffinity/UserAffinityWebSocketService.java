@@ -1,6 +1,5 @@
 package org.atinject.api.useraffinity;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -11,8 +10,8 @@ import org.atinject.core.notification.NotificationService;
 import org.atinject.core.tiers.WebSocketService;
 import org.infinispan.remoting.transport.TopologyAwareAddress;
 
-@ApplicationScoped
-public class UserAffinityWebSocketService extends WebSocketService {
+@WebSocketService
+public class UserAffinityWebSocketService {
 
     @Inject NotificationService notificationService;
     

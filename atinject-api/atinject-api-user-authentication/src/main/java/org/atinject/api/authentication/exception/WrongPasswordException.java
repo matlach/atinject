@@ -8,7 +8,7 @@ public class WrongPasswordException extends ApplicationException {
 
 	@Override
 	public String getExceptionCode() {
-		return AuthenticationExceptionCodes.WRONG_PASSWORD;
+		return AuthenticationExceptionCodes.WRONG_PASSWORD.name();
 	}
 
 }

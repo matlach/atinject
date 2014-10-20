@@ -10,7 +10,8 @@ import org.atinject.core.cache.ReplicatedCache;
 import org.atinject.core.locale.enumeration.AvailableLocales;
 import org.atinject.core.tiers.Service;
 
-public class LocaleService extends Service {
+@Service
+public class LocaleService {
 
 	@Inject
 	private ReplicatedCache<String, Locale> supportedLocales;

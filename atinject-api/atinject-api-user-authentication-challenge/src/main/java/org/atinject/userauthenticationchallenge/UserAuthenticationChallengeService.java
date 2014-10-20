@@ -3,7 +3,6 @@ package org.atinject.userauthenticationchallenge;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -13,8 +12,8 @@ import org.atinject.core.concurrent.ScheduledService;
 import org.atinject.core.session.event.SessionOpened;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserAuthenticationChallengeService extends Service {
+@Service
+public class UserAuthenticationChallengeService {
 
 	@Inject
 	private ScheduledService scheduledService;

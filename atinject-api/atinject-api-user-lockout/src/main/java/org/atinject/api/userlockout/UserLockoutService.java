@@ -1,6 +1,5 @@
 package org.atinject.api.userlockout;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -13,8 +12,8 @@ import org.atinject.api.userlockout.event.UserLocked;
 import org.atinject.api.userlockout.event.UserUnlocked;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserLockoutService extends Service {
+@Service
+public class UserLockoutService {
 
     // Threshold 5 times, duration 30 minutes, reset duration 5 minutes.
     

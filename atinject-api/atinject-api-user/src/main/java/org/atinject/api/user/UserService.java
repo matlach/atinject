@@ -2,7 +2,6 @@ package org.atinject.api.user;
 
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -12,8 +11,8 @@ import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
 
-@ApplicationScoped
-public class UserService extends Service{
+@Service
+public class UserService {
     
     @Inject @Named("user")
     private DistributedCache<UUID, UserEntity> userCacheStore;

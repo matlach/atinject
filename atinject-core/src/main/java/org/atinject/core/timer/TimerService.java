@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.cdi.CDI;
@@ -16,8 +15,8 @@ import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
 @Startup
-@ApplicationScoped
-public class TimerService extends Service
+@Service
+public class TimerService
 {
     
     private static final int[] DEFAULT_SECONDS = {0};

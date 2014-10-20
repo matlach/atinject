@@ -10,18 +10,18 @@ public abstract class AbstractRegistryExtension<T> {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
     
-    protected List<Class<? extends T>> classes;
+    protected List<Class<T>> classes;
     
     public AbstractRegistryExtension() {
         classes = new ArrayList<>();
     }
     
-    public void addClass(Class<? extends T> clazz) {
+    public void addClass(Class<T> clazz) {
         classes.add(clazz);
         logger.info("added '{}' to registry", clazz.getSimpleName());
     }
     
-    public List<Class<? extends T>> getClasses() {
+    public List<Class<T>> getClasses() {
         return classes;
     }
 }

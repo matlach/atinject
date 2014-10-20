@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.cdi.CDI;
@@ -14,8 +13,8 @@ import org.atinject.core.tiers.Service;
 import org.slf4j.Logger;
 
 @Startup
-@ApplicationScoped
-public class ClusteredTimerService extends Service {
+@Service
+public class ClusteredTimerService {
 
     @Inject
     Logger logger;

@@ -18,13 +18,13 @@ public class DefaultPermissionExtension extends AbstractEnumerationExtension imp
 
     private Logger logger = LoggerFactory.getLogger(DefaultPermissionExtension.class);
     
-    private Map<String, Class<? extends Permissions>> permissions;
+    private Map<String, Class<?>> permissions;
     
     public DefaultPermissionExtension(){
         permissions = new LinkedHashMap<>();
     }
     
-    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<? extends Permissions> event) {
+    <T> void processAnnotatedType(@Observes ProcessAnnotatedType<Permissions> event) {
         logger.info("merging '{}' to permissions", event.getAnnotatedType().getJavaClass());
         List<Field> fields = getNonSyntheticFields(event.getAnnotatedType().getJavaClass());
         for (Field field : fields) {

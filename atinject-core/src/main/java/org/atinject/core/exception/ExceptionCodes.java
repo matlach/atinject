@@ -1,5 +1,8 @@
 package org.atinject.core.exception;
 
-public interface ExceptionCodes {
+import org.atinject.core.enumeration.Enumeration;
 
+
+public interface ExceptionCodes extends Enumeration {
+	// marker interface
 }

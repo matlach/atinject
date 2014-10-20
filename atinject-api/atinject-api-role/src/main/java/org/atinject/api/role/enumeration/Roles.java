@@ -1,5 +1,8 @@
 package org.atinject.api.role.enumeration;
 
-public interface Roles {
+import org.atinject.core.enumeration.Enumeration;
 
+
+public interface Roles extends Enumeration {
+	// marker interface
 }

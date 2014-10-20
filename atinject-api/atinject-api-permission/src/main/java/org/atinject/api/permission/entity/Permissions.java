@@ -1,9 +1,8 @@
 package org.atinject.api.permission.entity;
 
-/**
- * marker interface for all permissions
- * any permissions must be declared public static final String ...
- */
-public interface Permissions {
+import org.atinject.core.enumeration.Enumeration;
 
+
+public interface Permissions extends Enumeration {
+	// marker interface
 }
