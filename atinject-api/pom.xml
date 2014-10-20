@@ -35,6 +35,7 @@
 		<module>atinject-api-user-topology</module>
 		<module>atinject-api-user-websocket</module>
 		<module>atinject-api-user-authentication-challenge</module>
+		<module>atinject-api-user-registration-throttling</module>
 	</modules>
 	
 	<dependencies>
