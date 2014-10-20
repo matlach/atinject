@@ -62,7 +62,7 @@
 		<logback.version>1.1.2</logback.version>
 		<weld.version>2.2.5.Final</weld.version>
 		<netty.version>5.0.0.Alpha1</netty.version>
-		<infinispan.version>7.0.0.Beta2</infinispan.version>
+		<infinispan.version>7.0.0.CR1</infinispan.version>
 		<jackson.version>2.4.1</jackson.version>
 		<hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
 		<pojo.mbean.version>1.1</pojo.mbean.version>
@@ -333,11 +333,9 @@
 						<fork>true</fork>
 						<source>1.8</source>
 						<target>1.8</target>
-						<debug>true</debug>
-						<optimize>true</optimize>
-						<!-- <showDeprecation>true</showDeprecation> <showWarnings>true</showWarnings> 
-							<compilerArguments> <Xlint:-options/> <Xlint:unchecked/> <Xlint:deprecation/> 
-							</compilerArguments> -->
+						<configuration>
+          					<compilerArgument>-parameters</compilerArgument>
+        				</configuration>
 					</configuration>
 				</plugin>
 
@@ -379,7 +377,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.0.201403182114</version>
+				<version>0.7.2.201409121644</version>
 				<executions>
 					<execution>
 						<id>prepare-integration-tests</id>
