@@ -9,11 +9,11 @@ public class SLF4JJGroupsLogger implements Log {
 	private Logger logger;
 	
 	public SLF4JJGroupsLogger(Class<?> clazz) {
-		LoggerFactory.getLogger(clazz);
+		logger = LoggerFactory.getLogger(clazz);
 	}
 
 	public SLF4JJGroupsLogger(String category) {
-		LoggerFactory.getLogger(category);
+		logger = LoggerFactory.getLogger(category);
 	}
 
 	@Override
