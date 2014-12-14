@@ -38,6 +38,7 @@
 		<module>atinject-api</module>
 		<module>atinject-core-nullanalysis</module>
 		<module>atinject-core-annotation</module>
+		<module>atinject-core-management</module>
 	</modules>
 
 	<scm>
@@ -60,14 +61,14 @@
 
 		<slf4j.version>1.7.7</slf4j.version>
 		<logback.version>1.1.2</logback.version>
-		<weld.version>2.2.5.Final</weld.version>
+		<weld.version>3.0.0.Alpha2</weld.version>
 		<netty.version>5.0.0.Alpha1</netty.version>
-		<infinispan.version>7.0.0.CR1</infinispan.version>
-		<jackson.version>2.4.1</jackson.version>
-		<hibernate.validator.version>5.1.2.Final</hibernate.validator.version>
-		<pojo.mbean.version>1.1</pojo.mbean.version>
+		<infinispan.version>7.1.0.Alpha1</infinispan.version>
+		<jackson.version>2.4.3</jackson.version>
+		<hibernate.validator.version>5.2.0.Alpha1</hibernate.validator.version>
+		<!-- <pojo.mbean.version>1.1</pojo.mbean.version> -->
 		<junit.version>4.11</junit.version>
-		<assertj.version>1.6.1</assertj.version>
+		<assertj.version>1.7.0</assertj.version>
 	</properties>
 
 	<dependencyManagement>
@@ -139,11 +140,11 @@
 				<version>${hibernate.validator.version}</version>
 			</dependency>
 
-			<dependency>
+			<!-- <dependency>
 				<groupId>org.softee</groupId>
 				<artifactId>pojo-mbean</artifactId>
 				<version>${pojo.mbean.version}</version>
-			</dependency>
+			</dependency> -->
 
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
@@ -253,10 +254,10 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.softee</groupId>
 			<artifactId>pojo-mbean</artifactId>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>

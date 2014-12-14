@@ -62,7 +62,9 @@ public abstract class IntegrationTest {
 	    	.addAsManifestResource("arquillian-beans.xml", "beans.xml")
 	        .addAsManifestResource("arquillian-validation.xml", "validation.xml")
 	        .addAsManifestResource("arquillian-javax.enterprise.inject.spi.Extension", "services/javax.enterprise.inject.spi.Extension")
-	        .addAsResource("arquillian-logback.xml", "logback.xml");
+	        .addAsManifestResource("arquillian-org.jboss.weld.bootstrap.api.Service", "services/org.jboss.weld.bootstrap.api.Service")
+	        .addAsResource("arquillian-logback.xml", "logback.xml")
+	        .addAsResource("arquillian-jgroups.xml", "jgroups.xml");
     	
     	logger.info(archive.toString(Formatters.VERBOSE));
     	

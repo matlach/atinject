@@ -35,7 +35,7 @@ public class SessionService{
     }
     
     public List<Session> getAllSessions(Predicate<Session> predicate) {
-    	return sessionCache.values().stream()
+    	return sessionCache.values()
     			.filter(predicate)
     			.collect(Collectors.toList());
     }

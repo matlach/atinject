@@ -21,7 +21,7 @@ public class LocaleService {
 	}
 	
 	public List<Locale> getAllSupportedLocale() {
-		return supportedLocales.values().stream().collect(Collectors.toList());
+		return supportedLocales.values().collect(Collectors.toList());
 	}
 	
 	public void addSupportedLocale(String locale) {

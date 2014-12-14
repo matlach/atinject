@@ -17,18 +17,16 @@ public class UserSessionService extends SessionService {
 
     @Inject @Named("session") private ReplicatedCache<UUID, UserSession> cache;
     
-    public UserSession getSessionByUserId(UUID userId){
-        // TODO this is a good candidate for parallel iteration
-        for (UserSession session : cache.values()){
-            if (session.getUserId().equals(userId)){
-                return session;
-            }
-        }
-        return null;
+    public UserSession getSessionByUserId(UUID userId) {
+    	return cache.values()
+    			.parallel()
+    			.filter((session) -> userId.equals(session.getUserId()))
+    					.findFirst()
+    					.orElse(null);
     }
     
     @Override
-    public UserSession getSession(String sessionId){
+    public UserSession getSession(String sessionId) {
         return (UserSession) super.getSession(sessionId);
     }
     
