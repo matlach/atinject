@@ -47,9 +47,16 @@ public class CacheManager
 
     // these settings must be configurable, system properties ???
     protected GlobalConfiguration newGlobalConfiguration(){
+    	System.getProperty("org.atinject.cluster.name");
+    	System.getProperty("org.atinject.cluster.machine.id");
+    	System.getProperty("org.atinject.cluster.rack.id");
+    	System.getProperty("org.atinject.cluster.site.id");
         return new GlobalConfigurationBuilder()
+        	.globalJmxStatistics()
+        		.enable()
             .transport()
                 .defaultTransport()
+                .addProperty("configurationFile", "jgroups.xml")
                 .clusterName("atinject")
                 .machineId("localhost")
                 .rackId("no-rack")
