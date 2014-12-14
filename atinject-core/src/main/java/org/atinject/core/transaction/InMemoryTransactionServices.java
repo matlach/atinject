@@ -9,8 +9,7 @@ import javax.transaction.UserTransaction;
 import org.infinispan.transaction.tm.DummyTransactionManager;
 import org.jboss.weld.transaction.spi.TransactionServices;
 
-public class InMemoryTransactionServices implements TransactionServices
-{
+public class InMemoryTransactionServices implements TransactionServices {
 
     @Override
     public void cleanup() {
@@ -18,8 +17,7 @@ public class InMemoryTransactionServices implements TransactionServices
     }
 
     @Override
-    public void registerSynchronization(Synchronization synchronizedObserver)
-    {
+    public void registerSynchronization(Synchronization synchronizedObserver) {
         try {
             DummyTransactionManager.getInstance().getTransaction().registerSynchronization(synchronizedObserver);
         }
@@ -29,8 +27,7 @@ public class InMemoryTransactionServices implements TransactionServices
     }
     
     @Override
-    public boolean isTransactionActive()
-    {
+    public boolean isTransactionActive() {
         try {
             return getUserTransaction().getStatus() == Status.STATUS_ACTIVE;
         }
