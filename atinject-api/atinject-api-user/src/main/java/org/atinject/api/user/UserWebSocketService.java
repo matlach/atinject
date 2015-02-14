@@ -26,7 +26,7 @@ public class UserWebSocketService {
 
     @OnMessage
     public GetUserResponse getUser(GetUserRequest request) {
-        UserEntity userEntity = userService.getUser(request.getUserId());
+        UserEntity userEntity = userService.getUser(request.getUserId()).get();
         User user = userAdapter.userEntityToUser(userEntity);
         return userDTOFactory.newGetUserResponse().setUser(user);
     }

@@ -1,5 +1,6 @@
 package org.atinject.api.user;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -34,28 +35,28 @@ public class UserServiceIT extends IntegrationTest {
     @Test
     @InSequence(2)
     public void testGet() {
-        UserEntity user = userService.getUser(userId);
-        Assert.assertNotNull(user);
+        Optional<UserEntity> user = userService.getUser(userId);
+        Assert.assertTrue(user.isPresent());
     }
     
     @Test
     @InSequence(3)
     public void testUpdate() {
-        UserEntity user = userService.getUser(userId); 
+        UserEntity user = userService.getUser(userId).get(); 
         user.setName("456");
         userService.updateUser(user);
         
-        user = userService.getUser(userId);
+        user = userService.getUser(userId).get();
         Assert.assertEquals("456", user.getName());
     }
     
     @Test
     @InSequence(4)
     public void testRemove() {
-        UserEntity user = userService.getUser(userId);
+        UserEntity user = userService.getUser(userId).get();
         userService.removeUser(user);
         
-        user = userService.getUser(user.getId());
+        user = userService.getUser(user.getId()).orElse(null);
         Assert.assertNull(user);
     }
 }

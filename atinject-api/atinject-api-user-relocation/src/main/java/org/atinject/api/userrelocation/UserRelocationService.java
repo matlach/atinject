@@ -36,7 +36,7 @@ public class UserRelocationService {
     // TODO new userId should be locale to that topology
     // TODO validate the generated user id is unique
     public void relocateUser(UUID userId, String machineId) {
-        UserEntity user = userService.getUser(userId);
+        UserEntity user = userService.getUser(userId).orElseThrow(() -> new NullPointerException());
         relocateUser(user, machineId);
     }
     

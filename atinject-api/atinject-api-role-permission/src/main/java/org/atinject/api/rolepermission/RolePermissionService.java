@@ -1,5 +1,7 @@
 package org.atinject.api.rolepermission;
 
+import java.util.Optional;
+
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -33,11 +35,11 @@ public class RolePermissionService {
     @Inject
     Event<PermissionRevokedToRole> permissionRevokedToRoleEvent;
 
-    public <R extends Enum<?> & Roles> RolePermissions getRolePermissions(R role) {
+    public <R extends Enum<?> & Roles> Optional<RolePermissions> getRolePermissions(R role) {
     	return getRolePermissions(role.name());
     }
     
-    public RolePermissions getRolePermissions(String role) {
+    public Optional<RolePermissions> getRolePermissions(String role) {
         return rolePermissionCache.get(role);
     }
     
@@ -65,10 +67,8 @@ public class RolePermissionService {
         if (!permissionService.isPermission(permission)) {
             throw new RolePermissionException("permission '" + permission + "' do not exists");
         }
-        RolePermissions rolePermissions = getRolePermissions(role);
-        if (rolePermissions == null) {
-            throw new RolePermissionException("role '" + role + "' has no permission");
-        }
+        RolePermissions rolePermissions = getRolePermissions(role)
+        		.orElseThrow(() -> new RolePermissionException("role '" + role + "' has no permission"));
         return rolePermissions.hasPermission(permission);
     }
 
@@ -77,7 +77,7 @@ public class RolePermissionService {
     }
     
     public void grantPermissionToRole(String role, String permission) {
-        RolePermissions rolePermissions = getRolePermissions(role);
+        RolePermissions rolePermissions = getRolePermissions(role).get();
         grantPermissionToRole(rolePermissions, permission);
     }
     

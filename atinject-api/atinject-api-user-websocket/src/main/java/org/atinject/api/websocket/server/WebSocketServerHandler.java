@@ -8,9 +8,9 @@ import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
 
 import org.atinject.api.usersession.UserSession;
+import org.atinject.api.usersession.UserSessionService;
 import org.atinject.core.concurrent.AsynchronousService;
 import org.atinject.core.distexec.UserRequestDistributedExecutor;
-import org.atinject.core.session.SessionService;
 import org.atinject.core.websocket.dto.WebSocketRequest;
 import org.atinject.core.websocket.dto.WebSocketResponse;
 
@@ -19,7 +19,7 @@ import org.atinject.core.websocket.dto.WebSocketResponse;
 public class WebSocketServerHandler extends org.atinject.core.websocket.server.WebSocketServerHandler {
 
     @Inject
-    private SessionService sessionService;
+    private UserSessionService sessionService;
     
     @Inject
     private AsynchronousService asynchronousService;
@@ -46,7 +46,7 @@ public class WebSocketServerHandler extends org.atinject.core.websocket.server.W
         // response could be sent asynchronously instead ?
         // should we use completion service ?
         
-        UserSession session = (UserSession) sessionService.getSession(sessionId);
+        UserSession session = sessionService.getSession(sessionId).get();
         
         Future<WebSocketResponse> future;
         if (session.getUserId() == null){

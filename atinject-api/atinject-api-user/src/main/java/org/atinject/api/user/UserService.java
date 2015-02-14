@@ -1,9 +1,11 @@
 package org.atinject.api.user;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.user.event.UserIdCollided;
@@ -26,7 +28,7 @@ public class UserService {
     @Inject
     private Event<UserIdCollided> userIdCollidedEvent;
     
-    public UserEntity getUser(UUID userId){
+    public Optional<UserEntity> getUser(UUID userId){
         return userCacheStore.get(userId);
     }
     
@@ -42,7 +44,7 @@ public class UserService {
         UUID userId = userIdGenerator.generateUserId();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
-        if (userCacheStore.get(userId) != null){
+        if (userCacheStore.get(userId).isPresent()){
             // an extraordinary event just happened
             // try again
             userIdCollidedEvent.fire(new UserIdCollided().setUserId(userId));
@@ -65,8 +67,9 @@ public class UserService {
     }
     
     public void updateUserName(UUID userId, String name) {
-        UserEntity user = getUser(userId);
-        updateUserName(user, name);
+        updateUserName(
+        		getUser(userId)
+        		.orElseThrow(() -> new NullPointerException()), name);
     }
     
     public void updateUserName(UserEntity user, String name) {
@@ -87,7 +90,7 @@ public class UserService {
      */
     public UserEntity removeUser(UUID userId) {
         lockUser(userId);
-        UserEntity user = userCacheStore.get(userId);
+        UserEntity user = userCacheStore.get(userId).orElseThrow(() -> new NullPointerException());
         removeUser(user);
         return user;
     }
@@ -95,10 +98,7 @@ public class UserService {
     /**
      * Note : it is assumed that userId has been locked before
      */
-    public void removeUser(UserEntity user) {
-        if (user == null) {
-            throw new NullPointerException("user");
-        }
+    public void removeUser(@NotNull UserEntity user) {
         userCacheStore.remove(user.getId());
     }
 }

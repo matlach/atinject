@@ -36,7 +36,7 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         sessionService.openSession(newSession);
         
-        Session session = sessionService.getSession(newSession.getSessionId());
+        Session session = sessionService.getSession(newSession.getSessionId()).get();
         
         Assert.assertEquals(newSession, session);
     }
@@ -50,7 +50,7 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         sessionService.closeSession(newSession);
         
-        Session session = sessionService.getSession(newSession.getSessionId());
+        Session session = sessionService.getSession(newSession.getSessionId()).orElse(null);
         
         Assert.assertNull(session);
     }
@@ -79,10 +79,10 @@ public class UserSessionServiceIT extends IntegrationTest {
         sessionService.openSession(newSession);
         
         userId = UUID.randomUUID();
-        UserSession session = sessionService.getSession("123");
+        UserSession session = sessionService.getSession("123").get();
         session.setUserId(userId);
         
-        session = sessionService.getSession("123");
+        session = sessionService.getSession("123").get();
         
         Assert.assertEquals(userId, session.getUserId());
     }

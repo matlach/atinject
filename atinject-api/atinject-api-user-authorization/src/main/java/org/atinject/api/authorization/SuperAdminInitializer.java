@@ -1,5 +1,6 @@
 package org.atinject.api.authorization;
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -22,8 +23,11 @@ import org.atinject.core.startup.Startup;
 
 @Startup
 @ApplicationScoped
-public class DefaultSuperAdminProvider implements SuperAdminProvider {
+public class SuperAdminInitializer {
 
+	@Inject
+	private SuperAdminCredentialProvider superAdminCredentialProvider;
+	
     @Inject
     private UserCredentialService userCredentialService;
     
@@ -39,44 +43,40 @@ public class DefaultSuperAdminProvider implements SuperAdminProvider {
     @Inject
     private PermissionService permissionService;
     
-    public static final String SUPER_ADMIN_USERNAME = "admin";
-    public static final String SUPER_ADMIN_PASSWORD = "admin";
-    
     @PostConstruct
     public <R extends Enum<?> & Roles, P extends Enum<?> & Permissions> void initialize() {
         // ensure super admin user / user credential exists
-        UserCredentialEntity superAdminCredential = userCredentialService.getUserCredential(getUsername());
-        if (superAdminCredential == null) {
-            UserEntity superAdminUser = userService.addUser(getUsername());
-            superAdminCredential = userCredentialService.setUserCredential(superAdminUser.getId(), getUsername(), getPassword());
-        }
+        UserEntity superAdminUser = getSuperAdminUser();
         
         // ensure super admin user has the super admin role
-        UserRolesEntity superAdminRoles = userRoleService.getUserRole(superAdminCredential.getUserId());
+        UserRolesEntity superAdminRoles = userRoleService.getUserRole(superAdminUser.getId());
         if (superAdminRoles.containsRole(DefaultRoles.SUPER_ADMIN)) {
-            userRoleService.grantUserRole(superAdminCredential.getUserId(), DefaultRoles.SUPER_ADMIN);
+            userRoleService.grantUserRole(superAdminUser.getId(), DefaultRoles.SUPER_ADMIN);
         }
         
         // ensure super admin role has all the permission
-        RolePermissions superAdminPermissions = rolePermissionService.getRolePermissions(DefaultRoles.SUPER_ADMIN);
-        if (superAdminPermissions == null) {
-            superAdminPermissions = rolePermissionService.addRolePermissions(DefaultRoles.SUPER_ADMIN);
-        }
+        RolePermissions superAdminRolePermissions = rolePermissionService.getRolePermissions(DefaultRoles.SUPER_ADMIN)
+        		.orElse(rolePermissionService.addRolePermissions(DefaultRoles.SUPER_ADMIN));
         Set<P> staticPermissions = permissionService.getAllStaticPermission();
         for (P permission : staticPermissions) {
-            if (! superAdminPermissions.hasPermission(permission)) {
+            if (! superAdminRolePermissions.hasPermission(permission)) {
                 rolePermissionService.grantPermissionToRole(DefaultRoles.SUPER_ADMIN, permission);
             }
         }
     }
-
-    @Override
-    public String getUsername() {
-        return SUPER_ADMIN_USERNAME;
+    
+    public UserEntity getSuperAdminUser() {
+    	Optional<UserCredentialEntity> superAdminCredential = userCredentialService.getUserCredential(superAdminCredentialProvider.getUsername());
+    	if (superAdminCredential.isPresent()) {
+    		return userService.getUser(superAdminCredential.get().getUserId()).get();
+    	}
+    	return addSuperAdminUser();
+    }
+    
+    public UserEntity addSuperAdminUser() {
+    	UserEntity superAdminUser = userService.addUser(superAdminCredentialProvider.getUsername());
+        userCredentialService.setUserCredential(superAdminUser.getId(), superAdminCredentialProvider.getUsername(), superAdminCredentialProvider.getPassword());
+        return superAdminUser;
     }
 
-    @Override
-    public String getPassword() {
-        return SUPER_ADMIN_PASSWORD;
-    }
 }

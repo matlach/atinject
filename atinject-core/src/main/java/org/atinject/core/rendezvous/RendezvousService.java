@@ -1,8 +1,8 @@
 package org.atinject.core.rendezvous;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -42,12 +42,10 @@ public class RendezvousService {
     }
 
     public void onSessionClosed(@Observes SessionClosed event) {
-        List<UUID> rendezvousIds = new ArrayList<>();
-        for (RendezvousEntity rendezvous : rendezvousCache.getAll().values()) {
-            if (rendezvous.getSessionIds().contains(event.getSession().getSessionId())) {
-                rendezvousIds.add(rendezvous.getId());
-            }
-        }
+        List<UUID> rendezvousIds = rendezvousCache.values()
+        	.filter(rendezvous -> rendezvous.getSessionIds().contains(event.getSession().getSessionId()))
+        	.map(rendezvous -> rendezvous.getId())
+        	.collect(Collectors.toList());
         for (UUID rendezvousId : rendezvousIds) {
             leave(rendezvousId, event.getSession());
         }
@@ -67,10 +65,8 @@ public class RendezvousService {
 
     public RendezvousEntity join(UUID rendezvousId, Session session) {
         rendezvousCache.lock(rendezvousId);
-        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId);
-        if (rendezvous == null) {
-            throw new NullPointerException("rendezvous does not exists");
-        }
+        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId)
+        		.orElseThrow(() -> new NullPointerException("rendezvous does not exists"));
         return join(rendezvous, session);
     }
 
@@ -85,10 +81,8 @@ public class RendezvousService {
 
     public RendezvousEntity leave(UUID rendezvousId, Session session) {
         rendezvousCache.lock(rendezvousId);
-        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId);
-        if (rendezvous == null) {
-            throw new NullPointerException("rendezvous does not exists");
-        }
+        RendezvousEntity rendezvous = rendezvousCache.get(rendezvousId)
+        		.orElseThrow(() -> new NullPointerException("rendezvous does not exists"));
         return leave(rendezvous, session);
     }
 

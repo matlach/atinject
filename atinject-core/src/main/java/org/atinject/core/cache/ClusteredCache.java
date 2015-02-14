@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.infinispan.commons.util.concurrent.NotifyingFuture;
@@ -16,18 +17,18 @@ import org.infinispan.remoting.rpc.RpcManager;
 public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
     
     @Override
-    public Map<K, V> getAll(Collection<K> keys) {
+    public Map<K, Optional<V>> getAll(Collection<K> keys) {
         Map<K, NotifyingFuture<V>> futures = new HashMap<>(keys.size());
         for (K key : keys) {
             NotifyingFuture<V> future = cache.getAsync(key);
             futures.put(key, future);
         }
         
-        Map<K, V> values = new HashMap<>(keys.size());
+        Map<K, Optional<V>> values = new HashMap<>(keys.size());
         for (Entry<K, NotifyingFuture<V>> entry : futures.entrySet()) {
             try {
                 V value = entry.getValue().get();
-                values.put(entry.getKey(), value);
+                values.put(entry.getKey(), Optional.ofNullable(value));
             }
             catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -35,7 +36,7 @@ public abstract class ClusteredCache<K, V> extends LocalCache<K, V> {
             catch (ExecutionException e) {
                 // log exception as error
                 // swallow exception
-                values.put(entry.getKey(), null);
+                values.put(entry.getKey(), Optional.empty());
             }
         }
         return values;

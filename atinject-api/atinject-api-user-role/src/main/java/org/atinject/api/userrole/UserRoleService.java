@@ -3,10 +3,11 @@ package org.atinject.api.userrole;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 import org.atinject.api.role.RoleService;
 import org.atinject.api.role.enumeration.Roles;
-import org.atinject.api.user.UserService;
+import org.atinject.api.user.validation.ExistingUserId;
 import org.atinject.api.userrole.entity.UserRolesEntity;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
@@ -15,17 +16,17 @@ import org.atinject.core.tiers.Service;
 @Service
 public class UserRoleService {
 
-    @Inject UserService userService;
-    @Inject RoleService roleService;
-    @Inject UserRoleEntityFactory factory;
+    @Inject private RoleService roleService;
+    @Inject private UserRoleEntityFactory factory;
     @Inject @Named("user-role") private DistributedCache<UUID, UserRolesEntity> userRoleCache;
     
-    public UserRolesEntity getUserRole(UUID userId){
-        UserRolesEntity userRoles = userRoleCache.get(userId);
-        if (userRoles != null) {
-            return userRoles;
-        }
-        userRoles = factory.newUserRoles().setUserId(userId);
+    public UserRolesEntity getUserRole(@NotNull UUID userId) {
+        return userRoleCache.get(userId)
+        		.orElse(addUserRole(userId));
+    }
+    
+    protected UserRolesEntity addUserRole(@NotNull @ExistingUserId UUID userId) {
+    	UserRolesEntity userRoles = factory.newUserRoles().setUserId(userId);
         userRoleCache.put(userId, userRoles);
         return userRoles;
     }

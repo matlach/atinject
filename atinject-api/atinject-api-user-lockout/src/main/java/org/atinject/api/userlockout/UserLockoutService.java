@@ -15,7 +15,7 @@ import org.atinject.core.tiers.Service;
 @Service
 public class UserLockoutService {
 
-    // Threshold 5 times, duration 30 minutes, reset duration 5 minutes.
+    // Threshold 5 times, duration 30 minutes, decrement attempts each duration 5 minutes.
     
     @Inject UserService userService;
     
@@ -30,7 +30,7 @@ public class UserLockoutService {
     }
     
     public void lockUser(String username) {
-        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
+        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username).get();
         userLockedEvent.fire(new UserLocked());
     }
     

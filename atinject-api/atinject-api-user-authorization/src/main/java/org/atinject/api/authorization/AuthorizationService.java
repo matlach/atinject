@@ -40,7 +40,7 @@ public class AuthorizationService {
         // get user roles permissions
         for (String role : userRoles.getRoles()) {
             // TODO batch
-            RolePermissions rolePermissions = rolePermissionService.getRolePermissions(role);
+            RolePermissions rolePermissions = rolePermissionService.getRolePermissions(role).get();
             permissions.addAll(rolePermissions.getPermissions());
         }
 

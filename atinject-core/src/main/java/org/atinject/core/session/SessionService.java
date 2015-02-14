@@ -3,6 +3,7 @@ package org.atinject.core.session;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -18,19 +19,19 @@ import org.atinject.core.tiers.Service;
 import org.atinject.core.topology.TopologyService;
 
 @Service
-public class SessionService{
+public class SessionService {
     
     @Inject @Named("session") private ReplicatedCache<String, Session> sessionCache;
     
-    public Session getSession(String sessionId){
+    public Optional<? extends Session> getSession(String sessionId){
         return sessionCache.get(sessionId);
     }
 
-    public Map<String, Session> getAllSessions(String... sessionIds) {
+    public Map<String, Optional<Session>> getAllSessions(String... sessionIds) {
         return sessionCache.getAll(sessionIds);
     }
     
-    public Map<String, Session> getAllSessions(List<String> sessionIds) {
+    public Map<String, Optional<Session>> getAllSessions(List<String> sessionIds) {
         return sessionCache.getAll(sessionIds);
     }
     
@@ -62,11 +63,11 @@ public class SessionService{
         }
     }
     
-    @Inject Event<SessionOpened> sessionOpenedEvent;
+    @Inject private Event<SessionOpened> sessionOpenedEvent;
     
-    @Inject Event<SessionClosed> sessionClosedEvent;
+    @Inject private Event<SessionClosed> sessionClosedEvent;
     
-    @Inject TopologyService topologyService;
+    @Inject private TopologyService topologyService;
     
     @PreDestroy
     public void cleanUp() {

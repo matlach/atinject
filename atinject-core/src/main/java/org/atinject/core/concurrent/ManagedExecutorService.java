@@ -78,7 +78,7 @@ public abstract class ManagedExecutorService implements ExecutorService {
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        return threadPoolExecutor.submit(task);
+        return threadPoolExecutor.submit(wrap(task, clientTrace(), Thread.currentThread().getName()));
     }
 
     @Override
@@ -109,5 +109,20 @@ public abstract class ManagedExecutorService implements ExecutorService {
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return threadPoolExecutor.invokeAny(tasks, timeout, unit);
+    }
+    
+    private <T> Callable<T> wrap(final Callable<T> task, final Exception clientStack, String clientThreadName) {
+        return () -> {
+            try {
+                return task.call();
+            } catch (Exception e) {
+                //log.error("Exception {} in task submitted from thrad {} here:", e, clientThreadName, clientStack);
+                throw e;
+            }
+        };
+    }
+ 
+    private Exception clientTrace() {
+        return new Exception("Client stack trace");
     }
 }

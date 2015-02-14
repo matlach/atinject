@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,15 +34,15 @@ public class LocalCache<K, V> {
         return this;
     }
     
-    public V get(K key) {
-        return cache.get(key);
+    public Optional<V> get(K key) {
+        return Optional.ofNullable(cache.get(key));
     }
 
-    public Map<K, V> getAll(K... keys) {
+    public Map<K, Optional<V>> getAll(K... keys) {
         return getAll(Arrays.asList(keys));
     }
     
-    public Map<K, V> getAll(Collection<K> keys) {
+    public Map<K, Optional<V>> getAll(Collection<K> keys) {
         return keys.stream()
                 .collect(Collectors.toMap(key -> key, key -> get(key)));
     }
@@ -50,16 +51,16 @@ public class LocalCache<K, V> {
     	return cacheWithZeroLockAcquisitionTimeoutAndFailSilently.lock(key);
     }
     
-    public boolean lock(K key) {
-        return cache.lock(key);
+    public void lock(K key) {
+        cache.lock(key);
     }
     
-    public boolean lockAll(K... keys) {
-        return cache.lock(keys);
+    public void lockAll(K... keys) {
+        cache.lock(keys);
     }
     
-    public boolean lockAll(Collection<K> keys) {
-        return cache.lock(keys);
+    public void lockAll(Collection<K> keys) {
+        cache.lock(keys);
     }
     
     public void put(K key, V value) {

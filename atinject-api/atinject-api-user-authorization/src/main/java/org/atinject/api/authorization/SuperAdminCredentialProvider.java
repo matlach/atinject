@@ -1,6 +1,6 @@
 package org.atinject.api.authorization;
 
-public interface SuperAdminProvider {
+public interface SuperAdminCredentialProvider {
 
     String getUsername();
     

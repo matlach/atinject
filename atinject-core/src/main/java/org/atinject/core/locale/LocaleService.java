@@ -29,11 +29,8 @@ public class LocaleService {
 		if (availableLocale == null) {
 			throw new RuntimeException();
 		}
-		Locale supportedLocale = supportedLocales.get(locale);
-		if (supportedLocale != null) {
-			throw new RuntimeException();
-		}
-		supportedLocales.put(locale, availableLocale);////
+		Locale supportedLocale = supportedLocales.get(locale).orElseThrow(() -> new RuntimeException());
+		supportedLocales.put(locale, availableLocale);
 	}
 	
 	public void removeSupportedLocale(String locale) {

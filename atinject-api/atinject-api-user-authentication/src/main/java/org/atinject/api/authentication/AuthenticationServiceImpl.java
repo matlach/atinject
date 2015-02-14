@@ -57,10 +57,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (session.getUserId() != null) {
             throw new IllegalStateException("session user id is not null");
         }
-        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
-        if (userCredential == null) {
-            throw new WrongUsernameException();
-        }
+        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username)
+        		.orElseThrow(() -> new WrongUsernameException());
         
         String saltedHash = passwordDigester.digest(userCredential.getSalt() + password);
         if (!userCredential.getHash().equals(saltedHash)) {
@@ -76,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         session.setUserId(userCredential.getUserId());
         sessionService.updateSession(session);
 
-        UserEntity user = userService.getUser(userCredential.getUserId());
+        UserEntity user = userService.getUser(userCredential.getUserId()).orElseThrow(() -> new NullPointerException());
 
         UserLoggedIn userLoggedIn = authenticationEventFactory
                 .newUserLoggedIn()
@@ -93,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             // nothing to do
             return;
         }
-        UserEntity user = userService.getUser(session.getUserId());
+        UserEntity user = userService.getUser(session.getUserId()).orElseThrow(() -> new NullPointerException());
         UserLoggedOut userLoggedOut = authenticationEventFactory
                 .newUserLoggedOut()
                 .setSession(session)

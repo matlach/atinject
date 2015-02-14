@@ -535,7 +535,7 @@ public class WebSocketServerHandler {
             @Override
             public WebSocketResponse call() throws Exception {
             	SessionContext sessionContext = CDI.select(SessionContext.class).get();
-                Session session = CDI.select(SessionService.class).get().getSession(sessionId);
+                Session session = CDI.select(SessionService.class).get().getSession(sessionId).get();
                 // set current session
                 sessionContext.set(session);
                 try {
@@ -602,7 +602,7 @@ public class WebSocketServerHandler {
             Attribute<String> sessionAttribute = ctx.channel().attr(SESSION_ID_ATTRIBUTE_KEY);
             String sessionId = sessionAttribute.get();
             if (sessionId != null){
-                Session session = sessionService.getSession(sessionId);
+                Session session = sessionService.getSession(sessionId).get();
                 // we should dispatch instead to "web socket close" method
                 sessionService.closeSession(session);
             }

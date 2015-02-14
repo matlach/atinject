@@ -1,5 +1,6 @@
 package org.atinject.userauthenticationchallenge;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -21,27 +22,24 @@ public class UserAuthenticationChallengeService {
 	@Inject
 	private UserSessionService userSessionService;
 	
-	private long challengeDelay;
+	private long challengeDelayMillis;
 	
 	@PostConstruct
 	public void initialize() {
-		challengeDelay = 3000;
+		challengeDelayMillis = 3000;
 	}
 	
 	public void onSessionOpened(@Observes SessionOpened event) {
 		scheduledService.schedule(
 				() -> disconnectIfNotAuthenticated(event.getSession().getSessionId()),
-				challengeDelay,
+				challengeDelayMillis,
 				TimeUnit.MILLISECONDS);
 	}
 	
 	public void disconnectIfNotAuthenticated(String sessionId) {
-		UserSession userSession = userSessionService.getSession(sessionId);
-		if (userSession == null) {
-			return;
-		}
-		if (userSession.getUserId() == null) {
-			userSessionService.closeSession(userSession);
+		Optional<UserSession> userSession = userSessionService.getSession(sessionId);
+		if (userSession.isPresent() && userSession.get().getUserId() == null) {
+			userSessionService.closeSession(userSession.get());
 		}
 	}
 }

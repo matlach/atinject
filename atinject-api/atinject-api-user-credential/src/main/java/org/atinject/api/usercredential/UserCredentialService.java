@@ -1,5 +1,6 @@
 package org.atinject.api.usercredential;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ public class UserCredentialService {
     
     @Inject private PasswordDigester passwordDigester;
     
-    public UserCredentialEntity getUserCredential(String username){
+    public Optional<UserCredentialEntity> getUserCredential(String username){
         return userCredentialCacheStore.get(username);
     }
     
@@ -35,16 +36,16 @@ public class UserCredentialService {
         return userCredential;
     }
     
-    public UserCredentialEntity changePassword(String username, String newPassword){
+    public UserCredentialEntity changePassword(String username, String currentPassword, String newPassword){
         userCredentialCacheStore.lock(username);
-        UserCredentialEntity userCredential = userCredentialCacheStore.get(username);
-        return changePassword(userCredential, newPassword);
+        UserCredentialEntity userCredential = userCredentialCacheStore.get(username).orElseThrow(() -> new NullPointerException());
+        return changePassword(userCredential, currentPassword, newPassword);
     }
     
     /**
      * Note : we assume userCredential should have been locked before
      */
-    public UserCredentialEntity changePassword(UserCredentialEntity userCredential, String newPassword){
+    public UserCredentialEntity changePassword(UserCredentialEntity userCredential, String currentPassword, String newPassword){
         String saltedHash = passwordDigester.digest(userCredential.getSalt() + newPassword);
         
         if (userCredential.getHash().equals(saltedHash)) {

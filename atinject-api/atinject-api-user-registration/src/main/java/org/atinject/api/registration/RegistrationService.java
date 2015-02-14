@@ -35,11 +35,7 @@ public class RegistrationService {
     private Event<UserRegistered> userRegisteredEvent;
 
     public boolean isUsernameAvailable(String username) {
-        UserCredentialEntity userCredential = userCredentialService.getUserCredential(username);
-        if (userCredential == null) {
-            return true;
-        }
-        return false;
+    	return ! userCredentialService.getUserCredential(username).isPresent();
     }
 
     public UserEntity registerAsGuest() {
@@ -63,7 +59,7 @@ public class RegistrationService {
 
     public UserEntity register(UUID userId, String username, String password) {
 
-        UserEntity user = userService.getUser(userId);
+        UserEntity user = userService.getUser(userId).orElseThrow(() -> new NullPointerException());
         UserCredentialEntity userCredential = userCredentialService.setUserCredential(userId, username, password);
 
         UserRegistered event = registrationEventFactory

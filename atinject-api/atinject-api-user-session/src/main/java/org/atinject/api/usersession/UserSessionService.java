@@ -1,5 +1,6 @@
 package org.atinject.api.usersession;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,8 +27,8 @@ public class UserSessionService extends SessionService {
     }
     
     @Override
-    public UserSession getSession(String sessionId) {
-        return (UserSession) super.getSession(sessionId);
+    public Optional<UserSession> getSession(String sessionId) {
+        return (Optional<UserSession>) super.getSession(sessionId);
     }
     
 }

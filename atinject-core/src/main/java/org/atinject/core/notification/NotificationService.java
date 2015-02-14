@@ -37,7 +37,7 @@ public class NotificationService {
     // TODO implements batching
     public Future<Void> sendNotification(RendezvousEntity rendezvous, WebSocketNotification notification) {
         for (String sessionId : rendezvous.getSessionIds()) {
-            Session session = sessionService.getSession(sessionId);
+            Session session = sessionService.getSession(sessionId).orElse(null);
             if (session != null) {
                 sendNotification(session, notification);
             }
@@ -49,19 +49,16 @@ public class NotificationService {
 
         private NotificationEvent event;
         
-        public NotificationEvent getEvent()
-        {
+        public NotificationEvent getEvent() {
             return event;
         }
 
-        public void setEvent(NotificationEvent event)
-        {
+        public void setEvent(NotificationEvent event) {
             this.event = event;
         }
 
         @Override
-        public Void call() throws Exception
-        {
+        public Void call() throws Exception {
             CDI.getBeanManager().fireEvent(event);
             return null;
         }
