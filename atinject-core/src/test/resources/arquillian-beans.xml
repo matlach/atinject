@@ -13,7 +13,7 @@
 		<class>org.atinject.core.tiers.exception.HandleServiceExceptionInterceptor</class>
 		<class>org.atinject.core.tiers.exception.HandleCacheExceptionInterceptor</class>
 		<class>org.atinject.core.transaction.TransactionalInterceptor</class>
-		<class>org.atinject.core.validation.ValidateRequestInterceptor</class>
+		<class>org.atinject.core.validation.ValidateInterceptor</class>
 	</interceptors>
 
  	<alternatives>

@@ -9,6 +9,10 @@ public class RegisterRequest extends WebSocketRequest {
     private String username;
 
     private String password;
+    
+    private String newUsername;
+
+    private String newPassword;
 
     public String getUsername() {
         return username;
@@ -27,5 +31,23 @@ public class RegisterRequest extends WebSocketRequest {
         this.password = password;
         return this;
     }
+
+	public String getNewUsername() {
+		return newUsername;
+	}
+
+	public RegisterRequest setNewUsername(String newUsername) {
+		this.newUsername = newUsername;
+		return this;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public RegisterRequest setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+		return this;
+	}
 
 }

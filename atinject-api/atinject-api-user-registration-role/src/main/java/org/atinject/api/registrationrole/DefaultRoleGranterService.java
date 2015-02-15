@@ -19,12 +19,12 @@ public abstract class DefaultRoleGranterService {
     @Inject UserRoleService userRoleService;
     
     public void onGuestRegistered(@Observes GuestRegistered event) {
-        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.GUEST);
+        userRoleService.grantUserRole(event.getRegistratedUser().getUser().getId(), DefaultRoles.GUEST);
     }
     
     public void onUserRegistered(@Observes UserRegistered event) {
-        userRoleService.revokeUserRole(event.getUser().getId(), DefaultRoles.GUEST);
-        userRoleService.grantUserRole(event.getUser().getId(), DefaultRoles.REGISTERED);
+        userRoleService.revokeUserRole(event.getRegistratedUser().getUser().getId(), DefaultRoles.GUEST);
+        userRoleService.grantUserRole(event.getRegistratedUser().getUser().getId(), DefaultRoles.REGISTERED);
     }
     
 }

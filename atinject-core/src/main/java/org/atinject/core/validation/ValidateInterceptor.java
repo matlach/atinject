@@ -10,9 +10,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 
-@ValidateRequest
+@Validate
 @Interceptor
-public class ValidateRequestInterceptor {
+public class ValidateInterceptor {
 
     @Inject
     private Validator validator;
@@ -24,7 +24,12 @@ public class ValidateRequestInterceptor {
         Set<ConstraintViolation<Object>> violations = validator.validateParameters(ctx.getTarget(), ctx.getMethod(), ctx.getParameters());
 
         if (! violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
+        	StringBuilder message = new StringBuilder();
+        	for (ConstraintViolation<Object> violation : violations) {
+        		message.append(violation.getMessage()).append("\n");
+        	}
+        	message.setLength(message.length() - 1);
+            throw new ConstraintViolationException(message.toString(), violations);
         }
 
         return ctx.proceed();

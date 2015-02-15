@@ -15,7 +15,7 @@ import org.atinject.core.thread.ThreadTracker;
 import org.atinject.core.tiers.exception.ApplyExceptionMapper;
 import org.atinject.core.tiers.exception.HandleWebSocketServiceException;
 import org.atinject.core.transaction.Transactional;
-import org.atinject.core.validation.ValidateRequest;
+import org.atinject.core.validation.Validate;
 
 @ApplicationScoped
 @Stereotype
@@ -24,7 +24,7 @@ import org.atinject.core.validation.ValidateRequest;
 @Profile
 @ThreadTracker
 @Transactional
-@ValidateRequest
+@Validate
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented

@@ -4,8 +4,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
+import org.atinject.api.user.validation.ExistingUserId;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
+import org.atinject.api.usercredential.validation.ExistingUsername;
+import org.atinject.api.usercredential.validation.NonExistingUsername;
+import org.atinject.api.usercredential.validation.ComplexPassword;
+import org.atinject.api.usercredential.validation.AcceptableUsername;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
 import org.atinject.core.tiers.Service;
@@ -23,7 +29,10 @@ public class UserCredentialService {
         return userCredentialCacheStore.get(username);
     }
     
-    public UserCredentialEntity setUserCredential(UUID userId, String username, String password){
+    public UserCredentialEntity setUserCredential(
+    		@NotNull @ExistingUserId UUID userId,
+    		@NotNull @NonExistingUsername @AcceptableUsername String username,
+    		@NotNull @ComplexPassword String password){
         userCredentialCacheStore.lock(username);
         String salt = saltGenerator.get();
         String saltedHash = passwordDigester.digest(salt + password);
@@ -36,7 +45,25 @@ public class UserCredentialService {
         return userCredential;
     }
     
-    public UserCredentialEntity changePassword(String username, String currentPassword, String newPassword){
+    public void changeUsernameAndPassword(String username, String password, String newUsername, String newPassword) {
+    	changeUsername(username, newUsername);
+    	changePassword(newUsername, password, newPassword);
+    }
+    
+    public void changeUsername(
+    		@NotNull @ExistingUsername String username,
+    		@NotNull @NonExistingUsername @AcceptableUsername String newUsername) {
+    	userCredentialCacheStore.lockAll(username, newUsername);
+    	UserCredentialEntity userCredential = getUserCredential(username).get();
+    	userCredentialCacheStore.remove(username);
+    	userCredential.setUsername(newUsername);
+    	userCredentialCacheStore.put(newUsername, userCredential);
+    }
+    
+    public UserCredentialEntity changePassword(
+    		@NotNull @ExistingUsername String username,
+    		@NotNull String currentPassword,
+    		@NotNull @ComplexPassword String newPassword){
         userCredentialCacheStore.lock(username);
         UserCredentialEntity userCredential = userCredentialCacheStore.get(username).orElseThrow(() -> new NullPointerException());
         return changePassword(userCredential, currentPassword, newPassword);

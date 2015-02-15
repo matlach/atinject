@@ -40,7 +40,7 @@ public class UserService {
      * create, lock and add new user with random userId and specified name and password
      * Note : userId key will be locked
      */
-    public UserEntity addUser(String name) {
+    public UserEntity addUser(@NotNull String name) {
         UUID userId = userIdGenerator.generateUserId();
         // be extra careful here as everything is based on user id
         // TODO any better way to do this ? what about locking ?
@@ -62,7 +62,7 @@ public class UserService {
      * add the user by delegating to {@link UserCacheStore#putUser(UserEntity)}
      * Note : it is assumed that userId has been locked before
      */
-    public void addUser(UserEntity user) {
+    public void addUser(@NotNull UserEntity user) {
         userCacheStore.put(user.getId(), user);
     }
     

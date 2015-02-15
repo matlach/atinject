@@ -11,6 +11,11 @@
   <artifactId>atinject-api-user-credential</artifactId>
 
   <dependencies>
+    <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>atinject-api-user</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
   	<dependency>
   		<groupId>${project.groupId}</groupId>
   		<artifactId>atinject-api-user-session</artifactId>

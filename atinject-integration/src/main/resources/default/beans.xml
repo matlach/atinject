@@ -15,7 +15,7 @@
 		<class>org.atinject.api.authorization.RequiresGuestInterceptor</class>
 		<class>org.atinject.api.authorization.RequiresRolesInterceptor</class>
 		<class>org.atinject.api.authorization.RequiresPermissionsInterceptor</class>
-		<class>org.atinject.core.validation.ValidateRequestInterceptor</class>
+		<class>org.atinject.core.validation.ValidateInterceptor</class>
 	</interceptors>
 
  	<alternatives>
