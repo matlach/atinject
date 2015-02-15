@@ -36,7 +36,7 @@ public class AuthenticationServiceIT extends IntegrationTest {
     @InSequence(1)
     public void setup() {
     	UserEntity user = userService.addUser("test-user");
-    	userCredentialService.setUserCredential(user.getId(), "test-user", "123");
+    	userCredentialService.addUserCredential(user.getId(), "test-user", "123");
     }
     
     @Test

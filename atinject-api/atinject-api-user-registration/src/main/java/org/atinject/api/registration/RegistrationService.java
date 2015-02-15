@@ -40,7 +40,7 @@ public class RegistrationService {
 
     public RegistratedUser registerAsGuest(String username, String password) {
         UserEntity user = userService.addUser(username);
-        UserCredentialEntity userCredential = userCredentialService.setUserCredential(user.getId(), username, password);
+        UserCredentialEntity userCredential = userCredentialService.addUserCredential(user.getId(), username, password);
 
         RegistratedUser registratedUser = new RegistratedUser();
         registratedUser.setUser(user);

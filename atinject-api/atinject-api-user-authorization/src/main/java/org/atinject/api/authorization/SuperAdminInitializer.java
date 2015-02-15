@@ -75,7 +75,7 @@ public class SuperAdminInitializer {
     
     public UserEntity addSuperAdminUser() {
     	UserEntity superAdminUser = userService.addUser(superAdminCredentialProvider.getUsername());
-        userCredentialService.setUserCredential(superAdminUser.getId(), superAdminCredentialProvider.getUsername(), superAdminCredentialProvider.getPassword());
+        userCredentialService.addUserCredential(superAdminUser.getId(), superAdminCredentialProvider.getUsername(), superAdminCredentialProvider.getPassword());
         return superAdminUser;
     }
 
