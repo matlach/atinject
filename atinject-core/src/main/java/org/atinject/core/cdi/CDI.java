@@ -83,7 +83,7 @@ public final class CDI {
         cdi.destroy(instance);
     }
     
-    public static CreationalContext createUnboundCreationalContext() {
+    public static <T> CreationalContext<T> createUnboundCreationalContext() {
         return getBeanManager().createCreationalContext(null);
     }
 }
