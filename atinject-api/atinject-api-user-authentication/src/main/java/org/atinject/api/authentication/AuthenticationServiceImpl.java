@@ -2,6 +2,7 @@ package org.atinject.api.authentication;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 import org.atinject.api.authentication.event.AuthenticationFailed;
 import org.atinject.api.authentication.event.UserLoggedIn;
@@ -15,7 +16,6 @@ import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usercredential.entity.UserCredentialEntity;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.core.distevent.Distributed;
-import org.atinject.core.nullanalysis.NonNull;
 import org.atinject.core.session.SessionService;
 import org.atinject.core.tiers.Service;
 
@@ -53,7 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      * @throws WrongPasswordException
      */
     @Override
-    public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password) {
+    public UserEntity login(@NotNull UserSession session, @NotNull String username, @NotNull String password) {
         if (session.getUserId() != null) {
             throw new IllegalStateException("session user id is not null");
         }

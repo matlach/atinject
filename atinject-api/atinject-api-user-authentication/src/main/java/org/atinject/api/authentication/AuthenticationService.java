@@ -1,12 +1,13 @@
 package org.atinject.api.authentication;
 
+import javax.validation.constraints.NotNull;
+
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usersession.UserSession;
-import org.atinject.core.nullanalysis.NonNull;
 
 public interface AuthenticationService {
 
-    UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password);
+    UserEntity login(@NotNull UserSession session, @NotNull String username, @NotNull String password);
 
     void logout(UserSession session);
 }

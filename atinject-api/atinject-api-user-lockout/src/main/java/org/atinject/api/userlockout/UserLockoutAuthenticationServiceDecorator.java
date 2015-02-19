@@ -3,12 +3,12 @@ package org.atinject.api.userlockout;
 import javax.decorator.Decorator;
 import javax.decorator.Delegate;
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 import org.atinject.api.authentication.AuthenticationService;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.userlockout.exception.UserLockedException;
 import org.atinject.api.usersession.UserSession;
-import org.atinject.core.nullanalysis.NonNull;
 
 @Decorator
 public abstract class UserLockoutAuthenticationServiceDecorator implements AuthenticationService {
@@ -18,7 +18,7 @@ public abstract class UserLockoutAuthenticationServiceDecorator implements Authe
     @Inject UserLockoutService userLockoutService;
     
     @Override
-    public UserEntity login(@NonNull UserSession session, @NonNull String username, @NonNull String password) {
+    public UserEntity login(@NotNull UserSession session, @NotNull String username, @NotNull String password) {
         if (userLockoutService.isUserLocked(username)) {
             throw new UserLockedException();
         }
