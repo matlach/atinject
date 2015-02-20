@@ -84,6 +84,10 @@ public final class CDI {
     }
     
     public static <T> CreationalContext<T> createUnboundCreationalContext() {
-        return getBeanManager().createCreationalContext(null);
+        return createUnboundCreationalContext(getBeanManager());
+    }
+    
+    public static <T> CreationalContext<T> createUnboundCreationalContext(BeanManager beanManager) {
+    	return beanManager.createCreationalContext(null);
     }
 }

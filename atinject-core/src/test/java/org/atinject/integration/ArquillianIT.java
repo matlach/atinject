@@ -6,6 +6,7 @@ import javax.transaction.UserTransaction;
 
 import org.assertj.core.api.Assertions;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class ArquillianIT extends IntegrationTest {
     @Inject
     private UserTransaction ut;
     
-    @Test
+    @Test @InSequence(1)
     public void testArquillianBootstrap() {
     	Assertions.assertThat(ut).isNotNull();
     }

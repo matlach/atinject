@@ -6,8 +6,7 @@ import javax.enterprise.inject.Any;
 import javax.inject.Inject;
 
 @Decorator
-public abstract class TestServiceDecorator implements TestServiceInterface
-{
+public abstract class TestServiceDecorator implements TestServiceInterface {
 
     @Inject @Delegate @Any TestServiceInterface service;
     

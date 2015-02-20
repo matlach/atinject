@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
-import org.atinject.api.usercredential.PasswordDigester;
 import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usersession.UserSession;
 import org.atinject.integration.IntegrationTest;
@@ -29,9 +28,6 @@ public class AuthenticationServiceIT extends IntegrationTest {
     @Inject
     private AuthenticationService authenticationService;
     
-    @Inject
-    private PasswordDigester passwordDigester;
-    
     @Test
     @InSequence(1)
     public void setup() {
@@ -49,8 +45,6 @@ public class AuthenticationServiceIT extends IntegrationTest {
             .setMachineId("")
             .setSessionId("")
             .setUserId(null);
-        
-        password = passwordDigester.digest(password);
         
         authenticationService.login(session, username, password);
     }

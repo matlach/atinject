@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessProducer;
 import javax.enterprise.inject.spi.Producer;
@@ -17,12 +18,14 @@ public class CacheExtension implements Extension {
 
     private Map<String, Producer<Configuration>> configurationProducers;
 
+    private BeanManager beanManager;
     public CacheExtension() {
         configurationProducers = new LinkedHashMap<>();
     }
     
-    public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event) {
-        Named named = event.getAnnotatedMember().getAnnotation(Named.class);
+    public <T, X> void onProcessProducer(@Observes ProcessProducer<T, Configuration> event, BeanManager beanManager) {
+        this.beanManager = beanManager;
+    	Named named = event.getAnnotatedMember().getAnnotation(Named.class);
         if (named == null) {
             throw new NullPointerException("@Named must be defined");
         }
@@ -32,7 +35,7 @@ public class CacheExtension implements Extension {
     public Map<String, Configuration> getConfigurations() {
         Map<String, Configuration> configurations = new LinkedHashMap<>(configurationProducers.size());
         for (Entry<String, Producer<Configuration>> entry : configurationProducers.entrySet()){
-            configurations.put(entry.getKey(), entry.getValue().produce(CDI.createUnboundCreationalContext()));
+            configurations.put(entry.getKey(), entry.getValue().produce(CDI.createUnboundCreationalContext(beanManager)));
         }
         return configurations;
     }

@@ -2,10 +2,11 @@ package org.atinject.api.role;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class RoleIT extends IntegrationTest {
@@ -18,8 +19,8 @@ public class RoleIT extends IntegrationTest {
     @Inject
     private RoleService roleService;
     
-    @Test
+    @Test @InSequence(1)
     public void testDummyRole() {
-        Assert.assertTrue(true);
+    	Assertions.assertThat(true).isTrue();
     }
 }

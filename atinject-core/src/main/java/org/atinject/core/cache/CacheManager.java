@@ -26,7 +26,7 @@ public class CacheManager
     private EmbeddedCacheManager cacheManager;
     
     @PostConstruct
-    public void initialize(){
+    public void initialize() {
         cacheManager = new DefaultCacheManager(newGlobalConfiguration(), newDefaultCacheConfiguration());
         // add listener
         cacheManager.addListener(new ClusteredCacheManagerListener());
@@ -53,6 +53,7 @@ public class CacheManager
     	System.getProperty("org.atinject.cluster.site.id");
         return new GlobalConfigurationBuilder()
         	.globalJmxStatistics()
+        		.allowDuplicateDomains(Boolean.TRUE)
         		.enable()
             .transport()
                 .defaultTransport()

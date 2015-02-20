@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class NettyInjectionIT extends IntegrationTest {
         return createDefaultArchive(NettyInjectionIT.class);
     }
     
-    @Test
+    @Test @InSequence(1)
     public void testInject() throws Exception {
         int port = 8090;
         EventLoopGroup bossGroup = new NioEventLoopGroup();

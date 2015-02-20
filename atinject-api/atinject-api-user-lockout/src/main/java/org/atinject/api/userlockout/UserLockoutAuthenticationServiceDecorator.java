@@ -13,9 +13,11 @@ import org.atinject.api.usersession.UserSession;
 @Decorator
 public abstract class UserLockoutAuthenticationServiceDecorator implements AuthenticationService {
 
-    @Inject @Delegate AuthenticationService authenticationService;
+    @Inject @Delegate
+    private AuthenticationService authenticationService;
     
-    @Inject UserLockoutService userLockoutService;
+    @Inject
+    private UserLockoutService userLockoutService;
     
     @Override
     public UserEntity login(@NotNull UserSession session, @NotNull String username, @NotNull String password) {

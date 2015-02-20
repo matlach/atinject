@@ -6,6 +6,7 @@ import org.atinject.core.websocket.client.WebSocketClient;
 import org.atinject.core.websocket.server.WebSocketServer;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class WebSocketIT extends IntegrationTest {
     @Inject
     private WebSocketServer server;
     
-    @Test
+    @Test @InSequence(1)
     public void testWebSockets() throws Exception {
         Thread.sleep(1000L); // wait for session id
         

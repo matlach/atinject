@@ -4,11 +4,12 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.atinject.core.session.Session;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -28,9 +29,8 @@ public class UserSessionServiceIT extends IntegrationTest {
     @Inject
     private UserSessionFactory sessionFactory;
     
-    @Test
-    public void testOpenSession()
-    {
+    @Test @InSequence(1)
+    public void testOpenSession() {
         Session newSession = sessionFactory.newSession()
                 .setSessionId("123");
         
@@ -38,11 +38,11 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         Session session = sessionService.getSession(newSession.getSessionId()).get();
         
-        Assert.assertEquals(newSession, session);
+        Assertions.assertThat(newSession).isEqualTo(session);
     }
     
-    @Test
-    public void testCloseSession(){
+    @Test @InSequence(2)
+    public void testCloseSession() {
         Session newSession = sessionFactory.newSession()
                 .setSessionId("123");
         
@@ -52,11 +52,11 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         Session session = sessionService.getSession(newSession.getSessionId()).orElse(null);
         
-        Assert.assertNull(session);
+        Assertions.assertThat(session).isNull();
     }
     
-    @Test
-    public void testGetSessionByUserId(){
+    @Test @InSequence(3)
+    public void testGetSessionByUserId() {
         UUID userId = UUID.randomUUID();
         UserSession newSession = sessionFactory.newSession()
                 .setSessionId("123")
@@ -66,11 +66,11 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         Session session = sessionService.getSessionByUserId(userId);
         
-        Assert.assertEquals(newSession, session);
+        Assertions.assertThat(newSession).isEqualTo(session);
     }
     
-    @Test
-    public void testUpdateSession(){
+    @Test @InSequence(4)
+    public void testUpdateSession() {
         UUID userId = UUID.randomUUID();
         UserSession newSession = sessionFactory.newSession()
                 .setSessionId("123")
@@ -84,6 +84,6 @@ public class UserSessionServiceIT extends IntegrationTest {
         
         session = sessionService.getSession("123").get();
         
-        Assert.assertEquals(userId, session.getUserId());
+        Assertions.assertThat(userId).isEqualTo(session.getUserId());
     }
 }
