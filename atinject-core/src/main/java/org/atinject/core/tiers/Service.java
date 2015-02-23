@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Stereotype;
 
+import org.atinject.core.lock.ApplyPessimisticLocking;
 import org.atinject.core.profiling.Profile;
 import org.atinject.core.thread.ThreadTracker;
 import org.atinject.core.tiers.exception.HandleServiceException;
@@ -22,6 +23,7 @@ import org.atinject.core.validation.Validate;
 @Profile
 @ThreadTracker
 @Transactional
+@ApplyPessimisticLocking
 @Validate
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

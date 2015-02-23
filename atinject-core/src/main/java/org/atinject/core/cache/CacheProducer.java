@@ -9,7 +9,11 @@ import org.atinject.core.cdi.Named;
 
 public class CacheProducer {
 
-    @Inject private CacheManager cacheManager;
+    @Inject
+    private CacheManager cacheManager;
+    
+    @Inject
+    private ProducedCacheRegistry producedCacheRegistry;
     
     @Produces @Named
     public <K, V> LocalCache<K, V> newLocalCache(InjectionPoint ip){
@@ -18,7 +22,9 @@ public class CacheProducer {
         if (cache == null) {
             throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
         }
-        return CDI.select(LocalCache.class).get().withCache(cache);
+        LocalCache<K, V> producedCache = CDI.select(LocalCache.class).get().withCache(cache);
+        producedCacheRegistry.addCache(named.value(), producedCache);
+        return producedCache;
     }
     
     @Produces @Named
@@ -28,7 +34,9 @@ public class CacheProducer {
         if (cache == null) {
             throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
         }
-        return CDI.select(DistributedCache.class).get().withCache(cache);
+        DistributedCache<K, V> producedCache = CDI.select(DistributedCache.class).get().withCache(cache);
+        producedCacheRegistry.addCache(named.value(), producedCache);
+        return producedCache;
     }
     
     @Produces @Named
@@ -38,7 +46,9 @@ public class CacheProducer {
         if (cache == null) {
             throw new ExceptionInInitializerError("cannot find cache named '" + named.value() + "'");
         }
-        return CDI.select(ReplicatedCache.class).get().withCache(cache);
+        ReplicatedCache<K, V> producedCache = CDI.select(ReplicatedCache.class).get().withCache(cache);
+        producedCacheRegistry.addCache(named.value(), producedCache);
+        return producedCache;
     }
     
 }
