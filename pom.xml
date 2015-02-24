@@ -38,6 +38,13 @@
 		<module>atinject-api</module>
 		<module>atinject-core-annotation</module>
 		<module>atinject-core-management</module>
+		<module>atinject-core-scheduling</module>
+		<module>atinject-core-configuration</module>
+		<module>atinject-core-profiling</module>
+		<module>atinject-core-scripting</module>
+		<module>atinject-core-validation</module>
+		<module>atinject-core-resource</module>
+		<module>atinject-core-rendezvous</module>
 	</modules>
 
 	<scm>
