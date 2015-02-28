@@ -9,15 +9,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.atinject.core.profiling.Profile;
-import org.atinject.core.thread.ThreadTracker;
-import org.atinject.core.tiers.exception.HandleCacheException;
 import org.infinispan.AdvancedCache;
 import org.infinispan.context.Flag;
 
-@HandleCacheException
-@Profile
-@ThreadTracker
+//@HandleCacheException
+//@Profile
+//@ThreadTracker
 public class LocalCache<K, V> {
 
     protected AdvancedCache<K, V> cache;

@@ -1,5 +1,6 @@
 package org.atinject.core.profiling;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -9,6 +10,7 @@ import com.codahale.metrics.Timer.Context;
 
 @Profile
 @Interceptor
+@Priority(Interceptor.Priority.APPLICATION)
 public class ProfileInterceptor {
     
     @Inject

@@ -10,21 +10,14 @@ import java.lang.annotation.Target;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Stereotype;
 
-import org.atinject.core.profiling.Profile;
-import org.atinject.core.thread.ThreadTracker;
-import org.atinject.core.tiers.exception.ApplyExceptionMapper;
-import org.atinject.core.tiers.exception.HandleWebSocketServiceException;
-import org.atinject.core.transaction.Transactional;
-import org.atinject.core.validation.Validate;
-
 @ApplicationScoped
 @Stereotype
-@ApplyExceptionMapper
-@HandleWebSocketServiceException
-@Profile
-@ThreadTracker
-@Transactional
-@Validate
+//@ApplyExceptionMapper
+//@HandleWebSocketServiceException
+//@Profile
+//@ThreadTracker
+//@Transactional
+//@Validate
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
