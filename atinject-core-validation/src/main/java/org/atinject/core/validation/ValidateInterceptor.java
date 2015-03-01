@@ -2,6 +2,7 @@ package org.atinject.core.validation;
 
 import java.util.Set;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -11,7 +12,7 @@ import javax.validation.ConstraintViolationException;
 
 
 @Validate
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class ValidateInterceptor {
 
     @Inject
