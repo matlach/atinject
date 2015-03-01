@@ -11,6 +11,11 @@
   <artifactId>atinject-api-analytic</artifactId>
 
   <dependencies>
+    <dependency>
+  		<groupId>${project.groupId}</groupId>
+  		<artifactId>atinject-core-scheduling</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
   	<dependency>
   		<groupId>${project.groupId}</groupId>
   		<artifactId>atinject-api-user-session</artifactId>
