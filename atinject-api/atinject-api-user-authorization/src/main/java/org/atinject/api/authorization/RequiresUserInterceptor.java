@@ -1,5 +1,6 @@
 package org.atinject.api.authorization;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -10,7 +11,7 @@ import org.atinject.api.usersession.UserSession;
 import org.atinject.core.session.SessionContext;
 
 @RequiresUser
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class RequiresUserInterceptor {
     
 	@Inject

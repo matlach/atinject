@@ -5,13 +5,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
 @Retry
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class RetryInterceptor {
 
     private static ThreadLocal<Object> hack = new ThreadLocal<>();

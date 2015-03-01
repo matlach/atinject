@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -16,7 +17,7 @@ import org.atinject.core.cache.LocalCache;
 import org.atinject.core.cache.ProducedCacheRegistry;
 
 @ApplyPessimisticLocking
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class ApplyPessimisticLockingInterceptor {
 
 	@Inject

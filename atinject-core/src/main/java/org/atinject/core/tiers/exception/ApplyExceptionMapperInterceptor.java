@@ -1,5 +1,6 @@
 package org.atinject.core.tiers.exception;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -9,7 +10,7 @@ import org.atinject.core.websocket.dto.WebSocketResponse;
 import org.atinject.core.websocket.dto.WebSocketResponseFault;
 
 @ApplyExceptionMapper
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class ApplyExceptionMapperInterceptor {
 	
 	@Inject

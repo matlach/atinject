@@ -1,5 +1,6 @@
 package org.atinject.core.transaction;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -8,9 +9,8 @@ import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
 @Transactional
-@Interceptor
-public class TransactionalInterceptor
-{
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
+public class TransactionalInterceptor {
 
     @Inject private UserTransaction userTransaction;
     

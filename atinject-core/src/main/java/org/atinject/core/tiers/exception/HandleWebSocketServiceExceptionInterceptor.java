@@ -1,5 +1,6 @@
 package org.atinject.core.tiers.exception;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
@@ -8,7 +9,7 @@ import javax.interceptor.InvocationContext;
 import org.slf4j.Logger;
 
 @HandleWebSocketServiceException
-@Interceptor
+@Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class HandleWebSocketServiceExceptionInterceptor {
     
     @Inject private Logger logger;
