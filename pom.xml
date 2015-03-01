@@ -45,6 +45,7 @@
 		<module>atinject-core-validation</module>
 		<module>atinject-core-resource</module>
 		<module>atinject-core-rendezvous</module>
+		<module>atinject-core-latency</module>
 	</modules>
 
 	<scm>
