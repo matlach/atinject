@@ -344,13 +344,15 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.2</version>
 					<configuration>
+						<fork>true</fork>
 						<encoding>UTF-8</encoding>
 						<compilerVersion>1.8</compilerVersion>
-						<fork>true</fork>
 						<source>1.8</source>
 						<target>1.8</target>
+						<useIncrementalCompilation>false</useIncrementalCompilation>
 						<configuration>
           					<compilerArgument>-parameters</compilerArgument>
+          					<testCompilerArgument>-parameters</testCompilerArgument>
         				</configuration>
 					</configuration>
 				</plugin>
