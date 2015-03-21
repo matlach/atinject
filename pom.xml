@@ -68,14 +68,15 @@
 
 		<slf4j.version>1.7.10</slf4j.version>
 		<logback.version>1.1.2</logback.version>
-		<weld.version>3.0.0.Alpha5</weld.version>
-		<netty.version>5.0.0.Alpha1</netty.version>
+		<weld.version>3.0.0.Alpha6</weld.version>
+		<netty.version>5.0.0.Alpha2</netty.version>
 		<infinispan.version>7.1.0.Final</infinispan.version>
 		<jackson.version>2.5.1</jackson.version>
-		<hibernate.validator.version>5.2.0.Alpha1</hibernate.validator.version>
+		<hibernate.validator.version>5.2.0.Beta1</hibernate.validator.version>
+		<metrics.version>3.1.1</metrics.version>
 		
 		<junit.version>4.12</junit.version>
-		<assertj.version>1.7.1</assertj.version>
+		<assertj.version>2.0.0</assertj.version>
 		<arquillian.version>1.1.7.Final</arquillian.version>
 		<arquillian.weld.se.embedded.version>1.0.0.CR8</arquillian.weld.se.embedded.version>
 	</properties>
@@ -152,7 +153,7 @@
 		<dependency>
 			<groupId>io.dropwizard.metrics</groupId>
 			<artifactId>metrics-core</artifactId>
-			<version>3.1.0</version>
+			<version>${metrics.version}</version>
 		</dependency>
 
 		<dependency>
@@ -218,8 +219,8 @@
 			<artifactId>weld-core</artifactId>
 			<exclusions>
 				<exclusion>
-					<artifactId>weld-core-jsf</artifactId>
-					<groupId>org.jboss.weld</groupId>
+					<artifactId>weld-jsf</artifactId>
+					<groupId>org.jboss.weld.module</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -277,6 +278,7 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
