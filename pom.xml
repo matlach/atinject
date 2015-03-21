@@ -69,7 +69,7 @@
 		<slf4j.version>1.7.10</slf4j.version>
 		<logback.version>1.1.2</logback.version>
 		<weld.version>3.0.0.Alpha6</weld.version>
-		<netty.version>5.0.0.Alpha2</netty.version>
+		<netty.version>5.0.0.Alpha1</netty.version>
 		<infinispan.version>7.1.0.Final</infinispan.version>
 		<jackson.version>2.5.1</jackson.version>
 		<hibernate.validator.version>5.2.0.Beta1</hibernate.validator.version>
