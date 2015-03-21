@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.atinject.core.cdi.CDI;
-import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.session.Session;
 import org.atinject.core.session.SessionService;
 import org.atinject.core.topology.TopologyDistributedExecutor;
@@ -34,17 +33,6 @@ public class NotificationService {
         return distributedExecutor.submit(session.getMachineId(), task);
     }
 
-    // TODO implements batching
-    public Future<Void> sendNotification(RendezvousEntity rendezvous, WebSocketNotification notification) {
-        for (String sessionId : rendezvous.getSessionIds()) {
-            Session session = sessionService.getSession(sessionId).orElse(null);
-            if (session != null) {
-                sendNotification(session, notification);
-            }
-        }
-        return null;
-    }
-    
     public static class SendNotificationTask implements Callable<Void> {
 
         private NotificationEvent event;

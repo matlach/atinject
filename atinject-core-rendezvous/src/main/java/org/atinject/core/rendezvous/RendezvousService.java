@@ -2,6 +2,7 @@ package org.atinject.core.rendezvous;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.enterprise.event.Event;
@@ -11,12 +12,15 @@ import javax.inject.Inject;
 import org.atinject.core.affinity.AffineVersion4UUIDGenerator;
 import org.atinject.core.cache.DistributedCache;
 import org.atinject.core.cdi.Named;
+import org.atinject.core.notification.NotificationService;
 import org.atinject.core.rendezvous.entity.RendezvousEntity;
 import org.atinject.core.rendezvous.event.SessionJoinedRendezvous;
 import org.atinject.core.rendezvous.event.SessionLeftRendezvous;
 import org.atinject.core.session.Session;
+import org.atinject.core.session.SessionService;
 import org.atinject.core.session.event.SessionClosed;
 import org.atinject.core.tiers.Service;
+import org.atinject.core.websocket.dto.WebSocketNotification;
 
 @Service
 public class RendezvousService {
@@ -33,6 +37,9 @@ public class RendezvousService {
     
     @Inject
     Event<SessionLeftRendezvous> sessionLeftRendezvousEvent;
+    
+    @Inject NotificationService notificationService;
+    @Inject SessionService sessionService;
 
     public RendezvousEntity newRendezvous() {
         UUID rendezvousId = generator.getLocalKey();
@@ -93,5 +100,16 @@ public class RendezvousService {
         rendezvous.getSessionIds().remove(session.getSessionId());
         sessionLeftRendezvousEvent.fire(null);
         return rendezvous;
+    }
+    
+    // TODO implements batching
+    public Future<Void> sendNotification(RendezvousEntity rendezvous, WebSocketNotification notification) {
+        for (String sessionId : rendezvous.getSessionIds()) {
+            Session session = sessionService.getSession(sessionId).orElse(null);
+            if (session != null) {
+                notificationService.sendNotification(session, notification);
+            }
+        }
+        return null;
     }
 }
