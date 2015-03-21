@@ -1,9 +1,0 @@
-org.atinject.core.dto.DTORegistryExtension
-org.atinject.core.entity.EntityRegistryExtension
-org.atinject.core.tiers.WebSocketServiceRegistryExtension
-org.atinject.core.tiers.ServiceRegistryExtension
-org.atinject.core.concurrent.AsynchronousServiceExtension
-org.atinject.core.cache.CacheExtension
-org.atinject.core.websocket.WebSocketExtension
-org.atinject.core.timer.TimerExtension
-org.atinject.core.startup.StartupExtension
