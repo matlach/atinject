@@ -9,6 +9,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.executable.ExecutableValidator;
 
+import org.hibernate.validator.HibernateValidator;
+import org.hibernate.validator.parameternameprovider.ReflectionParameterNameProvider;
+
 @ApplicationScoped
 public class Validator {
 
@@ -18,7 +21,13 @@ public class Validator {
     
     @PostConstruct
     public void initialize(){
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
+        validator = Validation.byProvider(HibernateValidator.class)
+        		.configure()
+        		.parameterNameProvider(new ReflectionParameterNameProvider())
+        		//TODO .messageInterpolator(interpolator)
+        		.failFast(true)
+        		.buildValidatorFactory()
+        		.getValidator();
         executableValidator = validator.forExecutables();
     }
     
