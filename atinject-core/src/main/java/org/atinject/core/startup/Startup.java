@@ -9,7 +9,10 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Startup
-{
+public @interface Startup {
 
+	int priority() default 0;
+	
+	public static final int HIGHEST = Integer.MAX_VALUE;
+	public static final int LOWEST = Integer.MIN_VALUE;
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterDeploymentValidation;
-import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessBean;
@@ -13,17 +12,23 @@ import javax.enterprise.inject.spi.WithAnnotations;
 
 public class StartupExtension implements Extension {
 	
-    private final Set<Bean<?>> startupBeans = new LinkedHashSet<>();
+    private final Set<ProcessBean<?>> startupBeans = new LinkedHashSet<>();
 
     <X> void processBean(@Observes @WithAnnotations(Startup.class) ProcessBean<X> event) {
-        startupBeans.add(event.getBean());
+        startupBeans.add(event);
     }
     
     void afterDeploymentValidation(@Observes AfterDeploymentValidation event, BeanManager manager) {
-       for (Bean<?> bean : startupBeans) {
-          // the call to toString() is a cheat to force the bean to be initialized
-          manager.getReference(bean, bean.getBeanClass(), manager.createCreationalContext(bean)).toString();
-       }
+    	startupBeans.stream()
+    			.sorted((e1, e2) -> Integer.compare(
+    					e2.getAnnotated().getAnnotation(Startup.class).priority(),
+    					e1.getAnnotated().getAnnotation(Startup.class).priority()))
+    			.forEach(
+    					// the call to toString() is a cheat to force the bean to be initialized
+    					(processBean) -> manager.getReference(
+    							processBean.getBean(),
+    							processBean.getBean().getBeanClass(),
+    							manager.createCreationalContext(processBean.getBean())).toString());
     }
     
 }
