@@ -20,6 +20,13 @@ public abstract class IntegrationTest {
     
 	static {
 		System.setProperty(org.jgroups.Global.CUSTOM_LOG_FACTORY, CustomJGroupsLoggerFactory.class.getName());
+//		System.setProperty("user.timezone", value);
+//		System.setProperty("user.country", value);
+//		System.setProperty("user.language", value);
+//		System.setProperty("user.country.format", value);
+//		System.setProperty("user.language,format", value);
+//		System.setProperty("user.country.display", value);
+//		System.setProperty("user.language.display", value);
 	}
 	
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
