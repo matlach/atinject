@@ -19,11 +19,11 @@ public class HandleCacheExceptionInterceptor {
     private boolean log = true;
     
     @AroundInvoke
-    public Object handleException(InvocationContext invocationContext) throws Exception{
-        try{
+    public Object handleException(InvocationContext invocationContext) throws Exception {
+        try {
             return invocationContext.proceed();
         }
-        catch (Exception e){
+        catch (Exception e) {
             if (sanitize) {
                 cacheStoreExceptionSanitizer.sanitize(e);
             }
