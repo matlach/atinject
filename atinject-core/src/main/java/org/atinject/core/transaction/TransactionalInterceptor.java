@@ -12,7 +12,8 @@ import javax.transaction.UserTransaction;
 @Interceptor @Priority(Interceptor.Priority.APPLICATION)
 public class TransactionalInterceptor {
 
-    @Inject private UserTransaction userTransaction;
+    @Inject
+    private UserTransaction userTransaction;
     
     @AroundInvoke 
     public Object manageTransaction(InvocationContext ctx) throws Exception {
