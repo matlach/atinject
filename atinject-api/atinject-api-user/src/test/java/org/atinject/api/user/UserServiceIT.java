@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.assertj.core.api.Assertions;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class UserServiceIT extends IntegrationTest {
@@ -36,7 +36,7 @@ public class UserServiceIT extends IntegrationTest {
     @InSequence(2)
     public void testGet() {
         Optional<UserEntity> user = userService.getUser(userId);
-        Assert.assertTrue(user.isPresent());
+        Assertions.assertThat(user).isPresent();
     }
     
     @Test
@@ -47,7 +47,7 @@ public class UserServiceIT extends IntegrationTest {
         userService.updateUser(user);
         
         user = userService.getUser(userId).get();
-        Assert.assertEquals("456", user.getName());
+        Assertions.assertThat(user.getName()).isEqualTo("456");
     }
     
     @Test
@@ -57,6 +57,6 @@ public class UserServiceIT extends IntegrationTest {
         userService.removeUser(user);
         
         user = userService.getUser(user.getId()).orElse(null);
-        Assert.assertNull(user);
+        Assertions.assertThat(user).isNull();
     }
 }
