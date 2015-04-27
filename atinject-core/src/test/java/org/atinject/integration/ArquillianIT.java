@@ -18,7 +18,6 @@ public class ArquillianIT extends IntegrationTest {
     public static JavaArchive createDeployment() {
     	return new DefaultDeployment(ArquillianIT.class)
     		.appendEmptyBeansXml()
-    		.appendEmptyValidationXml()
     		.appendJavaxEnterpriseInjectSpiExtension(CacheExtension.class)
     		.appendOrgJBossWeldBootstrapApiService(InMemoryTransactionServices.class)
     		.appendResource("arquillian-logback.xml", "logback.xml")

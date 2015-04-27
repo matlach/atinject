@@ -6,6 +6,10 @@ import org.atinject.api.user.UserService;
 import org.atinject.api.user.entity.UserEntity;
 import org.atinject.api.usercredential.UserCredentialService;
 import org.atinject.api.usersession.UserSession;
+import org.atinject.core.cache.CacheExtension;
+import org.atinject.core.transaction.InMemoryTransactionServices;
+import org.atinject.integration.ArquillianIT;
+import org.atinject.integration.DefaultDeployment;
 import org.atinject.integration.IntegrationTest;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.InSequence;
@@ -16,7 +20,13 @@ public class AuthenticationServiceIT extends IntegrationTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
-        return createDefaultArchive(AuthenticationServiceIT.class);
+    	return new DefaultDeployment(ArquillianIT.class)
+			.appendEmptyBeansXml()
+			.appendJavaxEnterpriseInjectSpiExtension(CacheExtension.class)
+			.appendOrgJBossWeldBootstrapApiService(InMemoryTransactionServices.class)
+			.appendResource("arquillian-logback.xml", "logback.xml")
+			.appendResource("arquillian-jgroups.xml", "jgroups.xml")
+			.getArchive();
     }
     
     @Inject

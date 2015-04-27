@@ -20,14 +20,12 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.beans11.BeansDescriptor;
-import org.jboss.shrinkwrap.descriptor.api.validationConfiguration11.ValidationConfigurationDescriptor;
 import org.jboss.weld.bootstrap.api.Service;
 
 public abstract class JavaDeployment {
 
 	private static final String JAVA_ARCHIVE_FILE_EXTENSION = ".jar";
 	private static final String BEANS_XML_ARCHIVE_PATH = "beans.xml";
-	private static final String VALIDATION_XML_ARCHIVE_PATH = "validation.xml";
 	private static final String JAVAX_ENTERPRISE_INJECT_SPI_EXTENSION_ARCHIVE_PATH = "services/javax.enterprise.inject.spi.Extension";
 	private static final String ORG_JBOSS_WELD_API_BOOTSTRAP_API_SERVICE_ARCHIVE_PATH = "services/org.jboss.weld.bootstrap.api.Service";
 	
@@ -88,7 +86,8 @@ public abstract class JavaDeployment {
     	return this;
     }
 
-    public JavaDeployment appendJavaxEnterpriseInjectSpiExtension(@SuppressWarnings("unchecked") Class<? extends Extension>... extensions) {
+    @SafeVarargs
+    public final JavaDeployment appendJavaxEnterpriseInjectSpiExtension(Class<? extends Extension>... extensions) {
     	return appendJavaxEnterpriseInjectSpiExtension(createJavaxEnterpriseSpiExtension(extensions));
     }
     
@@ -97,7 +96,8 @@ public abstract class JavaDeployment {
     	return this;
     }
     
-	public JavaDeployment appendOrgJBossWeldBootstrapApiService(Class<? extends Service>... services) {
+    @SafeVarargs
+	public final JavaDeployment appendOrgJBossWeldBootstrapApiService(Class<? extends Service>... services) {
     	return appendOrgJBossWeldBootstrapApiService(createOrgJBossWeldBootstrapApiService(services));
     }
     
@@ -114,11 +114,6 @@ public abstract class JavaDeployment {
 	
 	public JavaDeployment appendEmptyBeansXml() {
 		appendBeansXml(createEmptyBeansXml());
-		return this;
-	}
-	
-	public JavaDeployment appendEmptyValidationXml() {
-		archive.addAsManifestResource(createEmptyValidationXml(), VALIDATION_XML_ARCHIVE_PATH);
 		return this;
 	}
 	
@@ -154,18 +149,7 @@ public abstract class JavaDeployment {
     	archive.addAsManifestResource(orgJBossWeldBootstrapApiService, ORG_JBOSS_WELD_API_BOOTSTRAP_API_SERVICE_ARCHIVE_PATH);
     }
     
-    public static Asset createEmptyValidationXml() {
-    	return new StringAsset(
-    			Descriptors.create(ValidationConfigurationDescriptor.class)
-    				.exportAsString());
-    }
-    
-    public static Asset createValidationXml() {
-    	return new StringAsset(
-    			Descriptors.create(ValidationConfigurationDescriptor.class)
-    				.exportAsString());
-    }
-    
+    @SafeVarargs
     public static Asset createOrgJBossWeldBootstrapApiService(Class<? extends Service>... services) {
     	return createOrgJBossWeldBootstrapApiService(Arrays.asList(services));
     }
@@ -239,6 +223,7 @@ public abstract class JavaDeployment {
     			.toArray(String[]::new);
     }
     
+    @SafeVarargs
     public static Asset createJavaxEnterpriseSpiExtension(Class<? extends Extension>... extensions) {
     	return createJavaxEnterpriseSpiExtension(Arrays.asList(extensions));
     }
