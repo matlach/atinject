@@ -3,6 +3,7 @@ package org.atinject.core.security;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
+// TODO we should use instead Qualifier to hardcode available algorithm and/or have a generic one
 public abstract class MessageDigester {
     
     private static Charset UTF8_CHARSET = Charset.forName("UTF-8");
