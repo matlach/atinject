@@ -3,7 +3,7 @@ package org.atinject.integration;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.atinject.core.cache.CustomJGroupsLoggerFactory;
+//import org.atinject.core.cache.CustomJGroupsLoggerFactory;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.junit.Assume;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public abstract class IntegrationTest {
     
 	static {
-		System.setProperty(org.jgroups.Global.CUSTOM_LOG_FACTORY, CustomJGroupsLoggerFactory.class.getName());
+//		System.setProperty(org.jgroups.Global.CUSTOM_LOG_FACTORY, CustomJGroupsLoggerFactory.class.getName());
 //		System.setProperty("user.timezone", value);
 //		System.setProperty("user.country", value);
 //		System.setProperty("user.language", value);
