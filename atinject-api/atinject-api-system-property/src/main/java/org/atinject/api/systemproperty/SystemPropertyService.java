@@ -14,10 +14,10 @@ import org.slf4j.Logger;
 public class SystemPropertyService {
 
     @Inject
-    Logger logger;
+    private Logger logger;
 
     @Inject
-    RuntimeMXBean runtimeMXBean;
+    private RuntimeMXBean runtimeMXBean;
 
     // TODO move everything into extension, this class should use the extension as a delegate instead
     @Inject
