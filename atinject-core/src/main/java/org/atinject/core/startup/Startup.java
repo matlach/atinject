@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Startup {
 
+	// TODO should be converted to standard @Priority
 	int priority() default 0;
 	
 	public static final int HIGHEST = Integer.MAX_VALUE;
