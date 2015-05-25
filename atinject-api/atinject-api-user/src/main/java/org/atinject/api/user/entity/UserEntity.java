@@ -3,7 +3,6 @@ package org.atinject.api.user.entity;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.atinject.api.user.entity.UserEntity.UserExternalizer;
@@ -38,18 +37,6 @@ public class UserEntity extends VersionableEntity {
         return this;
     }
 
-    @Override
-    public final boolean equals(Object obj) {
-        return (obj == this) ||
-               (obj != null && obj.getClass() == this.getClass()) &&
-               (Objects.equals(getId(), ((UserEntity) obj).getId()));
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.requireNonNull(getId()).hashCode();
-    }
-    
     public static class UserExternalizer implements Externalizer<UserEntity> {
         private static final long serialVersionUID = 1L;
 
