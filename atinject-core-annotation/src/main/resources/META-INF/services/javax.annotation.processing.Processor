@@ -1,1 +1,2 @@
-org.atinject.core.annotation.SillyProcessor
+org.atinject.annotation.SillyProcessor
+org.atinject.annotation.EntityBuilderProcessor

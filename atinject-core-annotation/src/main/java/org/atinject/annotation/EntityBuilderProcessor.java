@@ -1,6 +1,8 @@
 package org.atinject.annotation;
 
-import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -13,80 +15,108 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
+
+import org.atinject.core.builder.Builder;
+
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JVar;
 
 @SupportedAnnotationTypes(value= {"*"})
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class EntityBuilderProcessor extends AbstractProcessor { 
 
+	private ProcessingEnvironment processingEnvironment;
 	private Filer filer;
 	private Messager messager;
 
 	@Override
 	public synchronized void init(ProcessingEnvironment env) {
+		processingEnvironment = env;
 		filer = env.getFiler();
 		messager = env.getMessager();
 	}
 
-	private static final String CLASS_TEMPLATE =
-	"package ${package};" +
-	"${imports}" +
-	"${new.line}" +
-	"public ${simple.class.name}Builder implements Builder<${simple.class.name}> {${new.line}" +
-	"${tab}private ${simple.class.name} entity;${new.line}" +
-	"${new.line}" +
-	"${builder.constructors}" +
-	"${static.builder.methods}" +
-	"${fluent.methods}" +
-	"${build.method}" +
-	"}";
-	
-	private static final String IMPORT_STATEMENT =
-	"import ${canonical.class.name};{new.line}";
-	
-	private static final String CONSTRUCTOR_TEMPLATE =
-	"${tab}public ${simple.class.name}(${constructor.arguments}) {${new.line}" +
-	"${tab}${tab}entity = new ${simple.class.name}(${new.entity.arguments});${new.line}" +
-	"${tab}}${new.line}";
-	
-	private static final String BUILD_METHOD_TEMPLATE =
-	"${tab}@Override${new.line}" +
-	"${tab}public build() {${new.line}" +
-	"${tab}${tab}return entity;${new.line}" +
-	"${tab}}${new.line}";
-	
 	@Override
 	public boolean process(Set<? extends TypeElement> elements, RoundEnvironment env) {
 		for (Element element : env.getRootElements()) {
-
-			if (!element.getSimpleName().toString().endsWith("Entity")) {
-				continue;
+			if (isEntity(element)) {
+				processEntity((TypeElement) element);
 			}
-
-			String entityBuilderClassName = element.getSimpleName().toString() + "Builder";
-			String entityBuilderClassContent = CLASS_TEMPLATE
-					.replace("${new.line}", "\n")
-					.replace("${tab}", "    ")
-					.replace("${package}", "TODO")
-					.replace("${imports}", "TODO")
-					.replace("${simple.name}", entityBuilderClassName)
-					.replace("${builder.constructors}", "TODO")
-					.replace("${static.builder.methods}", "TODO")
-					.replace("${fluent.methods}", "TODO")
-					.replace("${build.method}", "TODO");
-			
-			try {
-				JavaFileObject file = filer.createSourceFile("silly/" + entityBuilderClassName, element);
-				file.openWriter()
-					.append(entityBuilderClassContent)
-					.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-
 		}
-
 		return true;
 	}
+	
+	private boolean isEntity(Element element) {
+		return element.getKind().isClass() &&
+			   element.getSimpleName().toString().endsWith("Entity");
+	}
+	
+	private void processEntity(TypeElement entityTypeElement) {
+		try {
+			JCodeModel cm = new JCodeModel();
+			String entityBuilderClassName = entityTypeElement.getQualifiedName().toString() + "Builder";
+			JClass entityClass = cm.ref(Class.forName(entityTypeElement.getQualifiedName().toString()));
+			JClass builderInterface = cm.ref(Builder.class).narrow(entityClass);
+			JDefinedClass builderClass = cm
+					._class(entityBuilderClassName)
+					._implements(builderInterface);
+			
+			// builder protected constructor
+			builderClass.constructor(JMod.NONE);
+			// builder static builder method
+			builderClass.method(JMod.PUBLIC + JMod.STATIC, builderClass, "builder").body()._return(JExpr._new(builderClass));
+			
+			JMethod builderBuildMethod = builderClass.method(JMod.PUBLIC, entityClass, "build");
+			JBlock builderBuildMethodBody = builderBuildMethod.body();
+			
+			JVar builderBuildMethodNewInstanceVar = builderBuildMethodBody.decl(entityClass, "newInstance", JExpr._new(entityClass));
+			for (Element enclosedElement : entityTypeElement.getEnclosedElements()) {
+				if (enclosedElement.getKind().isField()) {
+					JClass builderFieldClass = cm.ref(Class.forName(((VariableElement)enclosedElement).asType().toString()));
+					JFieldVar builderField = builderClass.field(JMod.PRIVATE, builderFieldClass, enclosedElement.getSimpleName().toString());
+					
+					// field fluent setter
+					JMethod fluentSetter = builderClass.method(JMod.PUBLIC, builderClass, enclosedElement.getSimpleName().toString());
+					JVar fluentSetterParameter = fluentSetter.param(JMod.NONE, builderFieldClass, enclosedElement.getSimpleName().toString());
+					fluentSetter.body()
+						.assign(JExpr._this().ref(builderField), fluentSetterParameter)
+						._return(JExpr._this());
+					
+					// builder method assign
+					// TODO remove if statement if field is @NotNull or a primitive
+					builderBuildMethodBody._if(builderField.eq(JExpr._null()).not())._then()
+						.invoke(builderBuildMethodNewInstanceVar, "set" + enclosedElement.getSimpleName().toString().substring(0, 1).toUpperCase() + enclosedElement.getSimpleName().toString().substring(1))
+							.arg(builderField);
+				}
+			}
+			
+			builderBuildMethodBody._return(builderBuildMethodNewInstanceVar);
+			
+			
+			Path tempDir = Files.createTempDirectory(entityBuilderClassName);
+			cm.build(tempDir.toFile());
+			Path generatedContentPath = tempDir.resolve(entityBuilderClassName.replace(".", "/").concat(".java"));
+			String classContent = new String(Files.readAllBytes(generatedContentPath), Charset.forName("UTF-8"));
+			
+			JavaFileObject file = filer.createSourceFile(entityBuilderClassName, entityTypeElement);
+			file.openWriter()
+				.append(classContent)
+				.close();
+		}
+		catch (Exception e) {
+			messager.printMessage(Kind.ERROR, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
 }
