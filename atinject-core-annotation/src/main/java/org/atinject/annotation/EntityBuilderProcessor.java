@@ -14,12 +14,11 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
-
-import org.atinject.core.builder.Builder;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -63,10 +62,15 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 	
 	private void processEntity(TypeElement entityTypeElement) {
 		try {
+			if (entityTypeElement.getModifiers().contains(Modifier.ABSTRACT)) {
+				// skip
+				return;
+			}
+			
 			JCodeModel cm = new JCodeModel();
 			String entityBuilderClassName = entityTypeElement.getQualifiedName().toString() + "Builder";
-			JClass entityClass = cm.ref(Class.forName(entityTypeElement.getQualifiedName().toString()));
-			JClass builderInterface = cm.ref(Builder.class).narrow(entityClass);
+			JClass entityClass = cm.ref(entityTypeElement.getQualifiedName().toString());
+			JClass builderInterface = cm.ref("org.atinject.builder.Builder").narrow(entityClass);
 			JDefinedClass builderClass = cm
 					._class(entityBuilderClassName)
 					._implements(builderInterface);
@@ -82,7 +86,20 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 			JVar builderBuildMethodNewInstanceVar = builderBuildMethodBody.decl(entityClass, "newInstance", JExpr._new(entityClass));
 			for (Element enclosedElement : entityTypeElement.getEnclosedElements()) {
 				if (enclosedElement.getKind().isField()) {
-					JClass builderFieldClass = cm.ref(Class.forName(((VariableElement)enclosedElement).asType().toString()));
+					VariableElement variableElement = (VariableElement) enclosedElement;
+					if ("serialVersionUID".equals(variableElement.getSimpleName())) {
+						// skip
+						continue;
+					}
+//					skip?
+//					if (variableElement.getModifiers().contains(Modifier.STATIC) ||
+//						variableElement.getModifiers().contains(Modifier.TRANSIENT)) {
+//						// skip
+//						continue;
+//					}
+					
+					//TODO skip transient
+					JClass builderFieldClass = cm.ref(((VariableElement)enclosedElement).asType().toString());
 					JFieldVar builderField = builderClass.field(JMod.PRIVATE, builderFieldClass, enclosedElement.getSimpleName().toString());
 					
 					// field fluent setter

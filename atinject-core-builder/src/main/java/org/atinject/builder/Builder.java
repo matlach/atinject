@@ -1,4 +1,4 @@
-package org.atinject.core.builder;
+package org.atinject.builder;
 
 public interface Builder<T> {
 
