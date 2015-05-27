@@ -33,7 +33,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
 
-import org.assertj.core.util.Strings;
 import org.atinject.core.logging.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -105,7 +104,7 @@ public class SimpleNamingContext implements Context {
 			}
 			throw new NameNotFoundException(
 					"Name [" + this.root + lookupName + "] not bound; " + boundObjects.size() + " bindings: [" +
-					Strings.join(boundObjects.keySet()).with(",") + "]");
+					boundObjects.keySet() + "]");
 		}
 		return found;
 	}
