@@ -16,6 +16,13 @@
   		<artifactId>atinject-api-user-session</artifactId>
   		<version>${project.version}</version>
   	</dependency>
+  	
+  	<dependency>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>atinject-core-annotation</artifactId>
+							<version>${project.version}</version>
+							<scope>provided</scope>
+						</dependency>
   </dependencies>
 
 </project>

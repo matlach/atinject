@@ -17,6 +17,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaFileObject;
 
@@ -81,13 +82,14 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 			builderClass.method(JMod.PUBLIC + JMod.STATIC, builderClass, "builder").body()._return(JExpr._new(builderClass));
 			
 			JMethod builderBuildMethod = builderClass.method(JMod.PUBLIC, entityClass, "build");
+			builderBuildMethod.annotate(Override.class);
 			JBlock builderBuildMethodBody = builderBuildMethod.body();
 			
 			JVar builderBuildMethodNewInstanceVar = builderBuildMethodBody.decl(entityClass, "newInstance", JExpr._new(entityClass));
 			for (Element enclosedElement : entityTypeElement.getEnclosedElements()) {
 				if (enclosedElement.getKind().isField()) {
 					VariableElement variableElement = (VariableElement) enclosedElement;
-					if ("serialVersionUID".equals(variableElement.getSimpleName())) {
+					if ("serialVersionUID".equals(variableElement.getSimpleName().toString())) {
 						// skip
 						continue;
 					}
@@ -98,7 +100,6 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 //						continue;
 //					}
 					
-					//TODO skip transient
 					JClass builderFieldClass = cm.ref(((VariableElement)enclosedElement).asType().toString());
 					JFieldVar builderField = builderClass.field(JMod.PRIVATE, builderFieldClass, enclosedElement.getSimpleName().toString());
 					
@@ -110,16 +111,23 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 						._return(JExpr._this());
 					
 					// builder method assign
-					// TODO remove if statement if field is @NotNull or a primitive
-					builderBuildMethodBody._if(builderField.eq(JExpr._null()).not())._then()
-						.invoke(builderBuildMethodNewInstanceVar, "set" + enclosedElement.getSimpleName().toString().substring(0, 1).toUpperCase() + enclosedElement.getSimpleName().toString().substring(1))
+					// TODO also if field is annotated with @NotNull
+					if (isPrimitive(variableElement.asType())) {
+						builderBuildMethodBody
+							.invoke(builderBuildMethodNewInstanceVar, setter(enclosedElement.getSimpleName().toString()))
 							.arg(builderField);
+					}
+					else {
+						builderBuildMethodBody._if(builderField.eq(JExpr._null()).not())._then()
+							.invoke(builderBuildMethodNewInstanceVar, setter(enclosedElement.getSimpleName().toString()))
+								.arg(builderField);
+					}
 				}
 			}
 			
 			builderBuildMethodBody._return(builderBuildMethodNewInstanceVar);
 			
-			
+			// TODO content should be directly pushed in outputstream
 			Path tempDir = Files.createTempDirectory(entityBuilderClassName);
 			cm.build(tempDir.toFile());
 			Path generatedContentPath = tempDir.resolve(entityBuilderClassName.replace(".", "/").concat(".java"));
@@ -134,6 +142,29 @@ public class EntityBuilderProcessor extends AbstractProcessor {
 			messager.printMessage(Kind.ERROR, e.getMessage());
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean isPrimitive(TypeMirror type) {
+		String typeFQN = type.toString();
+		switch (typeFQN) {
+			case "byte":
+			case "short":
+			case "int":
+			case "long":
+			case "float":
+			case "double":
+			case "char":
+				return true;
+		}
+		return false;
+	}
+	
+	private String setter(String fieldName) {
+		return "set" + uppercaseFirstLetter(fieldName);
+	}
+	
+	private String uppercaseFirstLetter(String string) {
+		return string.substring(0, 1).toUpperCase() + string.substring(1);
 	}
 	
 }
