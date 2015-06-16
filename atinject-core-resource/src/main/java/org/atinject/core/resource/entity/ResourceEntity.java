@@ -8,16 +8,15 @@ public class ResourceEntity extends Entity {
 
     private static final long serialVersionUID = 1L;
 
-    String id;
+    private String name;
     
-    String bundleId;
+    private String bundleName;
     
-    Map<String, ResourceStringEntity> resourceStrings;
+    private Map<String, ResourceStringEntity> resourceStrings;
 
 	@Override
 	public Object getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return name;
 	}
     
 }
